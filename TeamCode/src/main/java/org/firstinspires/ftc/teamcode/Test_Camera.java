@@ -18,7 +18,7 @@ import java.util.List;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list.
  */
-@TeleOp(name = "CameraTest", group = "Concept")
+@TeleOp(name = "CameraTest", group = "opModes")
 
 public class Test_Camera  extends LinearOpMode {
 
@@ -52,7 +52,7 @@ public class Test_Camera  extends LinearOpMode {
 
                 // Push telemetry to the Driver Station.
                 telemetry.update();
-
+                visionPortal.resumeStreaming();
                 // Save CPU resources; can resume streaming when needed.
                 if (gamepad1.dpad_down) {
                     visionPortal.stopStreaming();
