@@ -50,7 +50,7 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@TeleOp(name=" Macanum", group="Iterative OpMode")
+@TeleOp(name="Drive_Camera ", group="OpMode")
 
 public class Drive_Camera extends OpMode
 {

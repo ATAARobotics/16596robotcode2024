@@ -38,7 +38,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-@TeleOp(name="mecanum", group="teleop")
+@TeleOp(name="MecanumDrive", group="teleop")
 public class MecanumDrive extends OpMode
 {
     // Declare OpMode members.
@@ -109,17 +109,18 @@ public class MecanumDrive extends OpMode
         double drive = gamepad1.left_stick_y * -1.0; // stick down is positive, invert so that up moves forward
         double turn = gamepad1.right_stick_x;
         double strafe = gamepad1.left_stick_x;
+        double speed_ratio;  // Use this to slow down robot
         // Choose to drive using either Tank Mode, or POV Mode
         // Comment out the method that's not used.  The default below is POV.
 
         // POV Mode uses left stick to go forward, and right stick to turn.
         // - This uses basic math to combine motions and is easier to drive straight.
 
-
-        leftFrontPower = Range.clip(drive + turn + strafe, -1, 1);
-        leftBackPower = Range.clip(drive + turn - strafe, -1, 1);
-        rightFrontPower = Range.clip(drive - turn - strafe, -1, 1);
-        rightBackPower = Range.clip(drive - turn + strafe, -1, 1);
+        speed_ratio = 0.8;
+        leftFrontPower = speed_ratio *  Range.clip(drive + turn + strafe, -1, 1);
+        leftBackPower = speed_ratio * Range.clip(drive + turn - strafe, -1, 1);
+        rightFrontPower = speed_ratio * Range.clip(drive - turn - strafe, -1, 1);
+        rightBackPower = speed_ratio * Range.clip(drive - turn + strafe, -1, 1);
 
 /* simple test of sparkmini - A button to turn motor on for testing
         On the
