@@ -38,6 +38,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+
+import java.util.List;
+
 @TeleOp(name="MecanumDrive", group="teleop")
 public class MecanumDrive extends OpMode
 {
@@ -49,7 +55,17 @@ public class MecanumDrive extends OpMode
     private DcMotor rightBackDrive = null;
 
     private DcMotorSimple armDrive = null;
+    private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
 
+    /**
+     * The variable to store our instance of the AprilTag processor.
+     */
+    private AprilTagProcessor aprilTag;
+
+    /**
+     * The variable to store our instance of the vision portal.
+     */
+    private VisionPortal visionPortal;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -134,8 +150,12 @@ public class MecanumDrive extends OpMode
             if(!gamepad1.a){
                 armDrive.setPower(0);
             }
+// april tag processing
+        telemetryAprilTag();
 
-
+        // Push telemetry to the Driver Station.
+        telemetry.update();
+        visionPortal.resumeStreaming();
 
         // Send calculated power to wheels
         leftFrontDrive.setPower(leftFrontPower);
@@ -148,11 +168,36 @@ public class MecanumDrive extends OpMode
 
     }
 
+
+
     /*
      * Code to run ONCE after the driver hits STOP
      */
     @Override
     public void stop() {
     }
+    private void telemetryAprilTag() {
 
+        List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+        telemetry.addData("# AprilTags Detected", currentDetections.size());
+
+        // Step through the list of detections and display info for each one.
+        for (AprilTagDetection detection : currentDetections) {
+            if (detection.metadata != null) {
+                telemetry.addLine(String.format("\n==== (ID %d) %s", detection.id, detection.metadata.name));
+                telemetry.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)", detection.ftcPose.x, detection.ftcPose.y, detection.ftcPose.z));
+                telemetry.addLine(String.format("PRY %6.1f %6.1f %6.1f  (deg)", detection.ftcPose.pitch, detection.ftcPose.roll, detection.ftcPose.yaw));
+                telemetry.addLine(String.format("RBE %6.1f %6.1f %6.1f  (inch, deg, deg)", detection.ftcPose.range, detection.ftcPose.bearing, detection.ftcPose.elevation));
+            } else {
+                telemetry.addLine(String.format("\n==== (ID %d) Unknown", detection.id));
+                telemetry.addLine(String.format("Center %6.0f %6.0f   (pixels)", detection.center.x, detection.center.y));
+            }
+        }   // end for() loop
+
+        // Add "key" information to telemetry
+        telemetry.addLine("\nkey:\nXYZ = X (Right), Y (Forward), Z (Up) dist.");
+        telemetry.addLine("PRY = Pitch, Roll & Yaw (XYZ Rotation)");
+        telemetry.addLine("RBE = Range, Bearing & Elevation");
+
+    }   // end method telemetryAprilTag()
 }
