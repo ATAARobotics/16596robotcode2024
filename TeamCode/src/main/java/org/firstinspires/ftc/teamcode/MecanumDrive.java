@@ -79,7 +79,7 @@ public class MecanumDrive extends OpMode {
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
         leftBackDrive = hardwareMap.get(DcMotor.class, "left_back_drive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
-        armDrive = hardwareMap.get(DcMotorSimple.class, "HexMotor");
+        armDrive = hardwareMap.get(DcMotorSimple.class, "HexMotor1");
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
@@ -123,6 +123,7 @@ public class MecanumDrive extends OpMode {
         double drive = gamepad1.left_stick_y * -1.0; // stick down is positive, invert so that up moves forward
         double turn = gamepad1.right_stick_x;
         double strafe = gamepad1.left_stick_x;
+        double arm = gamepad2.left_stick_y;
         double speed_ratio;  // Use this to slow down robot
         // Choose to drive using either Tank Mode, or POV Mode
         // Comment out the method that's not used.  The default below is POV.
@@ -131,6 +132,7 @@ public class MecanumDrive extends OpMode {
         // - This uses basic math to combine motions and is easier to drive straight.
 
         speed_ratio = 0.8;
+        armDriveSpeed = 0.5;
         leftFrontPower = speed_ratio * Range.clip(drive + turn + strafe, -1, 1);
         leftBackPower = speed_ratio * Range.clip(drive + turn - strafe, -1, 1);
         rightFrontPower = speed_ratio * Range.clip(drive - turn - strafe, -1, 1);
@@ -141,13 +143,8 @@ public class MecanumDrive extends OpMode {
  * robot configuration, use the drop down list under 'Servos' to select 'REV SPARK Mini Controller'
                 * and name it 'HexMotor'. */
 
-        armDriveSpeed = 0;
-        if (gamepad1.a) {
-            armDrive.setPower(.5);
-        }
-        if (!gamepad1.a) {
-            armDrive.setPower(0);
-        }
+        armDriveSpeed = .25;
+
 
 
         // Push telemetry to the Driver Station.
@@ -157,7 +154,7 @@ public class MecanumDrive extends OpMode {
         rightFrontDrive.setPower(rightFrontPower);
         leftBackDrive.setPower(leftBackPower);
         rightBackDrive.setPower(rightBackPower);
-
+armDrive.setPower(armDriveSpeed);
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
 
