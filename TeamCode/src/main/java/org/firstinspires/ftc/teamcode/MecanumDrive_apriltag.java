@@ -43,8 +43,9 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
 
-@TeleOp(name="MecanumDrive", group="teleop")
-public class MecanumDrive extends OpMode {
+@TeleOp(name="MecanumDrive_april tag", group="teleop")
+public class MecanumDrive_apriltag extends OpMode
+{
     // Declare OpMode members.
     private final ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftFrontDrive = null;
@@ -55,15 +56,15 @@ public class MecanumDrive extends OpMode {
     private DcMotorSimple armDrive = null;
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
 
-    /*
+    /**
      * The variable to store our instance of the AprilTag processor.
      */
-
+    private AprilTagProcessor aprilTag;
 
     /**
      * The variable to store our instance of the vision portal.
      */
-
+    private VisionPortal visionPortal;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -75,11 +76,11 @@ public class MecanumDrive extends OpMode {
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        leftFrontDrive = hardwareMap.get(DcMotor.class, "left_front_drive");
+        leftFrontDrive  = hardwareMap.get(DcMotor.class, "left_front_drive");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
-        leftBackDrive = hardwareMap.get(DcMotor.class, "left_back_drive");
+        leftBackDrive  = hardwareMap.get(DcMotor.class, "left_back_drive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
-        armDrive = hardwareMap.get(DcMotorSimple.class, "HexMotor");
+        armDrive = hardwareMap.get(DcMotorSimple.class,"HexMotor");
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
@@ -131,7 +132,7 @@ public class MecanumDrive extends OpMode {
         // - This uses basic math to combine motions and is easier to drive straight.
 
         speed_ratio = 0.8;
-        leftFrontPower = speed_ratio * Range.clip(drive + turn + strafe, -1, 1);
+        leftFrontPower = speed_ratio *  Range.clip(drive + turn + strafe, -1, 1);
         leftBackPower = speed_ratio * Range.clip(drive + turn - strafe, -1, 1);
         rightFrontPower = speed_ratio * Range.clip(drive - turn - strafe, -1, 1);
         rightBackPower = speed_ratio * Range.clip(drive - turn + strafe, -1, 1);
@@ -145,13 +146,16 @@ public class MecanumDrive extends OpMode {
         if (gamepad1.a) {
             armDrive.setPower(.5);
         }
-        if (!gamepad1.a) {
-            armDrive.setPower(0);
-        }
-
+            if(!gamepad1.a){
+                armDrive.setPower(0);
+            }
+// april tag processing
+        telemetryAprilTag();
 
         // Push telemetry to the Driver Station.
         telemetry.update();
+        visionPortal.resumeStreaming();
+
         // Send calculated power to wheels
         leftFrontDrive.setPower(leftFrontPower);
         rightFrontDrive.setPower(rightFrontPower);
@@ -164,10 +168,35 @@ public class MecanumDrive extends OpMode {
     }
 
 
+
     /*
      * Code to run ONCE after the driver hits STOP
      */
     @Override
     public void stop() {
     }
+    private void telemetryAprilTag() {
+
+        List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+        telemetry.addData("# AprilTags Detected", currentDetections.size());
+
+        // Step through the list of detections and display info for each one.
+        for (AprilTagDetection detection : currentDetections) {
+            if (detection.metadata != null) {
+                telemetry.addLine(String.format("\n==== (ID %d) %s", detection.id, detection.metadata.name));
+                telemetry.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)", detection.ftcPose.x, detection.ftcPose.y, detection.ftcPose.z));
+                telemetry.addLine(String.format("PRY %6.1f %6.1f %6.1f  (deg)", detection.ftcPose.pitch, detection.ftcPose.roll, detection.ftcPose.yaw));
+                telemetry.addLine(String.format("RBE %6.1f %6.1f %6.1f  (inch, deg, deg)", detection.ftcPose.range, detection.ftcPose.bearing, detection.ftcPose.elevation));
+            } else {
+                telemetry.addLine(String.format("\n==== (ID %d) Unknown", detection.id));
+                telemetry.addLine(String.format("Center %6.0f %6.0f   (pixels)", detection.center.x, detection.center.y));
+            }
+        }   // end for() loop
+
+        // Add "key" information to telemetry
+        telemetry.addLine("\nkey:\nXYZ = X (Right), Y (Forward), Z (Up) dist.");
+        telemetry.addLine("PRY = Pitch, Roll & Yaw (XYZ Rotation)");
+        telemetry.addLine("RBE = Range, Bearing & Elevation");
+
+    }   // end method telemetryAprilTag()
 }
