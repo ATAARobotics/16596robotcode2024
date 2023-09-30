@@ -34,6 +34,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -46,6 +47,9 @@ public class MecanumDrive extends OpMode
     private DcMotor rightFrontDrive = null;
     private DcMotor leftBackDrive = null;
     private DcMotor rightBackDrive = null;
+
+    private DcMotorSimple armDrive = null;
+
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -61,7 +65,7 @@ public class MecanumDrive extends OpMode
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
         leftBackDrive  = hardwareMap.get(DcMotor.class, "left_back_drive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
-
+        armDrive = hardwareMap.get(DcMotorSimple.class,"HexMotor");
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
@@ -101,6 +105,7 @@ public class MecanumDrive extends OpMode
         double rightFrontPower;
         double leftBackPower;
         double rightBackPower;
+        double armDriveSpeed;
         double drive = gamepad1.left_stick_y * -1.0; // stick down is positive, invert so that up moves forward
         double turn = gamepad1.right_stick_x;
         double strafe = gamepad1.left_stick_x;
@@ -115,6 +120,19 @@ public class MecanumDrive extends OpMode
         leftBackPower = Range.clip(drive + turn - strafe, -1, 1);
         rightFrontPower = Range.clip(drive - turn - strafe, -1, 1);
         rightBackPower = Range.clip(drive - turn + strafe, -1, 1);
+
+/* simple test of sparkmini - A button to turn motor on for testing
+        On the
+ * robot configuration, use the drop down list under 'Servos' to select 'REV SPARK Mini Controller'
+                * and name it 'HexMotor'. */
+
+        armDriveSpeed = 0;
+        if (gamepad1.a) {
+            armDrive.setPower(.5);
+        }
+            if(!gamepad1.a){
+                armDrive.setPower(0);
+            }
 
 
 
