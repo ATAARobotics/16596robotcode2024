@@ -26,7 +26,6 @@ public class readArmPosition1 extends OpMode
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
     }
-
     @Override
     public void loop() {
             double arm1Encoder= Arm1.getCurrentPosition();
