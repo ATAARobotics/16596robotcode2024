@@ -116,6 +116,7 @@ public class Drive_Camera extends OpMode
         double drive = gamepad1.left_stick_y * -1;
         double turn = gamepad1.right_stick_x;
         double strafe = gamepad1.left_stick_x;
+
         // Choose to drive using either Tank Mode, or POV Mode
         // Comment out the method that's not used.  The default below is POV.
 
@@ -123,7 +124,7 @@ public class Drive_Camera extends OpMode
         // - This uses basic math to combine motions and is easier to drive straight.
         drive = gamepad1.left_stick_y * -1;
         turn = gamepad1.right_stick_x;
-        strafe = gamepad1.left_stick_x;
+        strafe = gamepad1.left_stick_x *-1;  // confirm this is needed in next test
 
         leftFrontPower = Range.clip(drive + turn + strafe, -1, 1);
         leftBackPower = Range.clip(drive + turn - strafe, -1, 1);

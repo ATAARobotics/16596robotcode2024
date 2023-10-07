@@ -55,19 +55,7 @@ public class MecanumDrive extends OpMode {
     private DcMotorSimple armDrive = null;
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
 
-    /*
-     * The variable to store our instance of the AprilTag processor.
-     */
 
-
-    /**
-     * The variable to store our instance of the vision portal.
-     */
-
-
-    /*
-     * Code to run ONCE when the driver hits INIT
-     */
     @Override
     public void init() {
         telemetry.addData("Status", "Initialized");

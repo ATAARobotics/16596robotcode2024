@@ -33,6 +33,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -53,7 +54,7 @@ public class MecanumDrive_apriltag extends OpMode
     private DcMotor leftBackDrive = null;
     private DcMotor rightBackDrive = null;
 
-    private DcMotorSimple armDrive = null;
+    private DcMotorSimple armDrive = null; // HexMotor on arm; may have to add another
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
 
     /**
@@ -75,12 +76,12 @@ public class MecanumDrive_apriltag extends OpMode
 
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
-        // step (using the FTC Robot Controller app on the phone).
+        // IMPORTANT:  use DcMotorEx.class to enable
         leftFrontDrive  = hardwareMap.get(DcMotor.class, "left_front_drive");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
         leftBackDrive  = hardwareMap.get(DcMotor.class, "left_back_drive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
-        armDrive = hardwareMap.get(DcMotorSimple.class,"HexMotor");
+       // need to add this to expansion hub  armDrive = hardwareMap.get(DcMotor.class,"HexMotor");
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
@@ -88,6 +89,7 @@ public class MecanumDrive_apriltag extends OpMode
         // NOTE: reconfirm directions after gear ratio repaired and wheels mounted correctly!
 
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         leftBackDrive.setDirection(DcMotorSimple.Direction.REVERSE);
         rightBackDrive.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -120,11 +122,14 @@ public class MecanumDrive_apriltag extends OpMode
         double rightFrontPower;
         double leftBackPower;
         double rightBackPower;
-        double armDriveSpeed;
+        double armDriveSpeed; // fixed speed for arm, not by operator
+        double armAngle;
         double drive = gamepad1.left_stick_y * -1.0; // stick down is positive, invert so that up moves forward
         double turn = gamepad1.right_stick_x;
         double strafe = gamepad1.left_stick_x;
-        double speed_ratio;  // Use this to slow down robot
+        double speed_ratio;  // Use this to adjust max robot speed
+
+
         // Choose to drive using either Tank Mode, or POV Mode
         // Comment out the method that's not used.  The default below is POV.
 
@@ -137,18 +142,19 @@ public class MecanumDrive_apriltag extends OpMode
         rightFrontPower = speed_ratio * Range.clip(drive - turn - strafe, -1, 1);
         rightBackPower = speed_ratio * Range.clip(drive - turn + strafe, -1, 1);
 
-/* simple test of sparkmini - A button to turn motor on for testing
+/* simple test of sparkmini - A button to turn otor on for testing
         On the
  * robot configuration, use the drop down list under 'Servos' to select 'REV SPARK Mini Controller'
                 * and name it 'HexMotor'. */
 
-        armDriveSpeed = 0;
-        if (gamepad1.a) {
-            armDrive.setPower(.5);
-        }
-            if(!gamepad1.a){
-                armDrive.setPower(0);
-            }
+        armDriveSpeed = .25;
+        // value from Hex motor encoder.... Oct 5: can't read encoder if motor is powered from SparkMini....
+        // Need to either add Hub expansion OR plug encoder into an existing motor port and NOT use the motor encoder but rather that Hex core!
+        //
+
+// insert code here to move arm to preset position based on buttons. Need to get telemetry
+        // and move by hand to get angle positions
+
 // april tag processing
         telemetryAprilTag();
 
