@@ -131,7 +131,6 @@ public class MecanumDrive extends OpMode {
  * robot configuration, use the drop down list under 'Servos' to select 'REV SPARK Mini Controller'
                 * and name it 'HexMotor'. */
 
-        armDriveSpeed = .25;
 
 
 
