@@ -58,7 +58,7 @@ import java.util.Locale;
  */
 
 @TeleOp(name = "CameraCalibration", group = "Utility")
-
+@Disabled
 public class CameraCalibration extends LinearOpMode
 {
     /*

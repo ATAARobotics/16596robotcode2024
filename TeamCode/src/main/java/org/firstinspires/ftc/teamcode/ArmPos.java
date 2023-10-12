@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -7,19 +8,20 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 @TeleOp(name="ArmPos", group="")
-
+@Disabled
 public class ArmPos extends OpMode
 {
 
     private DcMotor Arm1 = null;
     @Override
+
     public void init() {
         telemetry.addData("Status", "Initialized");
 
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        Arm1  = hardwareMap.get(DcMotor .class,"Arm");
+        Arm1  = hardwareMap.get(DcMotor .class,"Arm1");
 
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
