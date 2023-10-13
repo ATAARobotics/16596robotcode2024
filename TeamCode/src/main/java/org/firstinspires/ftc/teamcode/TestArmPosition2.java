@@ -10,7 +10,7 @@ public class TestArmPosition2 extends OpMode
 {
     // Declare OpMode members.
     private DcMotor arm1 = null;
-
+    int armPosition = 0;
     @Override
     public void init() {
         telemetry.addData("Status", "Initialized");
@@ -35,14 +35,30 @@ public class TestArmPosition2 extends OpMode
     public void loop() {
         double arm1Encoder= arm1.getCurrentPosition();
         double leftStickValue1= gamepad1.left_stick_y;
+/* put button action on hold for simple driving of arm with joystick for testing
+        //  arm angle in degrees
+        //set up buttons for changing position
+        // =======================================
+        if (gamepad2.a) {
+            armPosition = 0;
+        }
+        if (gamepad2.b) {
+            armPosition = 55;
+        }
+        if (gamepad2.y) {
+            armPosition = 95;
+        }
 
-        int armPosition = 45;                           // arm angle in degrees
-        // set up buttons for changing position
+         // =====================================
+        // Move arm to preset position:
+
         arm1.setTargetPosition(armPosition);            // set target angle
         arm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);  // motor will go to position
         arm1.setPower(0.65);                              // set motor speed
-
+*/
         double leftStickValue2= gamepad2.left_stick_y;
+        arm1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        arm1.setPower(0.6* gamepad2.left_stick_y);
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Motors", "left (%.2f)", arm1Encoder);

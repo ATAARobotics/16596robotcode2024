@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode;
 
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -46,6 +47,7 @@ import java.util.List;
 
 
 @TeleOp(name="MecanumDrive_april tag", group="teleop")
+@Disabled
 public class MecanumDrive_apriltag extends OpMode
 {
     // Declare OpMode members.
