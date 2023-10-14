@@ -59,7 +59,8 @@ public class TestArmPosition2 extends OpMode
 */
         double leftStickValue2= gamepad2.left_stick_y;
         arm1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        arm1.setPower(0.6* gamepad2.left_stick_y);
+
+        arm1.setPower(- gamepad2.left_stick_y);
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Motors", "left (%.2f)", arm1Encoder);
