@@ -74,12 +74,14 @@ public class TestArmPosition2 extends OpMode
         if(gamepad2.right_bumper){              //Close finger
             finger.setPosition(0);
         }
-        while(gamepad2.left_trigger){           //Rotate Wrist Clockwise
-            wrist.
+        while(gamepad2.left_trigger >0){           //Rotate Wrist Clockwise
+            wrist.setPosition(0);
         }
-        while(gamepad2.right_trigger){          //Rotate Wrist Counter Clockwise
-            wrist.
+        wrist.setPosition(0.5);                 //Stop Servos
+        while(gamepad2.right_trigger >0){          //Rotate Wrist Counter Clockwise
+        wrist.setPosition(1);
         }
+        wrist.setPosition(0.5);                 //Stop Servos
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Motors", "left (%.2f)", arm1Encoder);
