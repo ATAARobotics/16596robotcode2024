@@ -34,7 +34,7 @@ public class TestArmPosition2 extends OpMode
     @Override
     public void loop() {
         double arm1Encoder= arm1.getCurrentPosition();
-        double leftStickValue1= gam9epad1.left_stick_y;
+        double leftStickValue1= gamepad1.left_stick_y;
 /* put button action on hold for simple driving of arm with joystick for testing
         //  arm angle in degrees
         //set up buttons for changing position
