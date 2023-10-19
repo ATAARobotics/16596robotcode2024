@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name="TestArmPosition2", group="")
 
@@ -10,6 +11,9 @@ public class TestArmPosition2 extends OpMode
 {
     // Declare OpMode members.
     private DcMotor arm1 = null;
+    private Servo finger;
+    private Servo wrist;
+    private Servo drone;
     int armPosition = 0;
     @Override
     public void init() {
@@ -19,6 +23,9 @@ public class TestArmPosition2 extends OpMode
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
         arm1  = hardwareMap.get(DcMotor.class, "Arm1");
+        finger= hardwareMap.get(Servo.class,"Finger");
+        wrist = hardwareMap.get(Servo.class, "Wrist");
+        drone = hardwareMap.get(Servo.class, "Drone");
         arm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); // set encoder to 0
 
 
@@ -62,9 +69,26 @@ public class TestArmPosition2 extends OpMode
 
         arm1.setPower(- gamepad2.left_stick_y);
 
+        //Servo controls
+        if(gamepad2.left_bumper){              //Open finger
+            finger.setPosition(.5);
+        }
+        if(gamepad2.right_bumper){              //Close finger
+            finger.setPosition(0);
+        }
+        while(gamepad2.left_trigger >0){           //Rotate Wrist Clockwise
+            wrist.setPosition(0);
+        }
+        wrist.setPosition(0.5);                 //Stop Servos
+        while(gamepad2.right_trigger >0){          //Rotate Wrist Counter Clockwise
+        wrist.setPosition(1);
+        }
+        wrist.setPosition(0.5);                 //Stop Servos
+
         // Show the elapsed game time and wheel power.
         telemetry.addData("Motors", "left (%.2f)", arm1Encoder);
         telemetry.addData("Controllers", "left (%.2f)", leftStickValue1);
         telemetry.addData("Controllers", "left (%.2f)", leftStickValue2);
+        //Servo methods
     }
 }
