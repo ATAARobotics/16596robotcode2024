@@ -141,7 +141,7 @@ public class MecanumDrive extends OpMode {
         rightFrontDrive.setPower(rightFrontPower);
         leftBackDrive.setPower(leftBackPower);
         rightBackDrive.setPower(rightBackPower);
-armDrive.setPower(armDriveSpeed);
+        armDrive.setPower(armDriveSpeed);
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
 
