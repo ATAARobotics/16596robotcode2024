@@ -1,6 +1,20 @@
 package org.firstinspires.ftc.teamcode;
 
+/*
+ServoEx servo = new SimpleServo(
+    hardwareMap, "servo_name", MIN_ANGLE, MAX_ANGLE
+);
+To turn to positions and angles, utilize the following methods:
+turnToAngle: sets the absolute angle of the servo
+rotateByAngle: turns the servo a number of angle units relative to the current angle
+rotateBy: turns the servo a relative positional distance from the current position
+setPosition: set the absolute position of the servo (from 0 to 1)
+
+*/
+
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.hardware.ServoEx;
+import com.arcrobotics.ftclib.hardware.SimpleServo;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -13,10 +27,16 @@ public class OpMode_comp extends OpMode
 {
     // Declare OpMode members.
     private Motor arm1 = null;
-    private Servo finger;
-    private Servo wrist;
-    private Servo drone;
+    ServoEx finger = null;
+    ServoEx wrist = null;
+    ServoEx drone = null;
+
+    /*
+
+
+    */
     int armPosition = 0;
+     */
     public GamepadEx driver = null;
     public GamepadEx operator = null;
     @Override
@@ -28,9 +48,16 @@ public class OpMode_comp extends OpMode
         // step (using the FTC Robot Controller app on the phone).
         //arm1  = hardwareMap.get(DcMotor.class, "Arm1");
         arm1 = new Motor(hardwareMap,"Arm1");
-        finger= hardwareMap.get(Servo.class,"Finger");
-        wrist = hardwareMap.get(Servo.class, "Wrist");
-        drone = hardwareMap.get(Servo.class, "Drone");
+        private ServoEx finger = new SimpleServo(
+                hardwareMap,"Finger",25,100
+        );
+        private ServoEx wrist = new SimpleServo(
+                hardwareMap,"Wrist",25,100
+        );
+        private ServoEx drone = new SimpleServo(
+                hardwareMap,"Drone",25,100
+        );
+
         arm1.resetEncoder(); // set encoder to 0
 
        driver = new GamepadEx(gamepad1);
