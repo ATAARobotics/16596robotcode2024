@@ -142,7 +142,7 @@ public class DriveTrain extends OpMode {
         double turn = 0;  // set up 'turn' variable
         double armSpeed = operator.getLeftY();
         double speed_ratio = 0.8;  // Use this to slow down robot
-        double armDriveRatio = 0.5 // use this to slow down arm
+        double armDriveRatio = 0.5; // use this to slow down arm
 
 
         // tell ftclib its inputs  strafeSpeed,forwardSpeed,turn,heading
@@ -156,12 +156,7 @@ public class DriveTrain extends OpMode {
 
         armMotors.set(armDriveRatio * armSpeed);  // calculate final arm speed to send
 
-
-
-
-
-
-        // Show the elapsed game time and wheel power.
+        // Show the elapsed game time and arm position.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.addData("arm position:",armMotors.getCurrentPosition());
         // Push telemetry to the Driver Station.
