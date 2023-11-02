@@ -29,34 +29,37 @@
 
 package org.firstinspires.ftc.teamcode;
 
-// TEST; DID THIS SHOW UP ON "PROJECT UPDATE"??
+import com.arcrobotics.ftclib.drivebase.MecanumDrive;
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
-import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
-import java.util.List;
-
-@TeleOp(name="MecanumDrive", group="teleop")
-public class MecanumDrive extends OpMode {
+@TeleOp(name="DriveTrain", group="teleop")
+public class DriveTrain extends OpMode {
     // Declare OpMode members.
+    public GamepadEx driver = null;
+    public GamepadEx operator = null;
+
+    MecanumDrive drivebase = null;
+
     private final ElapsedTime runtime = new ElapsedTime();
     private Motor leftFrontDrive = null;
     private Motor rightFrontDrive = null;
     private Motor leftBackDrive = null;
     private Motor rightBackDrive = null;
-    MecanumDrive drivebase = null;
+
     private Motor armDrive1 = null;
     private Motor armDrive2 = null;
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
-
+    private IMU imu;// BHI260AP imu on this hub
 
     @Override
     public void init() {
@@ -64,32 +67,38 @@ public class MecanumDrive extends OpMode {
 
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
-        // step (using the FTC Robot Controller app on the phone).
+        // step (using the FTC Robot Controller app on the phone/driver station).
        //
         leftFrontDrive = new Motor(hardwareMap, "left_front_drive");
         rightFrontDrive = new Motor(hardwareMap, "right_front_drive");
         leftBackDrive = new Motor(hardwareMap, "left_back_drive");
         rightBackDrive = new Motor(hardwareMap, "roght_back_drive");
 
+        driver = new GamepadEx(gamepad1);
+        operator = new GamepadEx(gamepad2);
 
-       /* leftFrontDrive = hardwareMap.get(DcMotor.class, "left_front_drive");
-        rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
-        leftBackDrive = hardwareMap.get(DcMotor.class, "left_back_drive");
-        rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
-        armDrive = hardwareMap.get(DcMotorSimple.class, "HexMotor1");
-*/
+
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
         // NOTE: reconfirm directions after gear ratio repaired and wheels mounted correctly!
 
-        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        leftBackDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightBackDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        imu = hardwareMap.get(IMU.class, "imu");// need to use IMU in expansion hub, not control hub
+        // need to confirm orientation of the HUB so that IMU directions are correct
+
+        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
+        RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.FORWARD;
+
+        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
+
+        MecanumDrive drivebase = new MecanumDrive(
+                leftFrontDrive,
+                rightFrontDrive,
+                leftBackDrive,
+                rightBackDrive
+        );
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
-        drivebase = new MecanumDrive(leftFrontDrive,rightFrontDrive,leftBackDrive,rightBackDrive);
     }
 
     /*
@@ -104,6 +113,7 @@ public class MecanumDrive extends OpMode {
      */
     @Override
     public void start() {
+        imu.resetYaw();
         runtime.reset();
     }
 
@@ -118,11 +128,23 @@ public class MecanumDrive extends OpMode {
         double leftBackPower;
         double rightBackPower;
         double armDriveSpeed;
-        double drive = gamepad1.left_stick_y * -1.0; // stick down is positive, invert so that up moves forward
-        double turn = gamepad1.right_stick_x;
-        double strafe = gamepad1.left_stick_x;
-        double arm = gamepad2.left_stick_y;
+
+        driver.readButtons();  // enable 'was just pressed' methods
+        YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
+        double heading = orientation.getYaw(AngleUnit.DEGREES);
+        double turn = 0;  // set up 'turn' variable
+
+        // tell ftclib its inputs  strafeSpeed,forwardSpeed,turn,heading
+        drivebase.driveFieldCentric(
+                driver.getLeftX(),
+                -driver.getLeftY(),
+                driver.getRightX()
+                heading
+        );
+
+        double arm = operator.getLeftY();
         double speed_ratio;  // Use this to slow down robot
+
         // Choose to drive using either Tank Mode, or POV Mode
         // Comment out the method that's not used.  The default below is POV.
 
@@ -135,13 +157,6 @@ public class MecanumDrive extends OpMode {
         leftBackPower = speed_ratio * Range.clip(drive + turn - strafe, -1, 1);
         rightFrontPower = speed_ratio * Range.clip(drive - turn - strafe, -1, 1);
         rightBackPower = speed_ratio * Range.clip(drive - turn + strafe, -1, 1);
-
-/* simple test of sparkmini - A button to turn motor on for testing
-        On the
- * robot configuration, use the drop down list under 'Servos' to select 'REV SPARK Mini Controller'
-                * and name it 'HexMotor'. */
-
-
 
 
         // Push telemetry to the Driver Station.
