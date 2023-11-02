@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
+import com.arcrobotics.ftclib.hardware.motors.MotorGroup;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -56,8 +57,9 @@ public class DriveTrain extends OpMode {
     private Motor leftBackDrive = null;
     private Motor rightBackDrive = null;
 
-    private Motor armDrive1 = null;
-    private Motor armDrive2 = null;
+    private Motor arm1 = null;
+    private Motor arm2 = null;
+    private MotorGroup armMotors = null;
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
     private IMU imu;// BHI260AP imu on this hub
 
@@ -72,7 +74,12 @@ public class DriveTrain extends OpMode {
         leftFrontDrive = new Motor(hardwareMap, "left_front_drive");
         rightFrontDrive = new Motor(hardwareMap, "right_front_drive");
         leftBackDrive = new Motor(hardwareMap, "left_back_drive");
-        rightBackDrive = new Motor(hardwareMap, "roght_back_drive");
+        rightBackDrive = new Motor(hardwareMap, "right_back_drive");
+        arm1 = new Motor(hardwareMap,"Arm1");
+        arm2 = new Motor(hardwareMap,"Arm2");
+
+        // set up arm motors for master/slave
+        MotorGroup armMotors = new MotorGroup(arm1,arm2);
 
         driver = new GamepadEx(gamepad1);
         operator = new GamepadEx(gamepad2);
@@ -133,43 +140,32 @@ public class DriveTrain extends OpMode {
         YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
         double heading = orientation.getYaw(AngleUnit.DEGREES);
         double turn = 0;  // set up 'turn' variable
+        double armSpeed = operator.getLeftY();
+        double speed_ratio = 0.8;  // Use this to slow down robot
+        double armDriveRatio = 0.5 // use this to slow down arm
+
 
         // tell ftclib its inputs  strafeSpeed,forwardSpeed,turn,heading
         drivebase.driveFieldCentric(
-                driver.getLeftX(),
-                -driver.getLeftY(),
-                driver.getRightX()
+                driver.getLeftX() * speed_ratio,
+                -driver.getLeftY()* speed_ratio,
+                driver.getRightX()* speed_ratio,
                 heading
         );
+        // move the arm:
 
-        double arm = operator.getLeftY();
-        double speed_ratio;  // Use this to slow down robot
-
-        // Choose to drive using either Tank Mode, or POV Mode
-        // Comment out the method that's not used.  The default below is POV.
-
-        // POV Mode uses left stick to go forward, and right stick to turn.
-        // - This uses basic math to combine motions and is easier to drive straight.
-
-        speed_ratio = 0.8;
-        armDriveSpeed = 0.5;
-        leftFrontPower = speed_ratio * Range.clip(drive + turn + strafe, -1, 1);
-        leftBackPower = speed_ratio * Range.clip(drive + turn - strafe, -1, 1);
-        rightFrontPower = speed_ratio * Range.clip(drive - turn - strafe, -1, 1);
-        rightBackPower = speed_ratio * Range.clip(drive - turn + strafe, -1, 1);
+        armMotors.set(armDriveRatio * armSpeed);  // calculate final arm speed to send
 
 
-        // Push telemetry to the Driver Station.
-        telemetry.update();
-        // Send calculated power to wheels
-        leftFrontDrive.setPower(leftFrontPower);
-        rightFrontDrive.setPower(rightFrontPower);
-        leftBackDrive.setPower(leftBackPower);
-        rightBackDrive.setPower(rightBackPower);
-        armDrive.setPower(armDriveSpeed);
+
+
+
+
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
-
+        telemetry.addData("arm position:",armMotors.getCurrentPosition());
+        // Push telemetry to the Driver Station.
+        telemetry.update();
     }
 
 
