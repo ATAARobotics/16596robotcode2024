@@ -31,12 +31,16 @@ package org.firstinspires.ftc.teamcode;
 
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.arcrobotics.ftclib.hardware.ServoEx;
+import com.arcrobotics.ftclib.hardware.SimpleServo;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -45,6 +49,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
 @TeleOp(name="DriveTrain", group="teleop")
 public class DriveTrain extends OpMode {
+    private static final double MIN_ANGLE = 0 ;
+    private static final double MAX_ANGLE = 90;
     // Declare OpMode members.
     public GamepadEx driver = null;
     public GamepadEx operator = null;
@@ -56,13 +62,12 @@ public class DriveTrain extends OpMode {
     private Motor rightFrontDrive = null;
     private Motor leftBackDrive = null;
     private Motor rightBackDrive = null;
-/* temporarily comment out everything except drive train
-    private Motor arm1 = null;
-    private Motor arm2 = null;
-    private MotorGroup armMotors = null;
-    private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
+    private SimpleServo finger;
+    private SimpleServo wrist;
+    private SimpleServo drone;
 
- */
+
+
     private IMU imu;// BHI260AP imu on this hub
 private boolean test = false;
     private RevHubOrientationOnRobot orientationOnRobot;
@@ -84,11 +89,19 @@ private boolean test = false;
      //   arm1 = new Motor(hardwareMap,"Arm1");
      //   arm2 = new Motor(hardwareMap,"Arm2");
 
+        //ServoEx finger = hardwareMap.get(Servo.class,"finger");
+      //  wrist = hardwareMap.get(Servo.class,"wrist");
+      //  drone = hardwareMap.get(Servo.class,"drone");
+
         // set up arm motors for master/slave
         //MotorGroup armMotors = new MotorGroup(arm1,arm2);
 
         driver = new GamepadEx(gamepad1);
         operator = new GamepadEx(gamepad2);
+        ServoEx finger = new SimpleServo(
+                hardwareMap, "finger", MIN_ANGLE, MAX_ANGLE
+        );
+
 
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
@@ -136,6 +149,7 @@ private boolean test = false;
     @Override
     public void loop() {
       this.init();
+        driver.readButtons();
         // Setup a variable for each drive wheel to save power level for telemetry
         double leftFrontPower;
         double rightFrontPower;
@@ -164,6 +178,14 @@ double turnSpeed=driver.getRightX()* speed_ratio;
         // move the arm:
 
         //armMotors.set(armDriveRatio * armSpeed);  // calculate final arm speed to send
+
+        // temporary code to move finger
+        if (driver.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
+            finger.turnToAngle(MIN_ANGLE);
+        } else if (driver.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)){
+                finger.turnToAngle(MAX_ANGLE);
+        }
+
 
         // Show the elapsed game time and arm position.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
