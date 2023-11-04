@@ -56,15 +56,21 @@ public class DriveTrain extends OpMode {
     private Motor rightFrontDrive = null;
     private Motor leftBackDrive = null;
     private Motor rightBackDrive = null;
-
+/* temporarily comment out everything except drive train
     private Motor arm1 = null;
     private Motor arm2 = null;
     private MotorGroup armMotors = null;
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
+
+ */
     private IMU imu;// BHI260AP imu on this hub
+private boolean test = false;
+    private RevHubOrientationOnRobot orientationOnRobot;
 
     @Override
     public void init() {
+      if (test ){return;}
+      test = true;
         telemetry.addData("Status", "Initialized");
 
         // Initialize the hardware variables. Note that the strings used here as parameters
@@ -75,11 +81,11 @@ public class DriveTrain extends OpMode {
         rightFrontDrive = new Motor(hardwareMap, "right_front_drive");
         leftBackDrive = new Motor(hardwareMap, "left_back_drive");
         rightBackDrive = new Motor(hardwareMap, "right_back_drive");
-        arm1 = new Motor(hardwareMap,"Arm1");
-        arm2 = new Motor(hardwareMap,"Arm2");
+     //   arm1 = new Motor(hardwareMap,"Arm1");
+     //   arm2 = new Motor(hardwareMap,"Arm2");
 
         // set up arm motors for master/slave
-        MotorGroup armMotors = new MotorGroup(arm1,arm2);
+        //MotorGroup armMotors = new MotorGroup(arm1,arm2);
 
         driver = new GamepadEx(gamepad1);
         operator = new GamepadEx(gamepad2);
@@ -96,9 +102,9 @@ public class DriveTrain extends OpMode {
         RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
         RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.FORWARD;
 
-        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
+        orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
 
-        MecanumDrive drivebase = new MecanumDrive(
+        drivebase = new MecanumDrive(
                 leftFrontDrive,
                 rightFrontDrive,
                 leftBackDrive,
@@ -129,6 +135,7 @@ public class DriveTrain extends OpMode {
      */
     @Override
     public void loop() {
+      this.init();
         // Setup a variable for each drive wheel to save power level for telemetry
         double leftFrontPower;
         double rightFrontPower;
@@ -143,22 +150,25 @@ public class DriveTrain extends OpMode {
         double armSpeed = operator.getLeftY();
         double speed_ratio = 0.8;  // Use this to slow down robot
         double armDriveRatio = 0.5; // use this to slow down arm
-
+double strafeSpeed=driver.getLeftX() * speed_ratio;
+double forwardSpeed=-driver.getLeftY()* speed_ratio;
+double turnSpeed=driver.getRightX()* speed_ratio;
 
         // tell ftclib its inputs  strafeSpeed,forwardSpeed,turn,heading
         drivebase.driveFieldCentric(
-                driver.getLeftX() * speed_ratio,
-                -driver.getLeftY()* speed_ratio,
-                driver.getRightX()* speed_ratio,
+                strafeSpeed,
+                forwardSpeed,
+                turnSpeed,
                 heading
         );
         // move the arm:
 
-        armMotors.set(armDriveRatio * armSpeed);  // calculate final arm speed to send
+        //armMotors.set(armDriveRatio * armSpeed);  // calculate final arm speed to send
 
         // Show the elapsed game time and arm position.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.addData("arm position:",armMotors.getCurrentPosition());
+        //telemetry.addData("arm position:",armMotors.getCurrentPosition());
+        telemetry.addData("heading",heading);
         // Push telemetry to the Driver Station.
         telemetry.update();
     }

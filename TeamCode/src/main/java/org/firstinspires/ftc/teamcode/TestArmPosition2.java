@@ -65,7 +65,7 @@ public class TestArmPosition2 extends OpMode
 
 
         armMotors.set(-.9* armSpeed);
-        telemetry.addData("Arm Position:", arm1Encoder);
+        telemetry.addData("Arm Position:", armEncoder);
 
 
     }

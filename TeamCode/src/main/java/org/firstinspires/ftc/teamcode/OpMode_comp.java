@@ -36,7 +36,7 @@ public class OpMode_comp extends OpMode
 
     */
     int armPosition = 0;
-     */
+
     public GamepadEx driver = null;
     public GamepadEx operator = null;
     @Override
@@ -48,13 +48,13 @@ public class OpMode_comp extends OpMode
         // step (using the FTC Robot Controller app on the phone).
         //arm1  = hardwareMap.get(DcMotor.class, "Arm1");
         arm1 = new Motor(hardwareMap,"Arm1");
-        private ServoEx finger = new SimpleServo(
+         ServoEx finger = new SimpleServo(
                 hardwareMap,"Finger",25,100
         );
-        private ServoEx wrist = new SimpleServo(
+         ServoEx wrist = new SimpleServo(
                 hardwareMap,"Wrist",25,100
         );
-        private ServoEx drone = new SimpleServo(
+         ServoEx drone = new SimpleServo(
                 hardwareMap,"Drone",25,100
         );
 
