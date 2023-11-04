@@ -1,3 +1,4 @@
+
 /* Copyright (c) 2017 FIRST. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -48,7 +49,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
 @TeleOp(name="DriveTrain", group="teleop")
-public class DriveTrain extends OpMode {
+public class practiceBOT extends OpMode {
     private static final double MIN_ANGLE = 0 ;
     private static final double MAX_ANGLE = 90;
     // Declare OpMode members.
@@ -65,44 +66,32 @@ public class DriveTrain extends OpMode {
     private SimpleServo finger;
     private SimpleServo wrist;
     private SimpleServo drone;
-
-
-
     private IMU imu;// BHI260AP imu on this hub
-private boolean test = false;
+    private boolean test = false;
     private RevHubOrientationOnRobot orientationOnRobot;
 
     @Override
     public void init() {
-      if (test ){return;}
-      test = true;
-      telemetry.addData("Status", "Initialized");
+        if (test ){return;}
+        test = true;
+        telemetry.addData("Status", "Initialized");
 
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone/driver station).
-       //
+        //
         leftFrontDrive = new Motor(hardwareMap, "left_front_drive");
         rightFrontDrive = new Motor(hardwareMap, "right_front_drive");
         leftBackDrive = new Motor(hardwareMap, "left_back_drive");
         rightBackDrive = new Motor(hardwareMap, "right_back_drive");
-     //   arm1 = new Motor(hardwareMap,"Arm1");
-     //   arm2 = new Motor(hardwareMap,"Arm2");
-
-        //ServoEx finger = hardwareMap.get(Servo.class,"finger");
-      //  wrist = hardwareMap.get(Servo.class,"wrist");
-      //  drone = hardwareMap.get(Servo.class,"drone");
+        //   arm1 = new Motor(hardwareMap,"Arm1");
+        //   arm2 = new Motor(hardwareMap,"Arm2");
 
         // set up arm motors for master/slave
         //MotorGroup armMotors = new MotorGroup(arm1,arm2);
 
         driver = new GamepadEx(gamepad1);
         operator = new GamepadEx(gamepad2);
-        ServoEx finger = new SimpleServo(
-                hardwareMap, "finger", MIN_ANGLE, MAX_ANGLE
-        );
-
-
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
@@ -148,7 +137,7 @@ private boolean test = false;
      */
     @Override
     public void loop() {
-      this.init();
+        this.init();
         driver.readButtons();
         // Setup a variable for each drive wheel to save power level for telemetry
         double leftFrontPower;
@@ -164,9 +153,10 @@ private boolean test = false;
         double armSpeed = operator.getLeftY();
         double speed_ratio = 0.8;  // Use this to slow down robot
         double armDriveRatio = 0.5; // use this to slow down arm
-double strafeSpeed=driver.getLeftX() * speed_ratio;
-double forwardSpeed=driver.getLeftY()* speed_ratio;
-double turnSpeed=driver.getRightX()* speed_ratio;
+
+        double strafeSpeed=driver.getLeftX() * speed_ratio;
+        double forwardSpeed=driver.getLeftY()* speed_ratio;
+        double turnSpeed=driver.getRightX()* speed_ratio;
 
         // tell ftclib its inputs  strafeSpeed,forwardSpeed,turn,heading
         drivebase.driveFieldCentric(
@@ -179,13 +169,13 @@ double turnSpeed=driver.getRightX()* speed_ratio;
 
         //armMotors.set(armDriveRatio * armSpeed);  // calculate final arm speed to send
 
-        // temporary code to move finger
+        /* temporary code to move finger
         if (driver.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
             finger.turnToAngle(MIN_ANGLE);
         } else if (driver.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)){
-                finger.turnToAngle(MAX_ANGLE);
+            finger.turnToAngle(MAX_ANGLE);
         }
-
+*/
 
         // Show the elapsed game time and arm position.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
