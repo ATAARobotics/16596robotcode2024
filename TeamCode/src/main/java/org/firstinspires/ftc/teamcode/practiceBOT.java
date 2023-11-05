@@ -48,7 +48,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
-@TeleOp(name="DriveTrain", group="teleop")
+@TeleOp(name="DriveTrainPracticeBOT", group="teleop")
 public class practiceBOT extends OpMode {
     private static final double MIN_ANGLE = 0 ;
     private static final double MAX_ANGLE = 90;
@@ -63,9 +63,12 @@ public class practiceBOT extends OpMode {
     private Motor rightFrontDrive = null;
     private Motor leftBackDrive = null;
     private Motor rightBackDrive = null;
+   /* no servos on practice BOT .... yet
     private SimpleServo finger;
     private SimpleServo wrist;
     private SimpleServo drone;
+    */
+
     private IMU imu;// BHI260AP imu on this hub
     private boolean test = false;
     private RevHubOrientationOnRobot orientationOnRobot;
@@ -84,19 +87,10 @@ public class practiceBOT extends OpMode {
         rightFrontDrive = new Motor(hardwareMap, "right_front_drive");
         leftBackDrive = new Motor(hardwareMap, "left_back_drive");
         rightBackDrive = new Motor(hardwareMap, "right_back_drive");
-        //   arm1 = new Motor(hardwareMap,"Arm1");
-        //   arm2 = new Motor(hardwareMap,"Arm2");
-
-        // set up arm motors for master/slave
-        //MotorGroup armMotors = new MotorGroup(arm1,arm2);
 
         driver = new GamepadEx(gamepad1);
         operator = new GamepadEx(gamepad2);
 
-        // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
-        // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
-        // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
-        // NOTE: reconfirm directions after gear ratio repaired and wheels mounted correctly!
 
         imu = hardwareMap.get(IMU.class, "imu");// need to use IMU in expansion hub, not control hub
         // need to confirm orientation of the HUB so that IMU directions are correct
@@ -150,9 +144,9 @@ public class practiceBOT extends OpMode {
         YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
         double heading = orientation.getYaw(AngleUnit.DEGREES);
         double turn = 0;  // set up 'turn' variable
-        double armSpeed = operator.getLeftY();
+        //double armSpeed = operator.getLeftY();
         double speed_ratio = 0.8;  // Use this to slow down robot
-        double armDriveRatio = 0.5; // use this to slow down arm
+        //double armDriveRatio = 0.5; // use this to slow down arm
 
         double strafeSpeed=driver.getLeftX() * speed_ratio;
         double forwardSpeed=driver.getLeftY()* speed_ratio;
@@ -165,17 +159,7 @@ public class practiceBOT extends OpMode {
                 turnSpeed,
                 heading
         );
-        // move the arm:
 
-        //armMotors.set(armDriveRatio * armSpeed);  // calculate final arm speed to send
-
-        /* temporary code to move finger
-        if (driver.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
-            finger.turnToAngle(MIN_ANGLE);
-        } else if (driver.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)){
-            finger.turnToAngle(MAX_ANGLE);
-        }
-*/
 
         // Show the elapsed game time and arm position.
         telemetry.addData("Status", "Run Time: " + runtime.toString());

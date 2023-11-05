@@ -29,32 +29,46 @@
 
 package org.firstinspires.ftc.teamcode;
 
+
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
-import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.arcrobotics.ftclib.hardware.ServoEx;
-import com.arcrobotics.ftclib.hardware.SimpleServo;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
-
+// put ftclib imports here:
+import com.arcrobotics.ftclib.drivebase.MecanumDrive;
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.command.button.Button; // missing and causing crash?
+import com.arcrobotics.ftclib.command.button.GamepadButton; // missing and causng crash?
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.arcrobotics.ftclib.hardware.ServoEx;
+import com.arcrobotics.ftclib.hardware.SimpleServo;
+import com.arcrobotics.ftclib.hardware.motors.Motor;
+import com.arcrobotics.ftclib.hardware.motors.MotorGroup;
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
-@TeleOp(name="DriveTrain", group="teleop")
-public class DriveTrain extends OpMode {
-    private static final double MIN_ANGLE = 0 ;
-    private static final double MAX_ANGLE = 90;
+// imports from hyperdroids:
+
+
+
+@TeleOp(name="Test_DriveTrain", group="teleop")
+//@Disabled
+public class TestDriveTrain extends OpMode {
+
     // Declare OpMode members.
     public GamepadEx driver = null;
     public GamepadEx operator = null;
-
+    double armPosition = 0;
     MecanumDrive drivebase = null;
 
     private final ElapsedTime runtime = new ElapsedTime();
@@ -62,11 +76,18 @@ public class DriveTrain extends OpMode {
     private Motor rightFrontDrive = null;
     private Motor leftBackDrive = null;
     private Motor rightBackDrive = null;
-    private SimpleServo finger;
-    private SimpleServo wrist;
-    private SimpleServo drone;
-
-
+    private Motor arm1 = null;
+    private Motor arm2 = null;
+    private Servo finger;
+    private Servo wrist;
+    private Servo drone;
+    static final double MAX_POS     =  1.0;     // Maximum rotational position
+    static final double MIN_POS     =  0.0;     // Minimum rotational position
+    static final double STEP   = 0.01;     // amount to slew servo
+    double  position = 0.85; // Start at open position
+    double position2 = (0.35);
+    double armSpeed;
+private MotorGroup armMotors;
 
     private IMU imu;// BHI260AP imu on this hub
 private boolean test = false;
@@ -80,28 +101,35 @@ private boolean test = false;
 
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
-        // step (using the FTC Robot Controller app on the phone/driver station).
        //
         leftFrontDrive = new Motor(hardwareMap, "left_front_drive");
         rightFrontDrive = new Motor(hardwareMap, "right_front_drive");
         leftBackDrive = new Motor(hardwareMap, "left_back_drive");
         rightBackDrive = new Motor(hardwareMap, "right_back_drive");
-     //   arm1 = new Motor(hardwareMap,"Arm1");
-     //   arm2 = new Motor(hardwareMap,"Arm2");
-
-        //ServoEx finger = hardwareMap.get(Servo.class,"finger");
-      //  wrist = hardwareMap.get(Servo.class,"wrist");
-      //  drone = hardwareMap.get(Servo.class,"drone");
-
+        arm1 = new Motor(hardwareMap, "arm1");
+        arm2 = new Motor(hardwareMap,"arm2");
         // set up arm motors for master/slave
-        //MotorGroup armMotors = new MotorGroup(arm1,arm2);
+        armMotors = new MotorGroup(arm1,arm2);
 
+        // set up servos
+ /*       ServoEx finger = new SimpleServo(
+                hardwareMap,"Finger",25,100
+        );
+        ServoEx wrist = new SimpleServo(
+                hardwareMap,"Wrist",25,100
+        );
+        ServoEx drone = new SimpleServo(
+                hardwareMap,"Drone",25,100
+        );
+*/
+        wrist = hardwareMap.get(Servo.class, "Wrist");
+        finger = hardwareMap.get(Servo.class, "Finger");
+        drone = hardwareMap.get(Servo.class, "Drone");
+
+       armMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        armMotors.setInverted(true);    // confirm if we need to invert
         driver = new GamepadEx(gamepad1);
         operator = new GamepadEx(gamepad2);
-        ServoEx finger = new SimpleServo(
-                hardwareMap, "finger", MIN_ANGLE, MAX_ANGLE
-        );
-
 
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
@@ -141,6 +169,8 @@ private boolean test = false;
     public void start() {
         imu.resetYaw();
         runtime.reset();
+        arm1.resetEncoder();
+
     }
 
     /*
@@ -149,24 +179,26 @@ private boolean test = false;
     @Override
     public void loop() {
       this.init();
-        driver.readButtons();
-        // Setup a variable for each drive wheel to save power level for telemetry
+        
+   /*     // Setup a variable for each drive wheel to save power level for telemetry
         double leftFrontPower;
         double rightFrontPower;
         double leftBackPower;
         double rightBackPower;
         double armDriveSpeed;
-
+*/
         driver.readButtons();  // enable 'was just pressed' methods
         YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
         double heading = orientation.getYaw(AngleUnit.DEGREES);
         double turn = 0;  // set up 'turn' variable
         double armSpeed = operator.getLeftY();
+        if (armSpeed <0 && armPosition < 10) armSpeed = 0;//avoid trying to lower arm when on chassis
+
         double speed_ratio = 0.8;  // Use this to slow down robot
-        double armDriveRatio = 0.5; // use this to slow down arm
-double strafeSpeed=driver.getLeftX() * speed_ratio;
-double forwardSpeed=driver.getLeftY()* speed_ratio;
-double turnSpeed=driver.getRightX()* speed_ratio;
+        double armDriveRatio = 0.4; // use this to slow down arm
+        double strafeSpeed=driver.getLeftX() * speed_ratio;
+        double forwardSpeed=driver.getLeftY()* speed_ratio;
+        double turnSpeed=driver.getRightX()* speed_ratio;
 
         // tell ftclib its inputs  strafeSpeed,forwardSpeed,turn,heading
         drivebase.driveFieldCentric(
@@ -177,22 +209,74 @@ double turnSpeed=driver.getRightX()* speed_ratio;
         );
         // move the arm:
 
-        //armMotors.set(armDriveRatio * armSpeed);  // calculate final arm speed to send
-
+        armMotors.set(armDriveRatio * armSpeed);  // calculate final arm speed to send
+        armPosition = arm1.getCurrentPosition();
         // temporary code to move finger
+/*
         if (driver.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
-            finger.turnToAngle(MIN_ANGLE);
+            finger.setPosition(.85);
+            telemetry.addData("release pixel","");
+            telemetry.update();
         } else if (driver.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)){
-                finger.turnToAngle(MAX_ANGLE);
+                finger.setPosition(1.0);
+            telemetry.addData("grab pixel","");
+            telemetry.update();
         }
 
+*/
+        if (gamepad2.a && position < MAX_POS) position += STEP;
+        if (gamepad2.y && position > MIN_POS) position -= STEP;
+        if (gamepad2.x && position < MAX_POS) position2 += STEP;
+        if (gamepad2.b && position > MIN_POS) position2 -= STEP;
+
+        // Set the servo to the new position and pause;
+        finger.setPosition(position);
+        wrist.setPosition(position2);
 
         // Show the elapsed game time and arm position.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
-        //telemetry.addData("arm position:",armMotors.getCurrentPosition());
-        telemetry.addData("heading",heading);
+        telemetry.addData("arm position:",armPosition);
+        telemetry.addData("Finger Position:", "%5.2f", position);
+        telemetry.addData("Wrist Position:", "%5.2f", position2);
+        telemetry.addData("heading:","%5.2f", heading);
+        telemetry.addData("===== motor data ====","");
+        telemetry.addData("strafe:", "%5.2f", strafeSpeed);
+        telemetry.addData("forward:", "%5.2f", forwardSpeed);
+        telemetry.addData("turn:", "%5.2f", turnSpeed);
         // Push telemetry to the Driver Station.
         telemetry.update();
+        // ftc-dashboard telemetry
+        TelemetryPacket pack = new TelemetryPacket();
+
+        pack.put("heading", heading);
+        pack.put("arm Position:",armPosition);
+        pack.put("Wrist position:",position2);
+        //pack.put("target_heading", headingControl.getSetPoint());
+       // pack.put("parallel", parallel_encoder.getDistance());
+        FtcDashboard.getInstance().sendTelemetryPacket(pack);
+
+/*
+        // it seems that you can't send both "number" telemetry _and_ "draw stuff" telemetry in the same "packet"?
+        pack = new TelemetryPacket();
+
+        // actual robot is 407mm square
+        double INCHES_TO_MM = 0.03937008;
+        // move origin to bottom left
+        pack.fieldOverlay().setTranslation(-6*12, 6*12);
+        // do all other drawing in millimeters
+        pack.fieldOverlay().setScale(INCHES_TO_MM, INCHES_TO_MM);
+        // center the drawing in the robot
+        //pack.fieldOverlay().setTranslation(-203, 203);
+        pack.fieldOverlay()
+                //               .setFill("blue")
+                //              .fillCircle(parallel_encoder.getDistance(), 0.0, 2.0)
+                .setFill("red")
+                .fillRect(parallel_encoder.getDistance(), -407, 407, 407);
+
+        //telemetryTfod();
+        FtcDashboard.getInstance().sendTelemetryPacket(pack);
+        */ // commented out dashboard stuff
+
     }
 
 
@@ -201,5 +285,6 @@ double turnSpeed=driver.getRightX()* speed_ratio;
      */
     @Override
     public void stop() {
+
     }
 }
