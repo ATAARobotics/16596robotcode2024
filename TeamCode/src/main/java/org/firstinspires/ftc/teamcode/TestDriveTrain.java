@@ -167,9 +167,9 @@ private boolean test = false;
         double armSpeed = operator.getLeftY();
         double speed_ratio = 0.8;  // Use this to slow down robot
         double armDriveRatio = 0.5; // use this to slow down arm
-double strafeSpeed=driver.getLeftX() * speed_ratio;
-double forwardSpeed=driver.getLeftY()* speed_ratio;
-double turnSpeed=driver.getRightX()* speed_ratio;
+        double strafeSpeed=driver.getLeftX() * speed_ratio;
+        double forwardSpeed=driver.getLeftY()* speed_ratio;
+        double turnSpeed=driver.getRightX()* speed_ratio;
 
         // tell ftclib its inputs  strafeSpeed,forwardSpeed,turn,heading
         drivebase.driveFieldCentric(
