@@ -18,12 +18,11 @@ import com.arcrobotics.ftclib.hardware.SimpleServo;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Servo;
 
 //
 @TeleOp(name="Drive_comp", group="")
 
-public class OpMode_comp extends OpMode
+public class DriveCompetition extends OpMode
 {
     // Declare OpMode members.
     private Motor arm1 = null;
@@ -31,12 +30,10 @@ public class OpMode_comp extends OpMode
     ServoEx wrist = null;
     ServoEx drone = null;
 
-    /*
 
-
-    */
     int armPosition = 0;
-
+    private static final double MIN_ANGLE = 0 ;
+    private static final double MAX_ANGLE = 90;
     public GamepadEx driver = null;
     public GamepadEx operator = null;
     @Override

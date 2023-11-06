@@ -48,7 +48,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
-@TeleOp(name="DriveTrain", group="teleop")
+@TeleOp(name="DriveTrainPracticeBOT", group="teleop")
 public class practiceBOT extends OpMode {
     private static final double MIN_ANGLE = 0 ;
     private static final double MAX_ANGLE = 90;
@@ -84,11 +84,6 @@ public class practiceBOT extends OpMode {
         rightFrontDrive = new Motor(hardwareMap, "right_front_drive");
         leftBackDrive = new Motor(hardwareMap, "left_back_drive");
         rightBackDrive = new Motor(hardwareMap, "right_back_drive");
-        //   arm1 = new Motor(hardwareMap,"Arm1");
-        //   arm2 = new Motor(hardwareMap,"Arm2");
-
-        // set up arm motors for master/slave
-        //MotorGroup armMotors = new MotorGroup(arm1,arm2);
 
         driver = new GamepadEx(gamepad1);
         operator = new GamepadEx(gamepad2);
@@ -165,17 +160,7 @@ public class practiceBOT extends OpMode {
                 turnSpeed,
                 heading
         );
-        // move the arm:
 
-        //armMotors.set(armDriveRatio * armSpeed);  // calculate final arm speed to send
-
-        /* temporary code to move finger
-        if (driver.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
-            finger.turnToAngle(MIN_ANGLE);
-        } else if (driver.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)){
-            finger.turnToAngle(MAX_ANGLE);
-        }
-*/
 
         // Show the elapsed game time and arm position.
         telemetry.addData("Status", "Run Time: " + runtime.toString());

@@ -40,21 +40,19 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.IMU;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
-@TeleOp(name="DriveTrain", group="teleop")
-public class DriveTrain extends OpMode {
+@TeleOp(name="Test_DriveTrain", group="teleop")
+public class TestDriveTrain extends OpMode {
     private static final double MIN_ANGLE = 0 ;
     private static final double MAX_ANGLE = 90;
     // Declare OpMode members.
     public GamepadEx driver = null;
     public GamepadEx operator = null;
-
+    int armPosition = 0;
     MecanumDrive drivebase = null;
 
     private final ElapsedTime runtime = new ElapsedTime();
@@ -62,11 +60,11 @@ public class DriveTrain extends OpMode {
     private Motor rightFrontDrive = null;
     private Motor leftBackDrive = null;
     private Motor rightBackDrive = null;
-    private SimpleServo finger;
-    private SimpleServo wrist;
-    private SimpleServo drone;
+    private ServoEx finger;
+    private ServoEx wrist;
+    private ServoEx drone;
 
-
+private MotorGroup armMotors;
 
     private IMU imu;// BHI260AP imu on this hub
 private boolean test = false;
@@ -86,22 +84,25 @@ private boolean test = false;
         rightFrontDrive = new Motor(hardwareMap, "right_front_drive");
         leftBackDrive = new Motor(hardwareMap, "left_back_drive");
         rightBackDrive = new Motor(hardwareMap, "right_back_drive");
-     //   arm1 = new Motor(hardwareMap,"Arm1");
-     //   arm2 = new Motor(hardwareMap,"Arm2");
-
-        //ServoEx finger = hardwareMap.get(Servo.class,"finger");
-      //  wrist = hardwareMap.get(Servo.class,"wrist");
-      //  drone = hardwareMap.get(Servo.class,"drone");
-
+        Motor arm1 = new Motor(hardwareMap, "Arm1");
+         Motor arm2 = new Motor(hardwareMap,"Arm2");
         // set up arm motors for master/slave
-        //MotorGroup armMotors = new MotorGroup(arm1,arm2);
-
-        driver = new GamepadEx(gamepad1);
-        operator = new GamepadEx(gamepad2);
+        MotorGroup armMotors = new MotorGroup(arm1,arm2);
         ServoEx finger = new SimpleServo(
-                hardwareMap, "finger", MIN_ANGLE, MAX_ANGLE
+                hardwareMap,"Finger",25,100
+        );
+        ServoEx wrist = new SimpleServo(
+                hardwareMap,"Wrist",25,100
+        );
+        ServoEx drone = new SimpleServo(
+                hardwareMap,"Drone",25,100
         );
 
+
+       armMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        armMotors.setInverted(true);    // confirm if we need to invert
+        driver = new GamepadEx(gamepad1);
+        operator = new GamepadEx(gamepad2);
 
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
@@ -141,6 +142,8 @@ private boolean test = false;
     public void start() {
         imu.resetYaw();
         runtime.reset();
+        armMotors.resetEncoder();
+
     }
 
     /*
@@ -177,8 +180,8 @@ double turnSpeed=driver.getRightX()* speed_ratio;
         );
         // move the arm:
 
-        //armMotors.set(armDriveRatio * armSpeed);  // calculate final arm speed to send
-
+        armMotors.set(armDriveRatio * armSpeed);  // calculate final arm speed to send
+        armPosition = armMotors.getCurrentPosition();
         // temporary code to move finger
         if (driver.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
             finger.turnToAngle(MIN_ANGLE);
@@ -189,8 +192,8 @@ double turnSpeed=driver.getRightX()* speed_ratio;
 
         // Show the elapsed game time and arm position.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
-        //telemetry.addData("arm position:",armMotors.getCurrentPosition());
-        telemetry.addData("heading",heading);
+        telemetry.addData("arm position:",armPosition;
+        telemetry.addData("heading:",heading);
         // Push telemetry to the Driver Station.
         telemetry.update();
     }
