@@ -192,7 +192,7 @@ double turnSpeed=driver.getRightX()* speed_ratio;
 
         // Show the elapsed game time and arm position.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.addData("arm position:",armPosition;
+        telemetry.addData("arm position:",armPosition);
         telemetry.addData("heading:",heading);
         // Push telemetry to the Driver Station.
         telemetry.update();
