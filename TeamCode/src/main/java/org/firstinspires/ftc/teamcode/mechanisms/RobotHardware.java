@@ -111,25 +111,14 @@ public class RobotHardware {
 
         // set up arm motors for master/slave
         MotorGroup armMotors = new MotorGroup(arm1,arm2);
+
+        // Define and initialize ALL installed servos.
         finger = myOpMode.hardwareMap.get(ServoEx.class,"Finger");
         wrist = myOpMode.hardwareMap.get(ServoEx.class,"Wrist");
         drone = myOpMode.hardwareMap.get(ServoEx.class,"Drone");
 
-        // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
-        // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
-        // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
-        leftDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightDrive.setDirection(DcMotor.Direction.FORWARD);
 
-        // If there are encoders connected, switch to RUN_USING_ENCODER mode for greater accuracy
-        // leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        // rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        // Define and initialize ALL installed servos.
-        leftHand = myOpMode.hardwareMap.get(Servo.class, "left_hand");
-        rightHand = myOpMode.hardwareMap.get(Servo.class, "right_hand");
-        leftHand.setPosition(MID_SERVO);
-        rightHand.setPosition(MID_SERVO);
 
         myOpMode.telemetry.addData(">", "Hardware Initialized");
         myOpMode.telemetry.update();
@@ -168,8 +157,8 @@ public class RobotHardware {
      */
     public void setDrivePower(double leftWheel, double rightWheel) {
         // Output the values to the motor drives.
-        leftDrive.setPower(leftWheel);
-        rightDrive.setPower(rightWheel);
+       // leftDrive.setPower(leftWheel);
+        //rightDrive.setPower(rightWheel);
     }
 
     /**
@@ -178,18 +167,10 @@ public class RobotHardware {
      * @param power driving power (-1.0 to 1.0)
      */
     public void setArmPower(double power) {
-        armMotor.setPower(power);
+        armMotors.set(power);
     }
 
-    /**
-     * Send the two hand-servos to opposing (mirrored) positions, based on the passed offset.
-     *
-     * @param offset
-     */
-    public void setHandPositions(double offset) {
-        offset = Range.clip(offset, -0.5, 0.5);
-        leftHand.setPosition(MID_SERVO + offset);
-        rightHand.setPosition(MID_SERVO - offset);
-    }
+
+
 }
 
