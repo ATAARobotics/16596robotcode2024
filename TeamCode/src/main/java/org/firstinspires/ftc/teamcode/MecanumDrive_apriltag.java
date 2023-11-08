@@ -47,7 +47,7 @@ import java.util.List;
 
 
 @TeleOp(name="MecanumDrive_april tag", group="teleop")
-//@Disabled
+@Disabled
 public class MecanumDrive_apriltag extends OpMode
 {
     // Declare OpMode members.

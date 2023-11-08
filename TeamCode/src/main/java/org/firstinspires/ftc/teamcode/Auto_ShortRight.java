@@ -51,6 +51,13 @@ public class Auto_ShortRight extends LinearOpMode {
 
         runtime.reset(); // reset timer
         while (opModeIsActive() && (runtime.seconds() < 3.0)) {
+            // tell ftclib its inputs  strafeSpeed,forwardSpeed,turn,heading
+            drivebase.driveFieldCentric(
+                    1,
+                    0,
+                    0,
+                    0
+            );
             telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
             telemetry.update();
         }

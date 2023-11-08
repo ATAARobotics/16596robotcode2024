@@ -52,7 +52,7 @@ public class TestDriveTrain extends OpMode {
     // Declare OpMode members.
     public GamepadEx driver = null;
     public GamepadEx operator = null;
-    int armPosition = 0;
+    double armPosition = 0;
     MecanumDrive drivebase = null;
 
     private final ElapsedTime runtime = new ElapsedTime();
@@ -60,6 +60,8 @@ public class TestDriveTrain extends OpMode {
     private Motor rightFrontDrive = null;
     private Motor leftBackDrive = null;
     private Motor rightBackDrive = null;
+    private Motor arm1 = null;
+    private Motor arm2 = null;
     private ServoEx finger;
     private ServoEx wrist;
     private ServoEx drone;
@@ -78,16 +80,17 @@ private boolean test = false;
 
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
-        // step (using the FTC Robot Controller app on the phone/driver station).
        //
         leftFrontDrive = new Motor(hardwareMap, "left_front_drive");
         rightFrontDrive = new Motor(hardwareMap, "right_front_drive");
         leftBackDrive = new Motor(hardwareMap, "left_back_drive");
         rightBackDrive = new Motor(hardwareMap, "right_back_drive");
-        Motor arm1 = new Motor(hardwareMap, "Arm1");
-         Motor arm2 = new Motor(hardwareMap,"Arm2");
+        arm1 = new Motor(hardwareMap, "arm1");
+        arm2 = new Motor(hardwareMap,"arm2");
         // set up arm motors for master/slave
-        MotorGroup armMotors = new MotorGroup(arm1,arm2);
+        armMotors = new MotorGroup(arm1,arm2);
+
+        // set up servos
         ServoEx finger = new SimpleServo(
                 hardwareMap,"Finger",25,100
         );
@@ -142,7 +145,7 @@ private boolean test = false;
     public void start() {
         imu.resetYaw();
         runtime.reset();
-        armMotors.resetEncoder();
+        arm1.resetEncoder();
 
     }
 
@@ -152,7 +155,7 @@ private boolean test = false;
     @Override
     public void loop() {
       this.init();
-        driver.readButtons();
+        
         // Setup a variable for each drive wheel to save power level for telemetry
         double leftFrontPower;
         double rightFrontPower;
@@ -181,10 +184,13 @@ private boolean test = false;
         // move the arm:
 
         armMotors.set(armDriveRatio * armSpeed);  // calculate final arm speed to send
-        armPosition = armMotors.getCurrentPosition();
+        //armPosition = armMotors.getCurrentPosition();
         // temporary code to move finger
+
         if (driver.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
             finger.turnToAngle(MIN_ANGLE);
+            telemetry.addData("turn to min on finger","");
+            telemetry.update();
         } else if (driver.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)){
                 finger.turnToAngle(MAX_ANGLE);
         }
