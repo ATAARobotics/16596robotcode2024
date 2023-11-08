@@ -37,6 +37,18 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.arcrobotics.ftclib.drivebase.MecanumDrive;
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.arcrobotics.ftclib.hardware.ServoEx;
+import com.arcrobotics.ftclib.hardware.SimpleServo;
+import com.arcrobotics.ftclib.hardware.motors.Motor;
+import com.arcrobotics.ftclib.hardware.motors.MotorGroup;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 /*
  * This OpMode scans a single servo back and forward until Stop is pressed.
@@ -99,14 +111,13 @@ public class ServoTest extends LinearOpMode {
             }
 */
            // simple servo tests:
-// put servo to mid position before starting to move it:
-            finger.setPosition(position);
-            wrist.setPosition(position2);
+
+
             // move finger: test results: 1 is pickup, 0.85 is release
-/*
-            if (operator.getButton(GamepadKeys.Button.Y) && position < MAX_POS) position += STEP;
-            if (operator.getButton(GamepadKeys.Button.A) && position > MIN_POS) position -= STEP;
-*/
+
+           // if (operator.getButton(GamepadKeys.Button.Y) && position < MAX_POS) position += STEP;
+            //if (operator.getButton(GamepadKeys.Button.A) && position > MIN_POS) position -= STEP;
+
             if (gamepad2.a && position < MAX_POS) position += STEP;
             if (gamepad2.y && position > MIN_POS) position -= STEP;
             if (gamepad2.x && position < MAX_POS) position2 += STEP;
@@ -120,7 +131,7 @@ public class ServoTest extends LinearOpMode {
 
             // Set the servo to the new position and pause;
             finger.setPosition(position);
-
+            wrist.setPosition(position2);
             sleep(CYCLE_MS);
             //idle();
         }

@@ -40,6 +40,7 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -47,8 +48,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
 @TeleOp(name="Test_DriveTrain", group="teleop")
 public class TestDriveTrain extends OpMode {
-    private static final double MIN_ANGLE = 0 ;
-    private static final double MAX_ANGLE = 90;
+
     // Declare OpMode members.
     public GamepadEx driver = null;
     public GamepadEx operator = null;
@@ -62,10 +62,15 @@ public class TestDriveTrain extends OpMode {
     private Motor rightBackDrive = null;
     private Motor arm1 = null;
     private Motor arm2 = null;
-    private ServoEx finger;
-    private ServoEx wrist;
-    private ServoEx drone;
-
+    private Servo finger;
+    private Servo wrist;
+    private Servo drone;
+    static final double MAX_POS     =  1.0;     // Maximum rotational position
+    static final double MIN_POS     =  0.0;     // Minimum rotational position
+    static final double STEP   = 0.01;     // amount to slew servo
+    double  position = 0.85; // Start at open position
+    double position2 = (0.35);
+    double armSpeed;
 private MotorGroup armMotors;
 
     private IMU imu;// BHI260AP imu on this hub
@@ -91,7 +96,7 @@ private boolean test = false;
         armMotors = new MotorGroup(arm1,arm2);
 
         // set up servos
-        ServoEx finger = new SimpleServo(
+ /*       ServoEx finger = new SimpleServo(
                 hardwareMap,"Finger",25,100
         );
         ServoEx wrist = new SimpleServo(
@@ -100,7 +105,10 @@ private boolean test = false;
         ServoEx drone = new SimpleServo(
                 hardwareMap,"Drone",25,100
         );
-
+*/
+        wrist = hardwareMap.get(Servo.class, "Wrist");
+        finger = hardwareMap.get(Servo.class, "Finger");
+        drone = hardwareMap.get(Servo.class, "Drone");
 
        armMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         armMotors.setInverted(true);    // confirm if we need to invert
@@ -168,8 +176,10 @@ private boolean test = false;
         double heading = orientation.getYaw(AngleUnit.DEGREES);
         double turn = 0;  // set up 'turn' variable
         double armSpeed = operator.getLeftY();
+        if (armSpeed <0 && armPosition < 10) armSpeed = 0;//avoid trying to lower arm when on chassis
+
         double speed_ratio = 0.8;  // Use this to slow down robot
-        double armDriveRatio = 0.5; // use this to slow down arm
+        double armDriveRatio = 0.4; // use this to slow down arm
         double strafeSpeed=driver.getLeftX() * speed_ratio;
         double forwardSpeed=driver.getLeftY()* speed_ratio;
         double turnSpeed=driver.getRightX()* speed_ratio;
@@ -184,22 +194,35 @@ private boolean test = false;
         // move the arm:
 
         armMotors.set(armDriveRatio * armSpeed);  // calculate final arm speed to send
-        //armPosition = armMotors.getCurrentPosition();
+        armPosition = arm1.getCurrentPosition();
         // temporary code to move finger
-
+/*
         if (driver.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
-            finger.turnToAngle(MIN_ANGLE);
-            telemetry.addData("turn to min on finger","");
+            finger.setPosition(.85);
+            telemetry.addData("release pixel","");
             telemetry.update();
         } else if (driver.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)){
-                finger.turnToAngle(MAX_ANGLE);
+                finger.setPosition(1.0);
+            telemetry.addData("grab pixel","");
+            telemetry.update();
         }
 
+*/
+        if (gamepad2.a && position < MAX_POS) position += STEP;
+        if (gamepad2.y && position > MIN_POS) position -= STEP;
+        if (gamepad2.x && position < MAX_POS) position2 += STEP;
+        if (gamepad2.b && position > MIN_POS) position2 -= STEP;
+
+        // Set the servo to the new position and pause;
+        finger.setPosition(position);
+        wrist.setPosition(position2);
 
         // Show the elapsed game time and arm position.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.addData("arm position:",armPosition);
-        telemetry.addData("heading:",heading);
+        telemetry.addData("Finger Position:", "%5.2f", position);
+        telemetry.addData("Wrist Position:", "%5.2f", position2);
+        telemetry.addData("heading:","%5.2f", heading);
         // Push telemetry to the Driver Station.
         telemetry.update();
     }
