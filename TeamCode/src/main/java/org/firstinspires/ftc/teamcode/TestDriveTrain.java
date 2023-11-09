@@ -42,9 +42,16 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
+// put ftclib imports here:
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+
+// imports from hyperdroids:
+
+
 
 @TeleOp(name="Test_DriveTrain", group="teleop")
 public class TestDriveTrain extends OpMode {
@@ -164,13 +171,13 @@ private boolean test = false;
     public void loop() {
       this.init();
         
-        // Setup a variable for each drive wheel to save power level for telemetry
+   /*     // Setup a variable for each drive wheel to save power level for telemetry
         double leftFrontPower;
         double rightFrontPower;
         double leftBackPower;
         double rightBackPower;
         double armDriveSpeed;
-
+*/
         driver.readButtons();  // enable 'was just pressed' methods
         YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
         double heading = orientation.getYaw(AngleUnit.DEGREES);
@@ -223,8 +230,44 @@ private boolean test = false;
         telemetry.addData("Finger Position:", "%5.2f", position);
         telemetry.addData("Wrist Position:", "%5.2f", position2);
         telemetry.addData("heading:","%5.2f", heading);
+        telemetry.addData("===== motor data ====","");
+        telemetry.addData("strafe:", "%5.2f", strafeSpeed);
+        telemetry.addData("forward:", "%5.2f", forwardSpeed);
+        telemetry.addData("turn:", "%5.2f", turnSpeed);
         // Push telemetry to the Driver Station.
         telemetry.update();
+        // ftc-dashboard telemetry
+        TelemetryPacket pack = new TelemetryPacket();
+
+        pack.put("heading", heading);
+        pack.put("arm Position:",armPosition);
+        pack.put("Wrist position:",position2);
+        //pack.put("target_heading", headingControl.getSetPoint());
+       // pack.put("parallel", parallel_encoder.getDistance());
+        FtcDashboard.getInstance().sendTelemetryPacket(pack);
+
+/*
+        // it seems that you can't send both "number" telemetry _and_ "draw stuff" telemetry in the same "packet"?
+        pack = new TelemetryPacket();
+
+        // actual robot is 407mm square
+        double INCHES_TO_MM = 0.03937008;
+        // move origin to bottom left
+        pack.fieldOverlay().setTranslation(-6*12, 6*12);
+        // do all other drawing in millimeters
+        pack.fieldOverlay().setScale(INCHES_TO_MM, INCHES_TO_MM);
+        // center the drawing in the robot
+        //pack.fieldOverlay().setTranslation(-203, 203);
+        pack.fieldOverlay()
+                //               .setFill("blue")
+                //              .fillCircle(parallel_encoder.getDistance(), 0.0, 2.0)
+                .setFill("red")
+                .fillRect(parallel_encoder.getDistance(), -407, 407, 407);
+
+        //telemetryTfod();
+        FtcDashboard.getInstance().sendTelemetryPacket(pack);
+        */ // commented out dashboard stuff
+
     }
 
 
@@ -233,5 +276,6 @@ private boolean test = false;
      */
     @Override
     public void stop() {
+
     }
 }
