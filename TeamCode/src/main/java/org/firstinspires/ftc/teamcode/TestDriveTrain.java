@@ -59,12 +59,17 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
 // imports from hyperdroids:
 
+/* TODO:
+1: SET UP ENCODERS
+2: USE ENCODER IN AUTO
 
+ */
 
 @TeleOp(name="Test_DriveTrain", group="teleop")
 //@Disabled
 public class TestDriveTrain extends OpMode {
 
+    private static final int WINCHTIME = 5; //Test time
     // Declare OpMode members.
     public GamepadEx driver = null;
     public GamepadEx operator = null;
@@ -78,15 +83,18 @@ public class TestDriveTrain extends OpMode {
     private Motor rightBackDrive = null;
     private Motor arm1 = null;
     private Motor arm2 = null;
+    private Motor winch = null;
     private Servo finger;
     private Servo wrist;
     private Servo drone;
+    private Servo hook;
     static final double MAX_POS     =  1.0;     // Maximum rotational position
     static final double MIN_POS     =  0.0;     // Minimum rotational position
     static final double STEP   = 0.01;     // amount to slew servo
     double  position = 0.85; // Start at open position
     double position2 = (0.35);
     double armSpeed;
+    double winchspeed = 1;
 private MotorGroup armMotors;
 
     private IMU imu;// BHI260AP imu on this hub
@@ -108,6 +116,8 @@ private boolean test = false;
         rightBackDrive = new Motor(hardwareMap, "right_back_drive");
         arm1 = new Motor(hardwareMap, "arm1");
         arm2 = new Motor(hardwareMap,"arm2");
+        winch = new Motor(hardwareMap, "winch");
+
         // set up arm motors for master/slave
         armMotors = new MotorGroup(arm1,arm2);
 
@@ -125,6 +135,7 @@ private boolean test = false;
         wrist = hardwareMap.get(Servo.class, "Wrist");
         finger = hardwareMap.get(Servo.class, "Finger");
         drone = hardwareMap.get(Servo.class, "Drone");
+        hook = hardwareMap.get(Servo.class,  "Hook");
 
        armMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         armMotors.setInverted(true);    // confirm if we need to invert
@@ -186,18 +197,19 @@ private boolean test = false;
         double leftBackPower;
         double rightBackPower;
         double armDriveSpeed;
-*/
+*/// code to set up power reading for motors
         driver.readButtons();  // enable 'was just pressed' methods
         YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
         double heading = orientation.getYaw(AngleUnit.DEGREES);
         double turn = 0;  // set up 'turn' variable
         double armSpeed = operator.getLeftY();
         if (armSpeed <0 && armPosition < 10) armSpeed = 0;//avoid trying to lower arm when on chassis
-
+        if (armSpeed >0) winch.set(-winchspeed); // Confirm rotation
+        if (armSpeed <0) winch.set (winchspeed); // Confirm rotation
         double speed_ratio = 0.8;  // Use this to slow down robot
         double armDriveRatio = 0.4; // use this to slow down arm
         double strafeSpeed=driver.getLeftX() * speed_ratio;
-        double forwardSpeed=driver.getLeftY()* speed_ratio;
+        double forwardSpeed= -driver.getLeftY()* speed_ratio;
         double turnSpeed=driver.getRightX()* speed_ratio;
 
         // tell ftclib its inputs  strafeSpeed,forwardSpeed,turn,heading
@@ -210,29 +222,39 @@ private boolean test = false;
         // move the arm:
 
         armMotors.set(armDriveRatio * armSpeed);  // calculate final arm speed to send
+
         armPosition = arm1.getCurrentPosition();
         // temporary code to move finger
 /*
-        if (driver.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
+        if (operator.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
             finger.setPosition(.85);
             telemetry.addData("release pixel","");
             telemetry.update();
-        } else if (driver.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)){
+        } else if (operator.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)){
                 finger.setPosition(1.0);
             telemetry.addData("grab pixel","");
             telemetry.update();
         }
-
 */
+
         if (gamepad2.a && position < MAX_POS) position += STEP;
         if (gamepad2.y && position > MIN_POS) position -= STEP;
         if (gamepad2.x && position < MAX_POS) position2 += STEP;
         if (gamepad2.b && position > MIN_POS) position2 -= STEP;
 
-        // Set the servo to the new position and pause;
+        // Set the servo to the new position;
         finger.setPosition(position);
         wrist.setPosition(position2);
-
+        if (gamepad2.left_trigger > 0) drone.setPosition(1); // Launch drone!
+        // Used for climbing
+        runtime.reset();
+        armDriveRatio = 1;
+        if (gamepad2.back) hook.setPosition(1); //Confirm Servo position to deploy hook
+        boolean winchmode = false;
+        if (gamepad2.start) winchmode = true; //Wind up winch
+        while ((runtime.seconds() < WINCHTIME) && winchmode) {
+            winch.set(1);
+        }
         // Show the elapsed game time and arm position.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.addData("arm position:",armPosition);
