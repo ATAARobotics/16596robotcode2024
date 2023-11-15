@@ -7,6 +7,16 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.hardware.RevIMU;
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+
 @Autonomous(name = "Short_Right",group = "")
 public class Auto_ShortRight extends LinearOpMode {
     private final ElapsedTime runtime = new ElapsedTime();
@@ -27,14 +37,17 @@ public class Auto_ShortRight extends LinearOpMode {
         leftBackDrive = new Motor(hardwareMap, "left_back_drive");
         rightBackDrive = new Motor(hardwareMap, "right_back_drive");
 
-        IMU imu = hardwareMap.get(IMU.class, "imu");// need to use IMU in expansion hub, not control hub
+         imu = hardwareMap.get(IMU.class, "imu");// need to use IMU in expansion hub, not control hub
         // need to confirm orientation of the HUB so that IMU directions are correct
 
         RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
         RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.FORWARD;
 
         orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
+        imu.initialize(new IMU.Parameters(orientationOnRobot));
 
+        YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
+        double heading = orientation.getYaw(AngleUnit.DEGREES);
         drivebase = new MecanumDrive(
                 leftFrontDrive,
                 rightFrontDrive,
@@ -56,12 +69,13 @@ public class Auto_ShortRight extends LinearOpMode {
                     1,
                     0,
                     0,
-                    0
+                    heading
+
             );
             telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
             telemetry.update();
         }
         // Step 2:  Stop
-
+            stop();
     }
 }
