@@ -59,12 +59,17 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
 // imports from hyperdroids:
 
+/* TODO:
+1: SET UP ENCODERS
+2: USE ENCODER IN AUTO
 
+ */
 
 @TeleOp(name="Test_DriveTrain", group="teleop")
 //@Disabled
 public class TestDriveTrain extends OpMode {
 
+    private static final int WINCHTIME = 5; //Test time
     // Declare OpMode members.
     public GamepadEx driver = null;
     public GamepadEx operator = null;
@@ -78,38 +83,51 @@ public class TestDriveTrain extends OpMode {
     private Motor rightBackDrive = null;
     private Motor arm1 = null;
     private Motor arm2 = null;
+    private Motor winch = null;
+    private Motor ypod = null;
     private Servo finger;
     private Servo wrist;
     private Servo drone;
-    static final double MAX_POS     =  1.0;     // Maximum rotational position
-    static final double MIN_POS     =  0.0;     // Minimum rotational position
-    static final double STEP   = 0.01;     // amount to slew servo
-    double  position = 0.85; // Start at open position
+    private Servo hook;
+    static final double MAX_POS = 1.0;     // Maximum rotational position
+    static final double MIN_POS = 0.0;     // Minimum rotational position
+    static final double STEP = 0.01;     // amount to slew servo
+    double position = 0.85; // Start at open position
     double position2 = (0.35);
     double armSpeed;
-private MotorGroup armMotors;
+    double winchspeed = 1;
+    double xDistance = 0;
+    double yDistance = 0;
+    private MotorGroup armMotors;
 
     private IMU imu;// BHI260AP imu on this hub
-private boolean test = false;
+    private boolean test = false;
     private RevHubOrientationOnRobot orientationOnRobot;
 
     @Override
     public void init() {
-      if (test ){return;}
-      test = true;
-      telemetry.addData("Status", "Initialized");
+        if (test) {
+            return;
+        }
+        test = true;
+        telemetry.addData("Status", "Initialized");
 
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
-       //
+        //
         leftFrontDrive = new Motor(hardwareMap, "left_front_drive");
         rightFrontDrive = new Motor(hardwareMap, "right_front_drive");
         leftBackDrive = new Motor(hardwareMap, "left_back_drive");
         rightBackDrive = new Motor(hardwareMap, "right_back_drive");
         arm1 = new Motor(hardwareMap, "arm1");
-        arm2 = new Motor(hardwareMap,"arm2");
+        arm2 = new Motor(hardwareMap, "arm2");
+        winch = new Motor(hardwareMap, "winch");
+
+        // use 'fake' motor to get Y encoder values
+        ypod = new Motor(hardwareMap, "y_encoder");
+
         // set up arm motors for master/slave
-        armMotors = new MotorGroup(arm1,arm2);
+        armMotors = new MotorGroup(arm1, arm2);
 
         // set up servos
  /*       ServoEx finger = new SimpleServo(
@@ -125,24 +143,18 @@ private boolean test = false;
         wrist = hardwareMap.get(Servo.class, "Wrist");
         finger = hardwareMap.get(Servo.class, "Finger");
         drone = hardwareMap.get(Servo.class, "Drone");
+        hook = hardwareMap.get(Servo.class, "Hook");
 
-       armMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        armMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         armMotors.setInverted(true);    // confirm if we need to invert
         driver = new GamepadEx(gamepad1);
         operator = new GamepadEx(gamepad2);
 
 
-        // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
-        // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
-        // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
-        // NOTE: reconfirm directions after gear ratio repaired and wheels mounted correctly!
-
-        imu = hardwareMap.get(IMU.class, "imu");// need to use IMU in expansion hub, not control hub
         // need to confirm orientation of the HUB so that IMU directions are correct
-
+        imu = hardwareMap.get(IMU.class, "imu");// need to use IMU in expansion hub, not control hub
         RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
-        RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.FORWARD;
-
+        RevHubOrientationOnRobot.UsbFacingDirection usbDirection = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
         orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
 
         drivebase = new MecanumDrive(
@@ -170,6 +182,8 @@ private boolean test = false;
         imu.resetYaw();
         runtime.reset();
         arm1.resetEncoder();
+        ypod.resetEncoder();
+        winch.resetEncoder();// this motor's encoder is used for Xpod
 
     }
 
@@ -178,27 +192,32 @@ private boolean test = false;
      */
     @Override
     public void loop() {
-      this.init();
-        
+        this.init();
+        //get X and Y distances
+
+        xDistance = winch.getDistance();
+        yDistance = ypod.getDistance();
+
+
    /*     // Setup a variable for each drive wheel to save power level for telemetry
         double leftFrontPower;
         double rightFrontPower;
         double leftBackPower;
         double rightBackPower;
         double armDriveSpeed;
-*/
+*/// code to set up power reading for motors
         driver.readButtons();  // enable 'was just pressed' methods
         YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
         double heading = orientation.getYaw(AngleUnit.DEGREES);
         double turn = 0;  // set up 'turn' variable
         double armSpeed = operator.getLeftY();
-        if (armSpeed <0 && armPosition < 10) armSpeed = 0;//avoid trying to lower arm when on chassis
 
-        double speed_ratio = 0.8;  // Use this to slow down robot
+        double speed_ratio = 0.6;  // Use this to slow down robot
+        double turn_ratio = 0.4; // use this to slow turn rate
         double armDriveRatio = 0.4; // use this to slow down arm
-        double strafeSpeed=driver.getLeftX() * speed_ratio;
-        double forwardSpeed=driver.getLeftY()* speed_ratio;
-        double turnSpeed=driver.getRightX()* speed_ratio;
+        double strafeSpeed = driver.getLeftX() * speed_ratio;
+        double forwardSpeed = -driver.getLeftY() * speed_ratio;
+        double turnSpeed = driver.getRightX() * turn_ratio;
 
         // tell ftclib its inputs  strafeSpeed,forwardSpeed,turn,heading
         drivebase.driveFieldCentric(
@@ -208,38 +227,61 @@ private boolean test = false;
                 heading
         );
         // move the arm:
-
+        //TODO: need to confirm armPosition at start, it will NOT be zero.
+        if (armSpeed < 0 && armPosition < 10)
+            armSpeed = 0;//avoid trying to lower arm when on chassis
+        // need to passively run winch when moving arm to keep string from hanging up
+        if (armSpeed > 0) winch.set(-winchspeed); // Confirm rotation
+        if (armSpeed < 0) winch.set(winchspeed); // Confirm rotation
         armMotors.set(armDriveRatio * armSpeed);  // calculate final arm speed to send
+
         armPosition = arm1.getCurrentPosition();
         // temporary code to move finger
 /*
-        if (driver.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
+        if (operator.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
             finger.setPosition(.85);
             telemetry.addData("release pixel","");
             telemetry.update();
-        } else if (driver.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)){
+        } else if (operator.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)){
                 finger.setPosition(1.0);
             telemetry.addData("grab pixel","");
             telemetry.update();
         }
-
 */
+
         if (gamepad2.a && position < MAX_POS) position += STEP;
         if (gamepad2.y && position > MIN_POS) position -= STEP;
         if (gamepad2.x && position < MAX_POS) position2 += STEP;
         if (gamepad2.b && position > MIN_POS) position2 -= STEP;
 
-        // Set the servo to the new position and pause;
+        // Set the servo to the new position;
         finger.setPosition(position);
         wrist.setPosition(position2);
+        if (gamepad2.left_trigger > 0) drone.setPosition(1); // Launch drone!
+        if (gamepad2.back) climb(); // start climb sequence
+
+    /*    // Used for climbing
+        runtime.reset();
+        armDriveRatio = 1;
+        if (gamepad2.back) hook.setPosition(1); //Confirm Servo position to deploy hook
+        boolean winchmode = false;
+        if (gamepad2.start) winchmode = true; //Wind up winch
+        while ((runtime.seconds() < WINCHTIME) && winchmode) {
+            winch.set(winchspeed);
+            armMotors.set(1);
+        }
+        */ // code to do climb without method
+
 
         // Show the elapsed game time and arm position.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.addData("arm position:",armPosition);
+        telemetry.addData("arm position:", armPosition);
         telemetry.addData("Finger Position:", "%5.2f", position);
         telemetry.addData("Wrist Position:", "%5.2f", position2);
-        telemetry.addData("heading:","%5.2f", heading);
-        telemetry.addData("===== motor data ====","");
+        telemetry.addData("heading:", "%5.2f", heading);
+        telemetry.addData("X Distance:", "%5.2f", xDistance);
+        telemetry.addData("Y Distance:", "%5.2f", yDistance);
+        telemetry.addData("===== motor data ====", "");
         telemetry.addData("strafe:", "%5.2f", strafeSpeed);
         telemetry.addData("forward:", "%5.2f", forwardSpeed);
         telemetry.addData("turn:", "%5.2f", turnSpeed);
@@ -249,10 +291,12 @@ private boolean test = false;
         TelemetryPacket pack = new TelemetryPacket();
 
         pack.put("heading", heading);
-        pack.put("arm Position:",armPosition);
-        pack.put("Wrist position:",position2);
+        pack.put("arm Position:", armPosition);
+        pack.put("Wrist position:", position2);
+        pack.put("X distance:", xDistance);
+        pack.put("Y distance:", yDistance);
         //pack.put("target_heading", headingControl.getSetPoint());
-       // pack.put("parallel", parallel_encoder.getDistance());
+        // pack.put("parallel", parallel_encoder.getDistance());
         FtcDashboard.getInstance().sendTelemetryPacket(pack);
 
 /*
@@ -277,7 +321,9 @@ private boolean test = false;
         FtcDashboard.getInstance().sendTelemetryPacket(pack);
         */ // commented out dashboard stuff
 
+
     }
+    // climb method?
 
 
     /*
@@ -286,5 +332,15 @@ private boolean test = false;
     @Override
     public void stop() {
 
+    }
+
+    public void climb() {
+        // put climb actions here
+        runtime.reset();
+        hook.setPosition(1); //Confirm Servo position to deploy hook
+        while (runtime.seconds() < WINCHTIME) {
+            winch.set(winchspeed);
+            armMotors.set(1);
+        }
     }
 }
