@@ -100,12 +100,13 @@ public class TestDriveTrain2 extends OpMode {
     private IMU imu;// BHI260AP imu on this hub
     private boolean test = false;
     boolean lastA = false;
+    boolean climbing = false;
     boolean lastB = false;
     boolean lastX = false;
     boolean lastY = false;
     private RevHubOrientationOnRobot orientationOnRobot;
-    static int ARM_MAX;
-    static int ARM_MIN;
+    static int ARM_MAX=124;
+    static int ARM_MIN=-75;
 
     @Override
     public void init() {
@@ -237,7 +238,10 @@ public class TestDriveTrain2 extends OpMode {
         // move the arm:
         //TODO: need to confirm armPosition at start, it will NOT be zero.
         if ((armSpeed < 0 && armPosition < ARM_MIN) || (armSpeed > 0 && armPosition > ARM_MAX))
-            armSpeed = 0;//avoid trying to lower arm when on chassis
+            armSpeed = 0;//avoid trying to lower arm when on chassis and limit extension
+
+
+
         // need to passively run winch when moving arm to keep string from hanging up
 //        if (armSpeed > 0) winch.set(-winchspeed); // Winch is CCW when arm moves up
 //        if (armSpeed < 0) winch.set(winchspeed); // Confirm rotation
@@ -259,7 +263,7 @@ public class TestDriveTrain2 extends OpMode {
 */
         if (gamepad2.a && !lastA) setArmPosition(17);
         if (gamepad2.y && !lastY) setArmPosition(69);
-        if (gamepad2.x && !lastX) finger.setPosition(0.0);
+        if (gamepad2.x  ) finger.setPosition(0.0);
         else finger.setPosition(1.0);
         if (gamepad2.b && !lastB) setArmPosition(94);
 
@@ -271,11 +275,15 @@ public class TestDriveTrain2 extends OpMode {
             telemetry.addData("DRONE LAUNCHED!:", "");
         }
        // if (gamepad2.back) climb(); // start climb sequence
-        if (gamepad2.left_trigger>0) {
+        if (gamepad2.left_trigger>0 && gamepad2.right_trigger>0) {
             hook.setPosition(0);// temp to test servo
+            climbing = true;
+
             telemetry.addData("HOOK RELEASED!:", "");
         }
-
+if(climbing && gamepad2.right_bumper){
+    winch.set(1);
+}
     /*    // Used for climbing
         runtime.reset();
         armDriveRatio = 1;
