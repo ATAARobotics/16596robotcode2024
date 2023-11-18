@@ -31,7 +31,7 @@ public class Auto_ShortLeft extends LinearOpMode {
         // need to confirm orientation of the HUB so that IMU directions are correct
 
         RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
-        RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.FORWARD;
+        RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
 
         orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
 
