@@ -38,6 +38,8 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -94,10 +96,11 @@ public class  TestDriveTrain extends OpMode {
     static final double MAX_POS = 1.0;     // Maximum rotational position
     static final double MIN_POS = 0.0;     // Minimum rotational position
     static final double STEP = 0.01;     // amount to slew servo
-    double position = 0.85; // Start at open position
-    double position2 = (0.35);
+    double position = 0.85; // Start finger at open position
+    double position2 = (0.35);// start wrist at pickup?
+    double droneStart = 1;
     double armSpeed;
-    double winchspeed = 1;
+    double winchspeed = .25;
     double xDistance = 0;
     double yDistance = 0;
     private MotorGroup armMotors;
@@ -121,6 +124,11 @@ public class  TestDriveTrain extends OpMode {
         rightFrontDrive = new Motor(hardwareMap, "right_front_drive");
         leftBackDrive = new Motor(hardwareMap, "left_back_drive");
         rightBackDrive = new Motor(hardwareMap, "right_back_drive");
+        leftBackDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        rightBackDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        rightFrontDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        leftFrontDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+
         arm1 = new Motor(hardwareMap, "arm1");
         arm2 = new Motor(hardwareMap, "arm2");
         winch = new Motor(hardwareMap, "winch");
@@ -226,15 +234,16 @@ public class  TestDriveTrain extends OpMode {
                 strafeSpeed,
                 forwardSpeed,
                 turnSpeed,
-                heading
-        );
+                heading);
+
         // move the arm:
         //TODO: need to confirm armPosition at start, it will NOT be zero.
         if (armSpeed < 0 && armPosition < 10)
             armSpeed = 0;//avoid trying to lower arm when on chassis
         // need to passively run winch when moving arm to keep string from hanging up
-        if (armSpeed > 0) winch.set(-winchspeed); // Confirm rotation
+        if (armSpeed > 0) winch.set(-winchspeed); // Winch is CCW when arm moves up
         if (armSpeed < 0) winch.set(winchspeed); // Confirm rotation
+        if (armSpeed ==0) winch.set(0); // stop winch when arm stops
         armMotors.set(armDriveRatio * armSpeed);  // calculate final arm speed to send
 
         armPosition = arm1.getCurrentPosition();
@@ -259,9 +268,15 @@ public class  TestDriveTrain extends OpMode {
         // Set the servo to the new position;
         finger.setPosition(position);
         wrist.setPosition(position2);
-        if (gamepad2.left_trigger > 0) drone.setPosition(1); // Launch drone!
+        if (gamepad2.right_trigger > 0){
+            drone.setPosition(0.0); // Launch drone!
+            telemetry.addData("DRONE LAUNCHED!:", "");
+        }
        // if (gamepad2.back) climb(); // start climb sequence
-        if (gamepad2.left_trigger>0) hook.setPosition(0);// temp to test servo
+        if (gamepad2.left_trigger>0) {
+            hook.setPosition(0);// temp to test servo
+            telemetry.addData("HOOK RELEASED!:", "");
+        }
 
     /*    // Used for climbing
         runtime.reset();
