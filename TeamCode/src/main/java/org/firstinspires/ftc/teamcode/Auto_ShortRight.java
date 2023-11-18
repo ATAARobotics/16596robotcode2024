@@ -69,7 +69,7 @@ public class Auto_ShortRight extends LinearOpMode {
         while (opModeIsActive() && (runtime.seconds() < 1.5)) {
             // tell ftclib its inputs  strafeSpeed,forwardSpeed,turn,heading
             drivebase.driveFieldCentric(
-                    -0.5,
+                    0.5,
                     0,
                     0,
                     heading

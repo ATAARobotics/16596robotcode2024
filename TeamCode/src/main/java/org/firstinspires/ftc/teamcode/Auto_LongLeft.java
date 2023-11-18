@@ -67,8 +67,8 @@ public class Auto_LongLeft extends LinearOpMode {
         while (opModeIsActive() && (runtime.seconds() < 3.0)) {
             // tell ftclib its inputs  strafeSpeed,forwardSpeed,turn,heading
             drivebase.driveFieldCentric(
-                    0.5,
-                    0.06,
+                    -0.5,
+                    0.0,
                     0,
                     0
             );

@@ -105,7 +105,7 @@ public class TestDriveTrain2 extends OpMode {
     boolean lastX = false;
     boolean lastY = false;
     private RevHubOrientationOnRobot orientationOnRobot;
-    static int ARM_MAX=115;
+    static int ARM_MAX=95;
     static int ARM_MIN=-75;
 
     @Override
@@ -193,7 +193,7 @@ public class TestDriveTrain2 extends OpMode {
         arm1.resetEncoder();
         ypod.resetEncoder();
         winch.resetEncoder();// this motor's encoder is used for Xpod
-
+        //setArmPosition(94);
     }
 
     /*
@@ -263,7 +263,7 @@ public class TestDriveTrain2 extends OpMode {
 */
         if (gamepad2.a && !lastA) setArmPosition(17);
         if (gamepad2.y && !lastY) setArmPosition(69);
-        if (gamepad2.x  ) finger.setPosition(0.0);
+        if (gamepad2.x  ) finger.setPosition(0.6);
         else finger.setPosition(1.0);
         if (gamepad2.b && !lastB) setArmPosition(94);
 
