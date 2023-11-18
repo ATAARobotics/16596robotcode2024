@@ -30,33 +30,18 @@
 package org.firstinspires.ftc.teamcode;
 
 
-import static com.sun.tools.doclint.Entity.ne;
-
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 // put ftclib imports here:
-import com.arcrobotics.ftclib.drivebase.MecanumDrive;
-import com.arcrobotics.ftclib.gamepad.GamepadEx;
-import com.arcrobotics.ftclib.command.button.Button; // missing and causing crash?
-import com.arcrobotics.ftclib.command.button.GamepadButton; // missing and causng crash?
-import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.arcrobotics.ftclib.hardware.ServoEx;
-import com.arcrobotics.ftclib.hardware.SimpleServo;
-import com.arcrobotics.ftclib.hardware.motors.Motor;
-import com.arcrobotics.ftclib.hardware.motors.MotorGroup;
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
@@ -69,9 +54,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
  */
 
-@TeleOp(name="Test_DriveTrain", group="teleop")
+@TeleOp(name="Test_DriveTrain2", group="teleop")
 //@Disabled
-public class  TestDriveTrain extends OpMode {
+public class TestDriveTrain2 extends OpMode {
 
     private static final int WINCHTIME = 5; //Test time
     // Declare OpMode members.
@@ -101,7 +86,7 @@ public class  TestDriveTrain extends OpMode {
     static final int ARM_PICKUP = -44;
     static final int ARM_DEPOSITMID = 113;
     static final int ARM_DEPOSITLONG = 188;
-    static final double WRIST_PICKUP = -0.0;
+    static final double WRIST_PICKUP = 0.31;
     static final double WRIST_DEPOSITMID = 0.31;
     static final double WRIST_DEPOSITLONG = 0.02;
     double position = 0.85; // Start finger at open position
@@ -271,8 +256,6 @@ public class  TestDriveTrain extends OpMode {
             telemetry.update();
         }
 */
-// if a is pressed and was not pressed last time I checked.
-
         if (gamepad2.a && !lastA) setArmPosition(17);
         if (gamepad2.y && !lastY) setArmPosition(69);
         if (gamepad2.x && !lastX) finger.setPosition(0.0);
@@ -280,8 +263,8 @@ public class  TestDriveTrain extends OpMode {
         if (gamepad2.b && !lastB) setArmPosition(94);
 
         // Set the servo to the new position;
-        finger.setPosition(position);
-        wrist.setPosition(position2);
+      //  finger.setPosition(position);
+      //  wrist.setPosition(position2);
         if (gamepad2.right_trigger > 0){
             drone.setPosition(0.0); // Launch drone!
             telemetry.addData("DRONE LAUNCHED!:", "");
@@ -307,9 +290,9 @@ public class  TestDriveTrain extends OpMode {
 
         // Show the elapsed game time and arm position.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.addData("arm position:", armPosition);
-        telemetry.addData("Finger Position:", "%5.2f", position);
-        telemetry.addData("Wrist Position:", "%5.2f", position2);
+        telemetry.addData("arm position:", armMotors.getPositions());
+        telemetry.addData("Finger Position:", "%5.2f", finger.getPosition());
+        telemetry.addData("Wrist Position:", "%5.2f", wrist.getPosition());
         telemetry.addData("heading:", "%5.2f", heading);
         telemetry.addData("X Distance:", "%5.2f", xDistance);
         telemetry.addData("Y Distance:", "%5.2f", yDistance);
@@ -382,6 +365,7 @@ public class  TestDriveTrain extends OpMode {
         switch(position){
             case 17:
                armMotors.setTargetPosition(ARM_PICKUP);
+
                wrist.setPosition(WRIST_PICKUP);
                break;
             case 94:
@@ -393,5 +377,12 @@ public class  TestDriveTrain extends OpMode {
                 wrist.setPosition(WRIST_DEPOSITLONG);
                 break;
         }
+//        armMotors.setRunMode(Motor.RunMode.PositionControl);
+//        armMotors.setPositionCoefficient(0.005);
+////        armMotors.setFeedforwardCoefficients(0.01,0.001);
+////        if(armMotors.atTargetPosition()) armMotors.stopMotor();
+////        else
+//            armMotors.set(0.3);
+//        armMotors.setPositionTolerance(10);
     }
 }
