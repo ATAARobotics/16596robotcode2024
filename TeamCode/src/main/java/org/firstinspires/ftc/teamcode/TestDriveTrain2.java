@@ -55,10 +55,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
  */
 
 @TeleOp(name="Manual_driveTrain", group="teleop")
-//@Disabled
-
-public class Manual_driveTrain extends OpMode {
-
 public class TestDriveTrain2 extends OpMode {
 
     private static final int WINCHTIME = 5; //Test time
