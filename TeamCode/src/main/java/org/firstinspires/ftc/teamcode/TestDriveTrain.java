@@ -216,7 +216,7 @@ public class TestDriveTrain extends OpMode {
         double turn_ratio = 0.4; // use this to slow turn rate
         double armDriveRatio = 0.4; // use this to slow down arm
         double strafeSpeed = driver.getLeftX() * speed_ratio;
-        double forwardSpeed = -driver.getLeftY() * speed_ratio;
+        double forwardSpeed = driver.getLeftY() * speed_ratio;
         double turnSpeed = driver.getRightX() * turn_ratio;
 
         // tell ftclib its inputs  strafeSpeed,forwardSpeed,turn,heading
@@ -258,7 +258,8 @@ public class TestDriveTrain extends OpMode {
         finger.setPosition(position);
         wrist.setPosition(position2);
         if (gamepad2.left_trigger > 0) drone.setPosition(1); // Launch drone!
-        if (gamepad2.back) climb(); // start climb sequence
+       // if (gamepad2.back) climb(); // start climb sequence
+        if (gamepad2.left_trigger>0) hook.setPosition(0);// temp to test servo
 
     /*    // Used for climbing
         runtime.reset();
