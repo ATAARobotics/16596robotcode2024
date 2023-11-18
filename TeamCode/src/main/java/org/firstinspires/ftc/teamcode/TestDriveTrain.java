@@ -30,6 +30,8 @@
 package org.firstinspires.ftc.teamcode;
 
 
+import static com.sun.tools.doclint.Entity.ne;
+
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
@@ -96,6 +98,12 @@ public class  TestDriveTrain extends OpMode {
     static final double MAX_POS = 1.0;     // Maximum rotational position
     static final double MIN_POS = 0.0;     // Minimum rotational position
     static final double STEP = 0.01;     // amount to slew servo
+    static final int ARM_PICKUP = -44;
+    static final int ARM_DEPOSITMID = 113;
+    static final int ARM_DEPOSITLONG = 188;
+    static final double WRIST_PICKUP = -0.0;
+    static final double WRIST_DEPOSITMID = 0.31;
+    static final double WRIST_DEPOSITLONG = 0.02;
     double position = 0.85; // Start finger at open position
     double position2 = (0.35);// start wrist at pickup?
     double droneStart = 1;
@@ -107,6 +115,10 @@ public class  TestDriveTrain extends OpMode {
 
     private IMU imu;// BHI260AP imu on this hub
     private boolean test = false;
+    boolean lastA = false;
+    boolean lastB = false;
+    boolean lastX = false;
+    boolean lastY = false;
     private RevHubOrientationOnRobot orientationOnRobot;
 
     @Override
@@ -259,11 +271,13 @@ public class  TestDriveTrain extends OpMode {
             telemetry.update();
         }
 */
+// if a is pressed and was not pressed last time I checked.
 
-        if (gamepad2.a && position < MAX_POS) position += STEP;
-        if (gamepad2.y && position > MIN_POS) position -= STEP;
-        if (gamepad2.x && position < MAX_POS) position2 += STEP;
-        if (gamepad2.b && position > MIN_POS) position2 -= STEP;
+        if (gamepad2.a && !lastA) setArmPosition(17);
+        if (gamepad2.y && !lastY) setArmPosition(69);
+        if (gamepad2.x && !lastX) finger.setPosition(0.0);
+        else finger.setPosition(1.0);
+        if (gamepad2.b && !lastB) setArmPosition(94);
 
         // Set the servo to the new position;
         finger.setPosition(position);
@@ -316,7 +330,10 @@ public class  TestDriveTrain extends OpMode {
         //pack.put("target_heading", headingControl.getSetPoint());
         // pack.put("parallel", parallel_encoder.getDistance());
         FtcDashboard.getInstance().sendTelemetryPacket(pack);
-
+        lastA = gamepad2.a;
+        lastB = gamepad2.b;
+        lastX = gamepad2.x;
+        lastY = gamepad2.y;
 /*
         // it seems that you can't send both "number" telemetry _and_ "draw stuff" telemetry in the same "packet"?
         pack = new TelemetryPacket();
@@ -359,6 +376,22 @@ public class  TestDriveTrain extends OpMode {
         while (runtime.seconds() < WINCHTIME) {
             winch.set(winchspeed);
             armMotors.set(1);
+        }
+    }
+    public void setArmPosition(int position){
+        switch(position){
+            case 17:
+               armMotors.setTargetPosition(ARM_PICKUP);
+               wrist.setPosition(WRIST_PICKUP);
+               break;
+            case 94:
+                armMotors.setTargetPosition(ARM_DEPOSITMID);
+                wrist.setPosition(WRIST_DEPOSITMID);
+                break;
+            case 69:
+                armMotors.setTargetPosition(ARM_DEPOSITLONG);
+                wrist.setPosition(WRIST_DEPOSITLONG);
+                break;
         }
     }
 }
