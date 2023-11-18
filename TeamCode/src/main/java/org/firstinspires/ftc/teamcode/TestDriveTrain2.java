@@ -54,13 +54,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
  */
 
-@TeleOp(name="Test_DriveTrain2", group="teleop")
+@TeleOp(name="Manual_driveTrain", group="teleop")
 //@Disabled
-<<<<<<<< HEAD:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Manual_driveTrain.java
+
 public class Manual_driveTrain extends OpMode {
-========
+
 public class TestDriveTrain2 extends OpMode {
->>>>>>>> origin/drive_april:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/TestDriveTrain2.java
 
     private static final int WINCHTIME = 5; //Test time
     // Declare OpMode members.
