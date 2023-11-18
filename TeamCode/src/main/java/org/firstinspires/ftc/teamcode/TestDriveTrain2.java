@@ -238,9 +238,9 @@ public class TestDriveTrain2 extends OpMode {
         if (armSpeed < 0 && armPosition < 10)
             armSpeed = 0;//avoid trying to lower arm when on chassis
         // need to passively run winch when moving arm to keep string from hanging up
-        if (armSpeed > 0) winch.set(-winchspeed); // Winch is CCW when arm moves up
-        if (armSpeed < 0) winch.set(winchspeed); // Confirm rotation
-        if (armSpeed ==0) winch.set(0); // stop winch when arm stops
+//        if (armSpeed > 0) winch.set(-winchspeed); // Winch is CCW when arm moves up
+//        if (armSpeed < 0) winch.set(winchspeed); // Confirm rotation
+//        if (armSpeed ==0) winch.set(0); // stop winch when arm stops
         armMotors.set(armDriveRatio * armSpeed);  // calculate final arm speed to send
 
         armPosition = arm1.getCurrentPosition();
