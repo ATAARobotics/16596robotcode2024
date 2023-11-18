@@ -104,6 +104,8 @@ public class TestDriveTrain2 extends OpMode {
     boolean lastX = false;
     boolean lastY = false;
     private RevHubOrientationOnRobot orientationOnRobot;
+    static int ARM_MAX;
+    static int ARM_MIN;
 
     @Override
     public void init() {
@@ -234,7 +236,7 @@ public class TestDriveTrain2 extends OpMode {
 
         // move the arm:
         //TODO: need to confirm armPosition at start, it will NOT be zero.
-        if (armSpeed < 0 && armPosition < 10)
+        if ((armSpeed < 0 && armPosition < ARM_MIN) || (armSpeed > 0 && armPosition > ARM_MAX))
             armSpeed = 0;//avoid trying to lower arm when on chassis
         // need to passively run winch when moving arm to keep string from hanging up
 //        if (armSpeed > 0) winch.set(-winchspeed); // Winch is CCW when arm moves up
