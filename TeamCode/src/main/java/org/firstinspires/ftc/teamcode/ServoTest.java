@@ -58,7 +58,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
  */
 @TeleOp(name = "ServoTest", group = "")
-//@Disabled
+@Disabled
 public class ServoTest extends LinearOpMode {
 
     static final double STEP   = 0.01;     // amount to slew servo each CYCLE_MS cycle

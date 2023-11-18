@@ -105,7 +105,7 @@ public class TestDriveTrain2 extends OpMode {
     boolean lastX = false;
     boolean lastY = false;
     private RevHubOrientationOnRobot orientationOnRobot;
-    static int ARM_MAX=124;
+    static int ARM_MAX=115;
     static int ARM_MIN=-75;
 
     @Override
@@ -274,16 +274,19 @@ public class TestDriveTrain2 extends OpMode {
             drone.setPosition(0.0); // Launch drone!
             telemetry.addData("DRONE LAUNCHED!:", "");
         }
-       // if (gamepad2.back) climb(); // start climb sequence
+       // go climbing!
         if (gamepad2.left_trigger>0 && gamepad2.right_trigger>0) {
-            hook.setPosition(0);// temp to test servo
+            hook.setPosition(0);
             climbing = true;
 
             telemetry.addData("HOOK RELEASED!:", "");
         }
+        runtime.reset();
 if(climbing && gamepad2.right_bumper){
-    winch.set(1);
-}
+    winch.set(.5);}
+    else winch.set(0);
+    //if(runtime.seconds() > 2) winch.set(0);
+
     /*    // Used for climbing
         runtime.reset();
         armDriveRatio = 1;
