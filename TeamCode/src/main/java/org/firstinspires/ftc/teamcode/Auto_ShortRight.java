@@ -6,6 +6,7 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -24,6 +25,7 @@ public class Auto_ShortRight extends LinearOpMode {
     private Motor rightFrontDrive = null;
     private Motor leftBackDrive = null;
     private Motor rightBackDrive = null;
+    private Servo finger;
 
     private Motor arm1 = null;
     MecanumDrive drivebase = null;
@@ -32,6 +34,7 @@ public class Auto_ShortRight extends LinearOpMode {
     private RevHubOrientationOnRobot orientationOnRobot;
     public void runOpMode(){
         // Initialize the drive system variables.
+        finger = hardwareMap.get(Servo.class, "Finger");
         leftFrontDrive = new Motor(hardwareMap, "left_front_drive");
         rightFrontDrive = new Motor(hardwareMap, "right_front_drive");
         leftBackDrive = new Motor(hardwareMap, "left_back_drive");
@@ -63,7 +66,7 @@ public class Auto_ShortRight extends LinearOpMode {
         // Replace with encoder measured distance if needed
 
         runtime.reset(); // reset timer
-        while (opModeIsActive() && (runtime.seconds() < 2.0)) {
+        while (opModeIsActive() && (runtime.seconds() < 1.5)) {
             // tell ftclib its inputs  strafeSpeed,forwardSpeed,turn,heading
             drivebase.driveFieldCentric(
                     -0.5,
@@ -72,6 +75,8 @@ public class Auto_ShortRight extends LinearOpMode {
                     heading
 
             );
+            finger.setPosition(0.0);
+
             telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
             telemetry.update();
         }

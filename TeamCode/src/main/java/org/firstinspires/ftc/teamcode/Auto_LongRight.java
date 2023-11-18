@@ -6,6 +6,7 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 @Autonomous(name = "Long_Right",group = "")
 public class Auto_LongRight extends LinearOpMode {
@@ -16,12 +17,14 @@ public class Auto_LongRight extends LinearOpMode {
     private Motor rightBackDrive = null;
 
     private Motor arm1 = null;
+    private Servo finger;
     MecanumDrive drivebase = null;
     private IMU imu;// BHI260AP imu on this hub
     private boolean test = false;
     private RevHubOrientationOnRobot orientationOnRobot;
     public void runOpMode(){
         // Initialize the drive system variables.
+        finger = hardwareMap.get(Servo.class, "Finger");
         leftFrontDrive = new Motor(hardwareMap, "left_front_drive");
         rightFrontDrive = new Motor(hardwareMap, "right_front_drive");
         leftBackDrive = new Motor(hardwareMap, "left_back_drive");
@@ -77,6 +80,8 @@ public class Auto_LongRight extends LinearOpMode {
                     0,
                     0
             );
+
+            finger.setPosition(0.0);
             telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
             telemetry.update();
         }
