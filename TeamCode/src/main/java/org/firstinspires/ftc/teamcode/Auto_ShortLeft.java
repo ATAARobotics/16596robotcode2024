@@ -43,7 +43,7 @@ public class Auto_ShortLeft extends LinearOpMode {
         );
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-
+        imu.resetYaw();
         // Step through each leg of the path, ensuring that the Auto mode has not been stopped along the way
 
         // Step 1:  strafe left for X seconds:

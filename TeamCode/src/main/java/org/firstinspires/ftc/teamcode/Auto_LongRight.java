@@ -43,7 +43,7 @@ public class Auto_LongRight extends LinearOpMode {
         );
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-
+        imu.resetYaw();
         // Step through each leg of the path, ensuring that the Auto mode has not been stopped along the way
         //step 1 : move forward to clear frame
         // Step 2:  strafe right for X seconds:
@@ -61,7 +61,7 @@ public class Auto_LongRight extends LinearOpMode {
             // tell ftclib its inputs  strafeSpeed,forwardSpeed,turn,heading
             drivebase.driveFieldCentric(
                     0,
-                    -0.5,
+                    0.5,
                     0,
                     0
             );
@@ -72,7 +72,7 @@ public class Auto_LongRight extends LinearOpMode {
         while (opModeIsActive() && (runtime.seconds() < 3.0)) {
             // tell ftclib its inputs  strafeSpeed,forwardSpeed,turn,heading
             drivebase.driveFieldCentric(
-                    -0.5,
+                    0.5,
                     0,
                     0,
                     0

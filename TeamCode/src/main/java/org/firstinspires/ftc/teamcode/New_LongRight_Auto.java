@@ -71,7 +71,7 @@ public class New_LongRight_Auto extends OpMode {
        }
         drivebase.driveFieldCentric(
                 0,
-                -0.5,
+                0.5,
                 0,
                 0
         );

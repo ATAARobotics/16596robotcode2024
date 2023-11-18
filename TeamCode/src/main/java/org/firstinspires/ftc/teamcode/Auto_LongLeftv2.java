@@ -24,9 +24,17 @@ public class Auto_LongLeftv2 extends OpMode {
     private IMU imu;// BHI260AP imu on this hub
     private boolean test = false;
     private RevHubOrientationOnRobot orientationOnRobot;
+    RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
+    RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
 
+
+@Override
+public void start(){
+    imu.resetYaw();
+}
     @Override
     public void init() {
+        orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
 
     }
 

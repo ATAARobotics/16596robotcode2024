@@ -56,7 +56,7 @@ public class Auto_ShortRight extends LinearOpMode {
         );
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-
+        imu.resetYaw();
         // Step through each leg of the path, ensuring that the Auto mode has not been stopped along the way
 
         // Step 1:  strafe right for X seconds:
