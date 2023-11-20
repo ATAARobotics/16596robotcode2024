@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.AutoPrograms;
 
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
@@ -8,14 +8,25 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-@Autonomous(name = "Short_Left",group = "")
-public class Auto_ShortLeft extends LinearOpMode {
+
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.hardware.RevIMU;
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+
+@Autonomous(name = "Short_Right",group = "")
+public class Auto_ShortRight extends LinearOpMode {
     private final ElapsedTime runtime = new ElapsedTime();
     private Motor leftFrontDrive = null;
     private Motor rightFrontDrive = null;
     private Motor leftBackDrive = null;
     private Motor rightBackDrive = null;
     private Servo finger;
+
     private Motor arm1 = null;
     MecanumDrive drivebase = null;
     private IMU imu;// BHI260AP imu on this hub
@@ -29,14 +40,17 @@ public class Auto_ShortLeft extends LinearOpMode {
         leftBackDrive = new Motor(hardwareMap, "left_back_drive");
         rightBackDrive = new Motor(hardwareMap, "right_back_drive");
 
-        IMU imu = hardwareMap.get(IMU.class, "imu");// need to use IMU in expansion hub, not control hub
+         imu = hardwareMap.get(IMU.class, "imu");// need to use IMU in expansion hub, not control hub
         // need to confirm orientation of the HUB so that IMU directions are correct
 
         RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
         RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
 
         orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
+        imu.initialize(new IMU.Parameters(orientationOnRobot));
 
+        YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
+        double heading = orientation.getYaw(AngleUnit.DEGREES);
         drivebase = new MecanumDrive(
                 leftFrontDrive,
                 rightFrontDrive,
@@ -48,23 +62,25 @@ public class Auto_ShortLeft extends LinearOpMode {
         imu.resetYaw();
         // Step through each leg of the path, ensuring that the Auto mode has not been stopped along the way
 
-        // Step 1:  strafe left for X seconds:
+        // Step 1:  strafe right for X seconds:
         // Replace with encoder measured distance if needed
 
         runtime.reset(); // reset timer
-        while (opModeIsActive() && (runtime.seconds() < 2.0)) {
+        while (opModeIsActive() && (runtime.seconds() < 1.5)) {
             // tell ftclib its inputs  strafeSpeed,forwardSpeed,turn,heading
             drivebase.driveFieldCentric(
-                    -0.5,
+                    0.5,
                     0,
                     0,
-                    0
+                    heading
+
             );
             finger.setPosition(0.0);
+
             telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
             telemetry.update();
         }
         // Step 2:  Stop
-
+            stop();
     }
 }

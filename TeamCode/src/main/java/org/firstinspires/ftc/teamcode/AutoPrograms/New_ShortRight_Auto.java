@@ -1,15 +1,16 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.AutoPrograms;
 
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.IMU;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-@Autonomous(name = "Long_Right",group = "")
-public class Auto_LongRight extends LinearOpMode {
+@Autonomous(name = "New_ShortRight_",group = "")
+@Disabled
+public class New_ShortRight_Auto extends LinearOpMode {
     private final ElapsedTime runtime = new ElapsedTime();
     private Motor leftFrontDrive = null;
     private Motor rightFrontDrive = null;
@@ -17,14 +18,12 @@ public class Auto_LongRight extends LinearOpMode {
     private Motor rightBackDrive = null;
 
     private Motor arm1 = null;
-    private Servo finger;
     MecanumDrive drivebase = null;
     private IMU imu;// BHI260AP imu on this hub
     private boolean test = false;
     private RevHubOrientationOnRobot orientationOnRobot;
     public void runOpMode(){
         // Initialize the drive system variables.
-        finger = hardwareMap.get(Servo.class, "Finger");
         leftFrontDrive = new Motor(hardwareMap, "left_front_drive");
         rightFrontDrive = new Motor(hardwareMap, "right_front_drive");
         leftBackDrive = new Motor(hardwareMap, "left_back_drive");
@@ -48,31 +47,12 @@ public class Auto_LongRight extends LinearOpMode {
         waitForStart();
         imu.resetYaw();
         // Step through each leg of the path, ensuring that the Auto mode has not been stopped along the way
-        //step 1 : move forward to clear frame
-        // Step 2:  strafe right for X seconds:
+
+        // Step 1:  strafe left for X seconds:
         // Replace with encoder measured distance if needed
 
-        try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
         runtime.reset(); // reset timer
-        //move forward 2 inches
-
-        while (opModeIsActive() && (runtime.seconds() < 0.04)){
-            // tell ftclib its inputs  strafeSpeed,forwardSpeed,turn,heading
-            drivebase.driveFieldCentric(
-                    0,
-                    0.5,
-                    0,
-                    0
-            );
-            telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
-            telemetry.update();
-        }
-
-        while (opModeIsActive() && (runtime.seconds() < 3.0)) {
+        while (opModeIsActive() && (runtime.seconds() < 2.0)) {
             // tell ftclib its inputs  strafeSpeed,forwardSpeed,turn,heading
             drivebase.driveFieldCentric(
                     0.5,
@@ -80,12 +60,10 @@ public class Auto_LongRight extends LinearOpMode {
                     0,
                     0
             );
-
-            finger.setPosition(0.0);
             telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
             telemetry.update();
         }
         // Step 2:  Stop
 
     }
-}//set finger to 0
+}
