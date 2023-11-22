@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.JustTesting;
 
 
 import com.arcrobotics.ftclib.controller.PIDController;
@@ -49,7 +49,6 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
-// imports from hyperdroids:
 
 /* TODO:
 1: SET UP ENCODERS
@@ -57,10 +56,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
  */
 
-@TeleOp(name="Manual_driveTrain", group="teleop")
-public class TestDriveTrain2 extends OpMode {
+@TeleOp(name="ArmTest", group="teleop")
+public class PID_armTest extends OpMode {
 
-    private static final int WINCHTIME = 5; //Test time
     // Declare OpMode members.
     public GamepadEx driver = null;
     public GamepadEx operator = null;
@@ -76,12 +74,12 @@ public class TestDriveTrain2 extends OpMode {
     private Motor rightBackDrive = null;
     private Motor arm1 = null;
     private Motor arm2 = null;
-    private Motor winch = null;
+    //private Motor winch = null;
     private Motor ypod = null;// fake motor to use encoder for odometry module
     private Servo finger, wrist, drone, hook;
     private String message = " ";
 
-   
+
     // TODO clean up these before Comp2- how many presets are used?
     static final int ARM_PICKUP = -44;
     static final int ARM_DEPOSIT_MID = 113;
@@ -89,15 +87,16 @@ public class TestDriveTrain2 extends OpMode {
     static final double WRIST_PICKUP = 0.31;
     static final double WRIST_DEPOSIT_MID = 0.31;
     static final double WRIST_DEPOSIT_LONG = 0.02;
+
     double position2 = (0.35);// start wrist at pickup?
-   
+
     double armSpeed;
-   public PIDController armPID;
+    public PIDController armPID;
     double winchspeed = .25;
     double xDistance = 0;
     double yDistance = 0;
     private MotorGroup armMotors;
-    public final double ticks_to_mm = Math.PI * 48 /2000;// for use in odometry
+    public final double ticks_to_mm = Math.PI * 48 / 2000;// for use in odometry
     private IMU imu;// BHI260AP imu on this hub
     private boolean test = false;
     boolean lastA = false;
@@ -131,18 +130,14 @@ public class TestDriveTrain2 extends OpMode {
 
         arm1 = new Motor(hardwareMap, "arm1");
         arm2 = new Motor(hardwareMap, "arm2");
-        winch = new Motor(hardwareMap, "winch");
-        // use 'fake' motor to get Y encoder values
-        ypod = new Motor(hardwareMap, "y_encoder");// encoder only, no motor here
-
-// Creates a PID Controller with gains kP, kI, kD
-      armPID = new PIDController(.5, .05, .05);
 
         // set up arm motors for master/slave
         armMotors = new MotorGroup(arm1, arm2);
-// see if there is way of putting motor group into brake mode?
         armMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         armMotors.setInverted(true);    // confirm if we need to invert
+
+// Creates a PID Controller with gains kP, kI, kD
+        armPID = new PIDController(.5, .08, .0);
 
         // set up servos
         wrist = hardwareMap.get(Servo.class, "Wrist");
@@ -152,7 +147,7 @@ public class TestDriveTrain2 extends OpMode {
 
         driver = new GamepadEx(gamepad1);
         operator = new GamepadEx(gamepad2);
-        winch.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        //winch.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
 
         // need to confirm orientation of the HUB so that IMU directions are correct
         imu = hardwareMap.get(IMU.class, "imu");// need to use IMU in expansion hub, not control hub
@@ -185,9 +180,6 @@ public class TestDriveTrain2 extends OpMode {
         imu.resetYaw(); // THIS SHOULD NOT BE HERE IF AUTO IS RUN AHEAD OF THIS!!
         runtime.reset();
         arm1.resetEncoder();
-        ypod.resetEncoder();
-        winch.resetEncoder();// this motor's encoder is used for Xpod
-        //``````````````````````````````````````````````````````````````````````````````````````````````setArmPosition(94);
     }
 
     /*
@@ -196,20 +188,7 @@ public class TestDriveTrain2 extends OpMode {
     @Override
     public void loop() {
         this.init();
-        //get X and Y distances
 
-        xDistance = winch.getDistance();
-        yDistance = ypod.getDistance();
-
-
-   /*     // Setup a variable for each drive wheel to save power level for telemetry
-        double leftFrontPower;
-        double rightFrontPower;
-        double leftBackPower;
-        double rightBackPower;
-        double armDriveSpeed;
-*/// code to set up power reading for motors
-        driver.readButtons();  // enable 'was just pressed' methods
         YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
         double heading = orientation.getYaw(AngleUnit.DEGREES);
         double turn = 0;  // set up 'turn' variable
@@ -218,6 +197,8 @@ public class TestDriveTrain2 extends OpMode {
         double speed_ratio = 0.6;  // Use this to slow down robot
         double turn_ratio = 0.4; // use this to slow turn rate
         double armDriveRatio = 0.4; // use this to slow down arm
+
+        //======= get human inputs for drive and arm =============
         double strafeSpeed = driver.getLeftX() * speed_ratio;
         double forwardSpeed = driver.getLeftY() * speed_ratio;
         double turnSpeed = driver.getRightX() * turn_ratio;
@@ -233,51 +214,22 @@ public class TestDriveTrain2 extends OpMode {
         //TODO: need to confirm armPosition at start, it will NOT be zero.
         if ((armSpeed < 0 && armPosition < ARM_MIN) || (armSpeed > 0 && armPosition > ARM_MAX))
             armSpeed = 0;//avoid trying to lower arm when on chassis and limit extension
-        if (armSpeed > 0 && driver.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER)> 0) armDriveRatio = 1;// override speed limit using trigger
+        if (armSpeed > 0 && driver.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0)
+            armDriveRatio = 1;// override speed limit using trigger
 
         armMotors.set(armDriveRatio * armSpeed);  // calculate final arm speed to send
+       armPosition = arm1.getCurrentPosition();
 
-        armPosition = arm1.getCurrentPosition();
-        // temporary code to move finger
-/*
-        if (operator.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
-            finger.setPosition(.85);
-            telemetry.addData("release pixel","");
-            telemetry.update();
-        } else if (operator.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)){
-                finger.setPosition(1.0);
-            telemetry.addData("grab pixel","");
-            telemetry.update();
-        }
-*/
-        if (gamepad2.a && !lastA) setArmPosition(1);// set arm and wrist for pickup
-        if (gamepad2.y && !lastY) setArmPosition(2);// set arm and wrist for mid deposit
+       if (gamepad2.a && !lastA) setArmPID(0);// set arm back to initial position via PID
+
         if (gamepad2.x) finger.setPosition(0.6);// finger defaults closed;this is to open it
         else finger.setPosition(1.0);
-        if (gamepad2.b && !lastB) setArmPosition(3);// set arm and wrist for long deposit
 
-        // ================ Launch Drone ===============================
-        if (gamepad2.right_trigger > 0) {
-            drone.setPosition(0.0); // Launch drone!
-            message = "drone launched";
-        }
-        // =============== go climbing! =============================
-        if (gamepad2.left_trigger > 0 && gamepad2.right_trigger > 0) {
-            hook.setPosition(0);
-            climbing = true;
-
-            message = "climbing!";
-        }
-        runtime.reset();
-        if (climbing && gamepad2.right_bumper) {
-            winch.set(1);
-            armMotors.set(1);
-        } else winch.set(0);
-        
         // Show the elapsed game time and arm position.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.addData("arm position:", armMotors.getPositions());
-        telemetry.addData("Finger Position:", "%5.2f", finger.getPosition());
+        telemetry.addData("arm position:",armPosition);
+        telemetry.addData("last a:",lastA);
+        /*telemetry.addData("Finger Position:", "%5.2f", finger.getPosition());
         telemetry.addData("Wrist Position:", "%5.2f", wrist.getPosition());
         telemetry.addData("heading:", "%5.2f", heading);
         telemetry.addData("X Distance:", "%5.2f", xDistance);
@@ -285,49 +237,25 @@ public class TestDriveTrain2 extends OpMode {
         telemetry.addData("===== motor data ====", "");
         telemetry.addData("strafe:", "%5.2f", strafeSpeed);
         telemetry.addData("forward:", "%5.2f", forwardSpeed);
-        telemetry.addData("turn:", "%5.2f", turnSpeed);
-        telemetry.addData("Message",message);
+        telemetry.addData("turn:", "%5.2f", turnSpeed);*/
+        telemetry.addData("Message", message);
         // Push telemetry to the Driver Station.
         telemetry.update();
         // ftc-dashboard telemetry
         TelemetryPacket pack = new TelemetryPacket();
 
         pack.put("heading", heading);
-        pack.put("arm Position:", armPosition);
-        pack.put("Wrist position:", position2);
-        pack.put("X distance:", xDistance);
-        pack.put("Y distance:", yDistance);
-        //pack.put("target_heading", headingControl.getSetPoint());
-        // pack.put("parallel", parallel_encoder.getDistance());
+        pack.put("arm Position", armPosition);
+        pack.put("message", message);
+
         FtcDashboard.getInstance().sendTelemetryPacket(pack);
+
         lastA = gamepad2.a;
         lastB = gamepad2.b;
         lastX = gamepad2.x;
         lastY = gamepad2.y;
-/*
-        // it seems that you can't send both "number" telemetry _and_ "draw stuff" telemetry in the same "packet"?
-        pack = new TelemetryPacket();
-
-        // actual robot is 407mm square
-        double INCHES_TO_MM = 0.03937008;
-        // move origin to bottom left
-        pack.fieldOverlay().setTranslation(-6*12, 6*12);
-        // do all other drawing in millimeters
-        pack.fieldOverlay().setScale(INCHES_TO_MM, INCHES_TO_MM);
-        // center the drawing in the robot
-        //pack.fieldOverlay().setTranslation(-203, 203);
-        pack.fieldOverlay()
-                //               .setFill("blue")
-                //              .fillCircle(parallel_encoder.getDistance(), 0.0, 2.0)
-                .setFill("red")
-                .fillRect(parallel_encoder.getDistance(), -407, 407, 407);
-
-        //telemetryTfod();
-        FtcDashboard.getInstance().sendTelemetryPacket(pack);
-        */ // commented out dashboard stuff
-
     }
-    
+
     /*
      * Code to run ONCE after the driver hits STOP
      */
@@ -335,48 +263,13 @@ public class TestDriveTrain2 extends OpMode {
     public void stop() {
 
     }
-
-    public void climb() {
-        // put climb actions here
-        runtime.reset();
-        hook.setPosition(1); //Confirm Servo position to deploy hook
-        while (runtime.seconds() < WINCHTIME) {
-            winch.set(winchspeed);
-            armMotors.set(1);
+   public void setArmPID(int position) {
+        armPID.setSetPoint(position);
+        while (!armPID.atSetPoint()) {
+            double armOut = armPID.calculate(arm1.getCurrentPosition());
+            armMotors.set(armOut);
+            message = "PID";
         }
-    }
-
-    public void setArmPosition(int armSetPosition) {
-        switch (armSetPosition) {
-            case 1:
-                //armMotors.setRunMode(Motor.RunMode.PositionControl);
-                armMotors.setTargetPosition(ARM_PICKUP);
-                wrist.setPosition(WRIST_PICKUP);
-                break;
-            case 2:
-               // armMotors.setRunMode(Motor.RunMode.PositionControl);
-                armMotors.setTargetPosition(0);// 0 for testing, needs to be ARM_DEPOSIT_MID
-                wrist.setPosition(WRIST_DEPOSIT_MID);
-                //armMotors.set(.5);
-                break;
-            case 3:
-                //armMotors.setRunMode(Motor.RunMode.PositionControl);
-                armMotors.setTargetPosition(ARM_DEPOSIT_LONG);
-                wrist.setPosition(WRIST_DEPOSIT_LONG);
-                break;
-        }
-        armMotors.setRunMode(Motor.RunMode.PositionControl);
-        armMotors.set(.5);
-        message = "left case statement";
-    }
+    }// end of method
 }
-// armPID.setSetPoint(ARM_DEPOSIT_MID);
-// bring arm to zero for testing
-//armPID.setSetPoint(0);// temp for testing
 
-               /* while (!armPID.atSetPoint()) {
-                    double armOut = armPID.calculate(armMotors.getCurrentPosition());
-                    armMotors.set(armOut);
-                    //armMotors.setTargetPosition(ARM_DEPOSIT_MID);
-                }*/
-//armMotors.set(0);

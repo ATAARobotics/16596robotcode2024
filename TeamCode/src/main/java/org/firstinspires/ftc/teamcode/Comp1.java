@@ -54,7 +54,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
  */
 
-@TeleOp(name="Manual_driveTrain", group="teleop")
+@TeleOp(name="Comp1", group="teleop")
 public class Comp1 extends OpMode {
 
     private static final int WINCHTIME = 5; //Test time
@@ -373,28 +373,26 @@ if(climbing && gamepad2.right_bumper){
             armMotors.set(1);
         }
     }
-    public void setArmPosition(int position){
-        switch(position){
+    public void setArmPosition(int position) {
+        switch (position) {
             case 17:
-               armMotors.setTargetPosition(ARM_PICKUP);
+                armMotors.setTargetPosition(ARM_PICKUP);
 
-               wrist.setPosition(WRIST_PICKUP);
-               break;
+                wrist.setPosition(WRIST_PICKUP);
+                break;
             case 94:
                 armMotors.setTargetPosition(ARM_DEPOSITMID);
-                wrist.setPosition(WRIST_DEPOSITMID);
+                //wrist.setPosition(WRIST_DEPOSITMID);
+                wrist.setPosition(0);
                 break;
             case 69:
                 armMotors.setTargetPosition(ARM_DEPOSITLONG);
                 wrist.setPosition(WRIST_DEPOSITLONG);
                 break;
         }
-//        armMotors.setRunMode(Motor.RunMode.PositionControl);
-//        armMotors.setPositionCoefficient(0.005);
-////        armMotors.setFeedforwardCoefficients(0.01,0.001);
-////        if(armMotors.atTargetPosition()) armMotors.stopMotor();
-////        else
-//            armMotors.set(0.3);
-//        armMotors.setPositionTolerance(10);
+
+
+
     }
+
 }
