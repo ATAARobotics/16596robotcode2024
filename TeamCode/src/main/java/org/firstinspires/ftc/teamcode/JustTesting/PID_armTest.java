@@ -100,7 +100,7 @@ public class PID_armTest extends OpMode {
     private IMU imu;// BHI260AP imu on this hub
     private boolean test = false;
     boolean lastA = false;
-    boolean climbing = false;
+    boolean armInAuto = false;
     boolean lastB = false;
     boolean lastX = false;
     boolean lastY = false;
@@ -137,7 +137,7 @@ public class PID_armTest extends OpMode {
         armMotors.setInverted(true);    // confirm if we need to invert
 
 // Creates a PID Controller with gains kP, kI, kD
-        armPID = new PIDController(.5, .08, .0);
+        armPID = new PIDController(.02, .004, .0);
 
         // set up servos
         wrist = hardwareMap.get(Servo.class, "Wrist");
@@ -216,15 +216,20 @@ public class PID_armTest extends OpMode {
             armSpeed = 0;//avoid trying to lower arm when on chassis and limit extension
         if (armSpeed > 0 && driver.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0)
             armDriveRatio = 1;// override speed limit using trigger
-
-        armMotors.set(armDriveRatio * armSpeed);  // calculate final arm speed to send
+// ============== use either operator speed or PID =====
+        if (!armInAuto ) armMotors.set(armDriveRatio * armSpeed);
+        else  {
+            armPID.setSetPoint(0);
+            double armOut = armPID.calculate(arm1.getCurrentPosition());// calculate final arm speed to send
+            armMotors.set(armOut);
+        }
        armPosition = arm1.getCurrentPosition();
 
-       if (gamepad2.a && !lastA) setArmPID(0);// set arm back to initial position via PID
+       //if (gamepad2.a && !lastA) setArmPID(0);// set arm back to initial position via PID
 
-        if (gamepad2.x) finger.setPosition(0.6);// finger defaults closed;this is to open it
-        else finger.setPosition(1.0);
-
+        if (gamepad2.x) armInAuto = !armInAuto;    // toggle arm auto mode
+        if (armInAuto ) message = "arm in auto mode";
+        else message = "arm in manual mode";
         // Show the elapsed game time and arm position.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.addData("arm position:",armPosition);
@@ -263,13 +268,12 @@ public class PID_armTest extends OpMode {
     public void stop() {
 
     }
-   public void setArmPID(int position) {
-        armPID.setSetPoint(position);
-        while (!armPID.atSetPoint()) {
-            double armOut = armPID.calculate(arm1.getCurrentPosition());
-            armMotors.set(armOut);
-            message = "PID";
-        }
-    }// end of method
+   /*public void setArmPID(int position) {
+       armPID.setSetPoint(position);
+       double armOut = armPID.calculate(arm1.getCurrentPosition());
+       armMotors.set(armOut);
+
+
+   }// end of method*/
 }
 
