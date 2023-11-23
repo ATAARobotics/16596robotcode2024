@@ -57,8 +57,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
  */
 
-@TeleOp(name="Manual_driveTrain", group="teleop")
-public class TestDriveTrain2 extends OpMode {
+@TeleOp(name="DriveTrain_comp", group="teleop")
+public class DriveTrain_comp extends OpMode {
 
     private static final int WINCHTIME = 5; //Test time
     // Declare OpMode members.
@@ -99,6 +99,7 @@ public class TestDriveTrain2 extends OpMode {
     private MotorGroup armMotors;
     public final double ticks_to_mm = Math.PI * 48 /2000;// for use in odometry
     private IMU imu;// BHI260AP imu on this hub
+    boolean armInAuto = false;
     private boolean test = false;
     boolean lastA = false;
     boolean climbing = false;
@@ -132,18 +133,18 @@ public class TestDriveTrain2 extends OpMode {
         arm1 = new Motor(hardwareMap, "arm1");
         arm2 = new Motor(hardwareMap, "arm2");
         winch = new Motor(hardwareMap, "winch");
+
         // use 'fake' motor to get Y encoder values
         ypod = new Motor(hardwareMap, "y_encoder");// encoder only, no motor here
-
-// Creates a PID Controller with gains kP, kI, kD
-      armPID = new PIDController(.5, .05, .05);
 
         // set up arm motors for master/slave
         armMotors = new MotorGroup(arm1, arm2);
 // see if there is way of putting motor group into brake mode?
         armMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         armMotors.setInverted(true);    // confirm if we need to invert
-
+// Creates a PID Controller with gains kP, kI, kD
+ // testing [without the wrist!] and 0 setpoint: Kp=0.02,Ki=0.004,Kd=0
+        armPID = new PIDController(.02, .004, 0);
         // set up servos
         wrist = hardwareMap.get(Servo.class, "Wrist");
         finger = hardwareMap.get(Servo.class, "Finger");
@@ -184,7 +185,7 @@ public class TestDriveTrain2 extends OpMode {
     public void start() {
         imu.resetYaw(); // THIS SHOULD NOT BE HERE IF AUTO IS RUN AHEAD OF THIS!!
         runtime.reset();
-        arm1.resetEncoder();
+        arm1.resetEncoder();// use this for arm position & PID
         ypod.resetEncoder();
         winch.resetEncoder();// this motor's encoder is used for Xpod
         //``````````````````````````````````````````````````````````````````````````````````````````````setArmPosition(94);
@@ -201,14 +202,6 @@ public class TestDriveTrain2 extends OpMode {
         xDistance = winch.getDistance();
         yDistance = ypod.getDistance();
 
-
-   /*     // Setup a variable for each drive wheel to save power level for telemetry
-        double leftFrontPower;
-        double rightFrontPower;
-        double leftBackPower;
-        double rightBackPower;
-        double armDriveSpeed;
-*/// code to set up power reading for motors
         driver.readButtons();  // enable 'was just pressed' methods
         YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
         double heading = orientation.getYaw(AngleUnit.DEGREES);
@@ -218,6 +211,8 @@ public class TestDriveTrain2 extends OpMode {
         double speed_ratio = 0.6;  // Use this to slow down robot
         double turn_ratio = 0.4; // use this to slow turn rate
         double armDriveRatio = 0.4; // use this to slow down arm
+
+        //======= get human inputs for drive and arm =============
         double strafeSpeed = driver.getLeftX() * speed_ratio;
         double forwardSpeed = driver.getLeftY() * speed_ratio;
         double turnSpeed = driver.getRightX() * turn_ratio;
@@ -234,9 +229,13 @@ public class TestDriveTrain2 extends OpMode {
         if ((armSpeed < 0 && armPosition < ARM_MIN) || (armSpeed > 0 && armPosition > ARM_MAX))
             armSpeed = 0;//avoid trying to lower arm when on chassis and limit extension
         if (armSpeed > 0 && driver.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER)> 0) armDriveRatio = 1;// override speed limit using trigger
-
-        armMotors.set(armDriveRatio * armSpeed);  // calculate final arm speed to send
-
+// ============== use either operator speed or PID =====
+        if (!armInAuto ) armMotors.set(armDriveRatio * armSpeed);
+        else  {
+            armPID.setSetPoint(0);
+            double armOut = armPID.calculate(arm1.getCurrentPosition());// calculate final arm speed to send
+            armMotors.set(armOut);
+        }
         armPosition = arm1.getCurrentPosition();
         // temporary code to move finger
 /*
@@ -255,7 +254,9 @@ public class TestDriveTrain2 extends OpMode {
         if (gamepad2.x) finger.setPosition(0.6);// finger defaults closed;this is to open it
         else finger.setPosition(1.0);
         if (gamepad2.b && !lastB) setArmPosition(3);// set arm and wrist for long deposit
-
+        if (gamepad2.dpad_left) armInAuto = !armInAuto;    // toggle arm auto mode
+        if (armInAuto ) message = "arm in auto mode";
+        else message = "arm in manual mode";
         // ================ Launch Drone ===============================
         if (gamepad2.right_trigger > 0) {
             drone.setPosition(0.0); // Launch drone!
@@ -297,6 +298,8 @@ public class TestDriveTrain2 extends OpMode {
         pack.put("Wrist position:", position2);
         pack.put("X distance:", xDistance);
         pack.put("Y distance:", yDistance);
+        pack.put("message", message);
+
         //pack.put("target_heading", headingControl.getSetPoint());
         // pack.put("parallel", parallel_encoder.getDistance());
         FtcDashboard.getInstance().sendTelemetryPacket(pack);

@@ -98,22 +98,14 @@ public class PID_armTest extends OpMode {
     private MotorGroup armMotors;
     public final double ticks_to_mm = Math.PI * 48 / 2000;// for use in odometry
     private IMU imu;// BHI260AP imu on this hub
-    private boolean test = false;
-    boolean lastA = false;
     boolean armInAuto = false;
-    boolean lastB = false;
-    boolean lastX = false;
-    boolean lastY = false;
     private RevHubOrientationOnRobot orientationOnRobot;
     static int ARM_MAX = 95;
     static int ARM_MIN = -75;
 
     @Override
     public void init() {
-        if (test) {
-            return;
-        }
-        test = true;
+
         telemetry.addData("Status", "Initialized");
 
         // Initialize the hardware variables. Note that the strings used here as parameters
@@ -217,32 +209,28 @@ public class PID_armTest extends OpMode {
         if (armSpeed > 0 && driver.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0)
             armDriveRatio = 1;// override speed limit using trigger
 // ============== use either operator speed or PID =====
-        if (!armInAuto ) armMotors.set(armDriveRatio * armSpeed);
-        else  {
+        if (!armInAuto) armMotors.set(armDriveRatio * armSpeed);
+        else {
             armPID.setSetPoint(0);
             double armOut = armPID.calculate(arm1.getCurrentPosition());// calculate final arm speed to send
             armMotors.set(armOut);
         }
-       armPosition = arm1.getCurrentPosition();
+        armPosition = arm1.getCurrentPosition();
 
-       //if (gamepad2.a && !lastA) setArmPID(0);// set arm back to initial position via PID
+        //if (gamepad2.a && !lastA) setArmPID(0);// set arm back to initial position via PID
 
         if (gamepad2.x) armInAuto = !armInAuto;    // toggle arm auto mode
-        if (armInAuto ) message = "arm in auto mode";
+        if (armInAuto) message = "arm in auto mode";
         else message = "arm in manual mode";
         // Show the elapsed game time and arm position.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.addData("arm position:",armPosition);
-        telemetry.addData("last a:",lastA);
-        /*telemetry.addData("Finger Position:", "%5.2f", finger.getPosition());
-        telemetry.addData("Wrist Position:", "%5.2f", wrist.getPosition());
+        telemetry.addData("arm position:", armPosition);
+
+        //  telemetry.addData("Finger Position:", "%5.2f", finger.getPosition());
+        //   telemetry.addData("Wrist Position:", "%5.2f", wrist.getPosition());
         telemetry.addData("heading:", "%5.2f", heading);
         telemetry.addData("X Distance:", "%5.2f", xDistance);
         telemetry.addData("Y Distance:", "%5.2f", yDistance);
-        telemetry.addData("===== motor data ====", "");
-        telemetry.addData("strafe:", "%5.2f", strafeSpeed);
-        telemetry.addData("forward:", "%5.2f", forwardSpeed);
-        telemetry.addData("turn:", "%5.2f", turnSpeed);*/
         telemetry.addData("Message", message);
         // Push telemetry to the Driver Station.
         telemetry.update();
@@ -255,25 +243,16 @@ public class PID_armTest extends OpMode {
 
         FtcDashboard.getInstance().sendTelemetryPacket(pack);
 
-        lastA = gamepad2.a;
-        lastB = gamepad2.b;
-        lastX = gamepad2.x;
-        lastY = gamepad2.y;
-    }
 
+    }
     /*
      * Code to run ONCE after the driver hits STOP
      */
     @Override
     public void stop() {
 
-    }
-   /*public void setArmPID(int position) {
-       armPID.setSetPoint(position);
-       double armOut = armPID.calculate(arm1.getCurrentPosition());
-       armMotors.set(armOut);
+        }
 
-
-   }// end of method*/
 }
+
 
