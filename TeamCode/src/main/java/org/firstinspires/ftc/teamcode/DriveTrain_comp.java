@@ -199,8 +199,10 @@ public class DriveTrain_comp extends OpMode {
         this.init();
         //get X and Y distances
 
-        xDistance = winch.getDistance();
-        yDistance = ypod.getDistance();
+        xDistance = winch.getDistance() * ticks_to_mm;
+        yDistance = ypod.getDistance() * ticks_to_mm;
+        double testX_Distance = winch.getCurrentPosition();
+        double testY_Distance = ypod.getCurrentPosition();
 
         driver.readButtons();  // enable 'was just pressed' methods
         YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
@@ -281,8 +283,10 @@ public class DriveTrain_comp extends OpMode {
         telemetry.addData("Finger Position:", "%5.2f", finger.getPosition());
         telemetry.addData("Wrist Position:", "%5.2f", wrist.getPosition());
         telemetry.addData("heading:", "%5.2f", heading);
-        telemetry.addData("X Distance:", "%5.2f", xDistance);
-        telemetry.addData("Y Distance:", "%5.2f", yDistance);
+        telemetry.addData("X Distance mm:", "%5.2f", xDistance);
+        telemetry.addData("Y Distancemm:", "%5.2f", yDistance);
+        telemetry.addData("test X Distance mm:", "%5.2f", testX_Distance);
+        telemetry.addData("test Y Distance mm:", "%5.2f", testY_Distance);
         telemetry.addData("===== motor data ====", "");
         telemetry.addData("strafe:", "%5.2f", strafeSpeed);
         telemetry.addData("forward:", "%5.2f", forwardSpeed);
