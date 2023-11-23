@@ -27,18 +27,28 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.JustTesting;
 
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-@TeleOp(name="mecanum", group="teleop")
-public class MecanumDrive extends OpMode
+import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+
+import java.util.List;
+
+
+@TeleOp(name="MecanumDrive_april tag", group="teleop")
+@Disabled
+public class MecanumDrive_apriltag extends OpMode
 {
     // Declare OpMode members.
     private final ElapsedTime runtime = new ElapsedTime();
@@ -46,6 +56,19 @@ public class MecanumDrive extends OpMode
     private DcMotor rightFrontDrive = null;
     private DcMotor leftBackDrive = null;
     private DcMotor rightBackDrive = null;
+
+    private DcMotorSimple armDrive = null; // HexMotor on arm; may have to add another
+    private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
+
+    /**
+     * The variable to store our instance of the AprilTag processor.
+     */
+    private AprilTagProcessor aprilTag;
+
+    /**
+     * The variable to store our instance of the vision portal.
+     */
+    private VisionPortal visionPortal;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -56,12 +79,12 @@ public class MecanumDrive extends OpMode
 
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
-        // step (using the FTC Robot Controller app on the phone).
+        // IMPORTANT:  use DcMotorEx.class to enable
         leftFrontDrive  = hardwareMap.get(DcMotor.class, "left_front_drive");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
         leftBackDrive  = hardwareMap.get(DcMotor.class, "left_back_drive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
-
+       // need to add this to expansion hub  armDrive = hardwareMap.get(DcMotor.class,"HexMotor");
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
@@ -69,6 +92,7 @@ public class MecanumDrive extends OpMode
         // NOTE: reconfirm directions after gear ratio repaired and wheels mounted correctly!
 
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         leftBackDrive.setDirection(DcMotorSimple.Direction.REVERSE);
         rightBackDrive.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -101,22 +125,45 @@ public class MecanumDrive extends OpMode
         double rightFrontPower;
         double leftBackPower;
         double rightBackPower;
+        double armDriveSpeed; // fixed speed for arm, not by operator
+        double armAngle;
         double drive = gamepad1.left_stick_y * -1.0; // stick down is positive, invert so that up moves forward
         double turn = gamepad1.right_stick_x;
         double strafe = gamepad1.left_stick_x;
+        double speed_ratio;  // Use this to adjust max robot speed
+
+
         // Choose to drive using either Tank Mode, or POV Mode
         // Comment out the method that's not used.  The default below is POV.
 
         // POV Mode uses left stick to go forward, and right stick to turn.
         // - This uses basic math to combine motions and is easier to drive straight.
 
+        speed_ratio = 0.8;
+        leftFrontPower = speed_ratio *  Range.clip(drive + turn + strafe, -1, 1);
+        leftBackPower = speed_ratio * Range.clip(drive + turn - strafe, -1, 1);
+        rightFrontPower = speed_ratio * Range.clip(drive - turn - strafe, -1, 1);
+        rightBackPower = speed_ratio * Range.clip(drive - turn + strafe, -1, 1);
 
-        leftFrontPower = Range.clip(drive + turn + strafe, -1, 1);
-        leftBackPower = Range.clip(drive + turn - strafe, -1, 1);
-        rightFrontPower = Range.clip(drive - turn - strafe, -1, 1);
-        rightBackPower = Range.clip(drive - turn + strafe, -1, 1);
+/* simple test of sparkmini - A button to turn otor on for testing
+        On the
+ * robot configuration, use the drop down list under 'Servos' to select 'REV SPARK Mini Controller'
+                * and name it 'HexMotor'. */
 
+        armDriveSpeed = .25;
+        // value from Hex motor encoder.... Oct 5: can't read encoder if motor is powered from SparkMini....
+        // Need to either add Hub expansion OR plug encoder into an existing motor port and NOT use the motor encoder but rather that Hex core!
+        //
 
+// insert code here to move arm to preset position based on buttons. Need to get telemetry
+        // and move by hand to get angle positions
+
+// april tag processing
+        telemetryAprilTag();
+
+        // Push telemetry to the Driver Station.
+        telemetry.update();
+        visionPortal.resumeStreaming();
 
         // Send calculated power to wheels
         leftFrontDrive.setPower(leftFrontPower);
@@ -129,11 +176,36 @@ public class MecanumDrive extends OpMode
 
     }
 
+
+
     /*
      * Code to run ONCE after the driver hits STOP
      */
     @Override
     public void stop() {
     }
+    private void telemetryAprilTag() {
 
+        List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+        telemetry.addData("# AprilTags Detected", currentDetections.size());
+
+        // Step through the list of detections and display info for each one.
+        for (AprilTagDetection detection : currentDetections) {
+            if (detection.metadata != null) {
+                telemetry.addLine(String.format("\n==== (ID %d) %s", detection.id, detection.metadata.name));
+                telemetry.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)", detection.ftcPose.x, detection.ftcPose.y, detection.ftcPose.z));
+                telemetry.addLine(String.format("PRY %6.1f %6.1f %6.1f  (deg)", detection.ftcPose.pitch, detection.ftcPose.roll, detection.ftcPose.yaw));
+                telemetry.addLine(String.format("RBE %6.1f %6.1f %6.1f  (inch, deg, deg)", detection.ftcPose.range, detection.ftcPose.bearing, detection.ftcPose.elevation));
+            } else {
+                telemetry.addLine(String.format("\n==== (ID %d) Unknown", detection.id));
+                telemetry.addLine(String.format("Center %6.0f %6.0f   (pixels)", detection.center.x, detection.center.y));
+            }
+        }   // end for() loop
+
+        // Add "key" information to telemetry
+        telemetry.addLine("\nkey:\nXYZ = X (Right), Y (Forward), Z (Up) dist.");
+        telemetry.addLine("PRY = Pitch, Roll & Yaw (XYZ Rotation)");
+        telemetry.addLine("RBE = Range, Bearing & Elevation");
+
+    }   // end method telemetryAprilTag()
 }
