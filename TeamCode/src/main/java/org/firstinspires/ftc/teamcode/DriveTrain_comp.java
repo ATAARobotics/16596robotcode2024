@@ -49,7 +49,6 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
-// imports from hyperdroids:
 
 /* TODO:
 1: SET UP ENCODERS
@@ -98,24 +97,17 @@ public class DriveTrain_comp extends OpMode {
     double yDistance = 0;
     private MotorGroup armMotors;
     public final double ticks_to_mm = Math.PI * 48 /2000;// for use in odometry
-    private IMU imu;// BHI260AP imu on this hub
+    private IMU imu;// BHO055 imu on this hub
     boolean armInAuto = false;
     private boolean test = false;
-    boolean lastA = false;
     boolean climbing = false;
-    boolean lastB = false;
-    boolean lastX = false;
-    boolean lastY = false;
     private RevHubOrientationOnRobot orientationOnRobot;
     static int ARM_MAX = 95;
     static int ARM_MIN = -75;
 
     @Override
     public void init() {
-        if (test) {
-            return;
-        }
-        test = true;
+
         telemetry.addData("Status", "Initialized");
 
         // Initialize the hardware variables. Note that the strings used here as parameters
@@ -160,15 +152,21 @@ public class DriveTrain_comp extends OpMode {
         RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
         RevHubOrientationOnRobot.UsbFacingDirection usbDirection = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
         orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
-
+        imu.initialize(new IMU.Parameters(orientationOnRobot));
+double testYencoder;
         drivebase = new MecanumDrive(
                 leftFrontDrive,
                 rightFrontDrive,
                 leftBackDrive,
                 rightBackDrive
         );
+        arm1.resetEncoder();// use this for arm position & PID
+        ypod.resetEncoder();
+        winch.resetEncoder();// this motor's encoder is used for Xpod
+        testYencoder = ypod.getCurrentPosition();
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
+
     }
 
     /*
@@ -199,10 +197,10 @@ public class DriveTrain_comp extends OpMode {
         this.init();
         //get X and Y distances
 
-        xDistance = winch.getDistance() * ticks_to_mm;
-        yDistance = ypod.getDistance() * ticks_to_mm;
-        double testX_Distance = winch.getCurrentPosition();
-        double testY_Distance = ypod.getCurrentPosition();
+        xDistance = winch.getDistance() ;
+        yDistance = -ypod.getDistance() ;
+        double calcX_Distance = winch.getCurrentPosition()* ticks_to_mm;
+        double calcY_Distance = -ypod.getCurrentPosition()* ticks_to_mm;
 
         driver.readButtons();  // enable 'was just pressed' methods
         YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
@@ -210,7 +208,7 @@ public class DriveTrain_comp extends OpMode {
         double turn = 0;  // set up 'turn' variable
         double armSpeed = operator.getLeftY();
 
-        double speed_ratio = 0.6;  // Use this to slow down robot
+        double speed_ratio = 0.4;  // Use this to slow down robot
         double turn_ratio = 0.4; // use this to slow turn rate
         double armDriveRatio = 0.4; // use this to slow down arm
 
@@ -251,12 +249,12 @@ public class DriveTrain_comp extends OpMode {
             telemetry.update();
         }
 */
-        if (gamepad2.a && !lastA) setArmPosition(1);// set arm and wrist for pickup
-        if (gamepad2.y && !lastY) setArmPosition(2);// set arm and wrist for mid deposit
-        if (gamepad2.x) finger.setPosition(0.6);// finger defaults closed;this is to open it
+        if (operator.wasJustPressed(GamepadKeys.Button.A)) setArmPosition(1);// set arm and wrist for pickup
+        if (operator.wasJustPressed(GamepadKeys.Button.Y)) setArmPosition(2);// set arm and wrist for mid deposit
+        if (operator.wasJustPressed(GamepadKeys.Button.X)) finger.setPosition(0.6);// finger defaults closed;this is to open it
         else finger.setPosition(1.0);
-        if (gamepad2.b && !lastB) setArmPosition(3);// set arm and wrist for long deposit
-        if (gamepad2.dpad_left) armInAuto = !armInAuto;    // toggle arm auto mode
+        if (operator.wasJustPressed(GamepadKeys.Button.B)) setArmPosition(3);// set arm and wrist for long deposit
+        if (operator.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) armInAuto = !armInAuto;    // toggle arm auto mode
         if (armInAuto ) message = "arm in auto mode";
         else message = "arm in manual mode";
         // ================ Launch Drone ===============================
@@ -271,7 +269,7 @@ public class DriveTrain_comp extends OpMode {
 
             message = "climbing!";
         }
-        runtime.reset();
+
         if (climbing && gamepad2.right_bumper) {
             winch.set(1);
             armMotors.set(1);
@@ -285,8 +283,8 @@ public class DriveTrain_comp extends OpMode {
         telemetry.addData("heading:", "%5.2f", heading);
         telemetry.addData("X Distance mm:", "%5.2f", xDistance);
         telemetry.addData("Y Distancemm:", "%5.2f", yDistance);
-        telemetry.addData("test X Distance mm:", "%5.2f", testX_Distance);
-        telemetry.addData("test Y Distance mm:", "%5.2f", testY_Distance);
+        telemetry.addData("Calculated X Distance mm:", "%5.2f", calcX_Distance);
+        telemetry.addData("Calculated Y Distance mm:", "%5.2f", calcY_Distance);
         telemetry.addData("===== motor data ====", "");
         telemetry.addData("strafe:", "%5.2f", strafeSpeed);
         telemetry.addData("forward:", "%5.2f", forwardSpeed);
@@ -307,10 +305,7 @@ public class DriveTrain_comp extends OpMode {
         //pack.put("target_heading", headingControl.getSetPoint());
         // pack.put("parallel", parallel_encoder.getDistance());
         FtcDashboard.getInstance().sendTelemetryPacket(pack);
-        lastA = gamepad2.a;
-        lastB = gamepad2.b;
-        lastX = gamepad2.x;
-        lastY = gamepad2.y;
+
 /*
         // it seems that you can't send both "number" telemetry _and_ "draw stuff" telemetry in the same "packet"?
         pack = new TelemetryPacket();

@@ -97,7 +97,7 @@ public class PID_armTest extends OpMode {
     double yDistance = 0;
     private MotorGroup armMotors;
     public final double ticks_to_mm = Math.PI * 48 / 2000;// for use in odometry
-    private IMU imu;// BHI260AP imu on this hub
+    private IMU imu;// BHO055 imu on this hub
     boolean armInAuto = false;
     private RevHubOrientationOnRobot orientationOnRobot;
     static int ARM_MAX = 95;
@@ -146,6 +146,7 @@ public class PID_armTest extends OpMode {
         RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
         RevHubOrientationOnRobot.UsbFacingDirection usbDirection = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
         orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
+        imu.initialize(new IMU.Parameters(orientationOnRobot));
 
         drivebase = new MecanumDrive(
                 leftFrontDrive,
