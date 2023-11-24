@@ -11,17 +11,11 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import com.arcrobotics.ftclib.gamepad.GamepadEx;
-import com.arcrobotics.ftclib.hardware.RevIMU;
-
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
 @Autonomous(name = "Short_Right",group = "")
-public class Auto_ShortRight extends LinearOpMode {
+public class Auto_right_PID extends LinearOpMode {
     private final ElapsedTime runtime = new ElapsedTime();
     PIDController headingControl = null;
     private MotorGroup armMotors;
@@ -74,7 +68,7 @@ public class Auto_ShortRight extends LinearOpMode {
         headingControl = new PIDController(0.08, 0.05, 0.0);
         YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
         double heading = orientation.getYaw(AngleUnit.DEGREES);
-        headingControl.setSetPoint(0.0);// get set points for directions
+        headingControl.setSetPoint(right);// get set points for directions
 
         drivebase = new MecanumDrive(
                 leftFrontDrive,
@@ -96,7 +90,7 @@ public class Auto_ShortRight extends LinearOpMode {
             xDistance = winch.getCurrentPosition() * ticks_to_mm;
             //yDistance = ypod.getCurrentPosition() * ticks_to_mm; use this for testing
             // tell ftclib its inputs  strafeSpeed,forwardSpeed,turn,heading
-/*// if we can't get good strafing then try PID Heading control
+// if we can't get good strafing then try PID Heading control
 
             drivebase.driveFieldCentric(
                     0.5,
@@ -104,21 +98,26 @@ public class Auto_ShortRight extends LinearOpMode {
                     headingCorrection,
                     heading
 
-            );*/ // this is using PID to keep strafe correct
+            ); // this is using PID to keep strafe correct
 
-            drivebase.driveFieldCentric(
-                    0.5,
-                    0,
-                    0,
-                    heading
 
-            );
             finger.setPosition(0.0);
+// do we need to back up slightly so we are not touching the pixel?
 
             telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
             telemetry.update();
+            // step 2: Back away from pixel if needed:
+            while (opModeIsActive() && (runtime.seconds() < 0.5)) {
+                drivebase.driveFieldCentric(
+                        0.0,
+                        -.20,
+                        headingCorrection,
+                        heading
+
+                );
+            }
         }
-        // Step 2:  Stop
+        // Step 3:  Stop
             stop();
     }
 }
