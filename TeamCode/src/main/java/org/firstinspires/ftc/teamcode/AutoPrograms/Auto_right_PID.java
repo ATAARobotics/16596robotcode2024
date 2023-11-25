@@ -93,7 +93,7 @@ winch.resetEncoder();
         while (opModeIsActive()) {
             heading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
             if(heading - forward > 180) heading -= 360;
-            headingCorrection = -headingControl.calculate(heading);
+            headingCorrection = -headingControl.calculate(heading/360);
 //            xDistance = winch.getCurrentPosition() * ticks_to_mm;
             xDistance = ypod.getDistance();
             //yDistance = ypod.getCurrentPosition() * ticks_to_mm; use this for testing
