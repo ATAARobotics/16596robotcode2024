@@ -282,7 +282,7 @@ double testYencoder;
         telemetry.addData("Wrist Position:", "%5.2f", wrist.getPosition());
         telemetry.addData("heading:", "%5.2f", heading);
         telemetry.addData("X Distance mm:", "%5.2f", xDistance);
-        telemetry.addData("Y Distancemm:", "%5.2f", yDistance);
+        telemetry.addData("Y Distance mm:", "%5.2f", yDistance);
         telemetry.addData("Calculated X Distance mm:", "%5.2f", calcX_Distance);
         telemetry.addData("Calculated Y Distance mm:", "%5.2f", calcY_Distance);
         telemetry.addData("===== motor data ====", "");
@@ -352,18 +352,21 @@ double testYencoder;
         switch (armSetPosition) {
             case 1:
                 //armMotors.setRunMode(Motor.RunMode.PositionControl);
-                armMotors.setTargetPosition(ARM_PICKUP);
+                //armMotors.setTargetPosition(ARM_PICKUP);
+                armPID.setSetPoint(ARM_PICKUP);
                 wrist.setPosition(WRIST_PICKUP);
                 break;
             case 2:
                // armMotors.setRunMode(Motor.RunMode.PositionControl);
-                armMotors.setTargetPosition(0);// 0 for testing, needs to be ARM_DEPOSIT_MID
+               // armMotors.setTargetPosition(0);// 0 for testing, needs to be ARM_DEPOSIT_MID
+                armPID.setSetPoint(ARM_DEPOSIT_MID);
                 wrist.setPosition(WRIST_DEPOSIT_MID);
                 //armMotors.set(.5);
                 break;
             case 3:
-                //armMotors.setRunMode(Motor.RunMode.PositionControl);
-                armMotors.setTargetPosition(ARM_DEPOSIT_LONG);
+                // armMotors.setRunMode(Motor.RunMode.PositionControl);
+                // armMotors.setTargetPosition(ARM_DEPOSIT_LONG);
+                armPID.setSetPoint(ARM_DEPOSIT_LONG);
                 wrist.setPosition(WRIST_DEPOSIT_LONG);
                 break;
         }

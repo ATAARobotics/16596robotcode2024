@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.mechanisms;
 
+import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
@@ -21,6 +22,7 @@ public class DriveTrain {
     // Odometry Motors and variables
     private Motor xPea = null;
     private Motor yPea = null;
+    private PIDController headingControl = null;
     public final double ticks_to_mm = Math.PI * 48 /2000;// for use in odometry
 
     // Define IMU
@@ -28,10 +30,11 @@ public class DriveTrain {
     private RevHubOrientationOnRobot orientationOnRobot;
 
     // Auto alignment directions
-    double forward = 0; // north
-    double back = 180; // south
-    double right = -90; // east
-    double left = 90; //west
+    public double forward = 0; // north
+    public double back = 180; // south
+    public double right = -90; // east
+    public double left = 90; //west
+    private double headingDirection = forward;
 
 
     // Define Drive constants.  Make them public so they CAN be used by the calling OpMode
@@ -68,6 +71,8 @@ public class DriveTrain {
         driveBase = new MecanumDrive(leftFrontDrive,rightFrontDrive,leftBackDrive,rightBackDrive);
     }
     public void init() {
+        headingControl = new PIDController(0.02, 0.004, 0.0);
+        headingControl.setSetPoint(headingDirection);
         leftBackDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         rightBackDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         rightFrontDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
@@ -81,13 +86,32 @@ public class DriveTrain {
         yPea.resetEncoder();
         imu.resetYaw();
     }
+
+    public  void TurnLeft(){
+        headingDirection = headingDirection +90;
+        headingDirection = headingDirection % 360;
+    }
+    public  void TurnRight(){
+        headingDirection = headingDirection -90;
+        headingDirection = headingDirection % 360;
+    }
+
+    public void setDirection(double newHeading) {
+        headingDirection = newHeading;
+    }
+    public void drive(double forwardSpeed, double strafeSpeed) {
+        double heading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+        if(heading - forward > 180) heading -= 360;
+        double headingCorrection = -headingControl.calculate(heading);
+        drive(forwardSpeed,headingCorrection,strafeSpeed);
+    }
     public void drive(double forwardSpeed, double turnSpeed, double strafeSpeed) {
         // tell ftclib its inputs  strafeSpeed,forwardSpeed,turn,heading
         driveBase.driveFieldCentric(
                 strafeSpeed,
                 forwardSpeed,
                 turnSpeed,
-                imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+        headingDirection);
     }
 
     /**

@@ -138,7 +138,7 @@ public class Auto_LongLeft extends LinearOpMode {
                         0.0,
                         -.20,
                         headingCorrection,
-                        heading,
+                        heading
                         );
             }
                         //Step 3: Release Pixels

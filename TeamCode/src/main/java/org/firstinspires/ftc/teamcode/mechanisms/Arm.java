@@ -75,12 +75,12 @@ public class Arm {
 
         if (!armInAuto ) armMotors.set(armDriveRatio * armSpeed);
         else  {
-            armPID.setSetPoint(0);
             double armOut = armPID.calculate(arm1.getCurrentPosition());// calculate final arm speed to send
             armMotors.set(armOut);
         }
         armPosition = arm1.getCurrentPosition();
     }
+
     public void overrideArmSpeed(boolean enabled) {
         armDriveRatio = enabled?1:0.4;
     }
@@ -88,24 +88,22 @@ public class Arm {
     public void setArmPosition(int armSetPosition) {
         switch (armSetPosition) {
             case 1:
-                //armMotors.setRunMode(Motor.RunMode.PositionControl);
+                armPID.setSetPoint(ARM_PICKUP);
                 armMotors.setTargetPosition(ARM_PICKUP);
                 wrist.setPosition(WRIST_PICKUP);
                 break;
             case 2:
-                // armMotors.setRunMode(Motor.RunMode.PositionControl);
-                armMotors.setTargetPosition(0);// 0 for testing, needs to be ARM_DEPOSIT_MID
+                armPID.setSetPoint(ARM_DEPOSIT_MID);
+                armMotors.setTargetPosition(ARM_DEPOSIT_MID);
                 wrist.setPosition(WRIST_DEPOSIT_MID);
-                //armMotors.set(.5);
                 break;
             case 3:
-                //armMotors.setRunMode(Motor.RunMode.PositionControl);
+                armPID.setSetPoint(ARM_DEPOSIT_LONG);
                 armMotors.setTargetPosition(ARM_DEPOSIT_LONG);
                 wrist.setPosition(WRIST_DEPOSIT_LONG);
                 break;
         }
         armMotors.setRunMode(Motor.RunMode.PositionControl);
-        armMotors.set(.5);
     }
 
     public void setFinger(boolean enabled) {

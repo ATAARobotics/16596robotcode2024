@@ -56,6 +56,7 @@ public class CleanTeleop extends OpMode {
 
     private String message = " ";
     boolean climbing = false;
+    boolean turning = false;
 
 
     /**
@@ -98,9 +99,19 @@ public class CleanTeleop extends OpMode {
         double turnSpeed = driver.getRightX() * SPEED_RATIO;
 
         // tell ftclib its inputs  strafeSpeed,forwardSpeed,turn,heading
+        if(!turning && turnSpeed > 0.8) {
+            driveTrain.TurnRight();
+            turning = true;
+        }
+        else if(!turning && turnSpeed < -0.8) {
+            driveTrain.TurnLeft();
+            turning = true;
+        }
+        if (Math.abs(turnSpeed)< 0.8){
+            turning  = false;
+        }
         driveTrain.drive(
                 forwardSpeed,
-                turnSpeed,
                 strafeSpeed);
 
         arm.loop();

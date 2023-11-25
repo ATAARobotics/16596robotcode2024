@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.AutoPrograms;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
@@ -7,6 +9,7 @@ import com.arcrobotics.ftclib.hardware.motors.MotorGroup;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -14,7 +17,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
-@Autonomous(name = "Short Right",group = "")
+//@Autonomous(name = "Short Right",group = "")
+@TeleOp(name="TestHeadingPID", group="teleop")
 public class Auto_right_PID extends LinearOpMode {
     private final ElapsedTime runtime = new ElapsedTime();
     PIDController headingControl = null;
@@ -29,10 +33,10 @@ public class Auto_right_PID extends LinearOpMode {
     private Motor ypod = null;// fake motor to use encoder for odometry module
     private Servo finger, wrist, drone, hook;
     private String message = " ";
-    public final double ticks_to_mm = Math.PI * 48 /2000;// for use in odometry
+    public final double ticks_to_mm = Math.PI * 48 / (25.4 * 2000);// for use in odometry
     double xDistance = 0;
     double yDistance = 0;
-    double xTarget = -500;
+    double xTarget = -48;
     double forward = 0; // north
     double back = 180; // south
     double right = -90; // east
@@ -51,7 +55,10 @@ public class Auto_right_PID extends LinearOpMode {
         rightBackDrive = new Motor(hardwareMap, "right_back_drive");
         arm1 = new Motor(hardwareMap, "arm1");
         arm2 = new Motor(hardwareMap, "arm2");
-
+        leftBackDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        rightBackDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        rightFrontDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        leftFrontDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         // use 'fake' motor to get Y encoder values
         ypod = new Motor(hardwareMap, "y_encoder");// encoder only, no motor here
 
@@ -70,7 +77,9 @@ winch.resetEncoder();
 
         orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
         imu.initialize(new IMU.Parameters(orientationOnRobot));
-        headingControl = new PIDController(0.01, 0.0, 0.0);
+
+        headingControl = new PIDController(0.02, 0.004, 0.0);
+
         YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
         double heading = orientation.getYaw(AngleUnit.DEGREES);
         headingControl.setSetPoint(forward);// get set points for directions
@@ -102,7 +111,7 @@ winch.resetEncoder();
 
             if(xDistance > xTarget) drivebase.driveFieldCentric(
                     0,
-                    0,
+                    0.0,
                     headingCorrection,
                     heading
 
@@ -112,7 +121,7 @@ winch.resetEncoder();
             }
 
 
-            finger.setPosition(0.0);
+           // finger.setPosition(0.0);
 // do we need to back up slightly so we are not touching the pixel?
 
             telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
@@ -122,6 +131,21 @@ winch.resetEncoder();
             telemetry.addData("X Distance mm:", "%5.2f", xDistance);
             telemetry.addData("Y Distance mm:", "%5.2f", winch.getDistance());
             telemetry.update();
+
+            // ftc-dashboard telemetry
+            TelemetryPacket pack = new TelemetryPacket();
+
+            pack.put("heading", heading);
+            pack.put("xDistance", xDistance);
+            pack.put("yDistance", winch.getDistance());
+            pack.put("Current Heading", heading);
+            pack.put("Heading Correction", headingCorrection);
+            pack.put("Heading Target", forward);
+            pack.put("message", message);
+
+            FtcDashboard.getInstance().sendTelemetryPacket(pack);
+
+
             // step 2: Back away from pixel if needed:
 //            while (opModeIsActive() && (runtime.seconds() < 0.5)) {
 ////                drivebase.driveFieldCentric(

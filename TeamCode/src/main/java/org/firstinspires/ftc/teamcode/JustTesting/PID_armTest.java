@@ -107,7 +107,6 @@ public class PID_armTest extends OpMode {
     public void init() {
 
         telemetry.addData("Status", "Initialized");
-
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         //
@@ -122,14 +121,14 @@ public class PID_armTest extends OpMode {
 
         arm1 = new Motor(hardwareMap, "arm1");
         arm2 = new Motor(hardwareMap, "arm2");
-
+        arm1.resetEncoder();
         // set up arm motors for master/slave
         armMotors = new MotorGroup(arm1, arm2);
         armMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         armMotors.setInverted(true);    // confirm if we need to invert
 
 // Creates a PID Controller with gains kP, kI, kD
-        armPID = new PIDController(.02, .004, .0);
+        armPID = new PIDController(.06, .004, .0);
 
         // set up servos
         wrist = hardwareMap.get(Servo.class, "Wrist");
@@ -215,6 +214,7 @@ public class PID_armTest extends OpMode {
             armPID.setSetPoint(0);
             double armOut = armPID.calculate(arm1.getCurrentPosition());// calculate final arm speed to send
             armMotors.set(armOut);
+            telemetry.addData("armPower",armOut);
         }
         armPosition = arm1.getCurrentPosition();
 
