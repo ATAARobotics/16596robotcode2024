@@ -37,10 +37,10 @@ public class Auto_LongLeft extends LinearOpMode {
     double south = 180; // back
     double east = -90; // left
     double west = 90; // right
-    double northDist = 0;
-    double eastDist = 0;
-    double southDist = 0;
-    double westDist = 0;
+    double northTarget = 0;
+    double eastTarget = 0;
+    double southTarget = 0;
+    double westTarget = 0;
     double step1Dist = 1524;
     double step2Dist = 2540;
     double step3Dist = 127;
