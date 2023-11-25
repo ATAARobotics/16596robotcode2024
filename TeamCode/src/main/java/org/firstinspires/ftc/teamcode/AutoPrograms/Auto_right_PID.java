@@ -70,7 +70,7 @@ winch.resetEncoder();
 
         orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
         imu.initialize(new IMU.Parameters(orientationOnRobot));
-        headingControl = new PIDController(0.1, 0.0, 0.0);
+        headingControl = new PIDController(0.01, 0.0, 0.0);
         YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
         double heading = orientation.getYaw(AngleUnit.DEGREES);
         headingControl.setSetPoint(forward);// get set points for directions
@@ -93,7 +93,7 @@ winch.resetEncoder();
         while (opModeIsActive()) {
             heading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
             if(heading - forward > 180) heading -= 360;
-            headingCorrection = -headingControl.calculate(heading/360);
+            headingCorrection = -headingControl.calculate(heading);
 //            xDistance = winch.getCurrentPosition() * ticks_to_mm;
             xDistance = ypod.getDistance();
             //yDistance = ypod.getCurrentPosition() * ticks_to_mm; use this for testing
