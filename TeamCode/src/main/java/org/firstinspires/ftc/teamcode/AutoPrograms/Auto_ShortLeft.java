@@ -15,6 +15,10 @@ public class Auto_ShortLeft extends LinearOpMode {
     private Motor rightFrontDrive = null;
     private Motor leftBackDrive = null;
     private Motor rightBackDrive = null;
+    double northDist = 0;
+    double eastDist = 0;
+    double southDist = 0;
+    double westDist = 0;
     private Servo finger;
     private Motor arm1 = null;
     MecanumDrive drivebase = null;

@@ -15,7 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
 @Autonomous(name = "Short_Right",group = "")
-public class Auto_right_PID extends LinearOpMode {
+public class Auto_ShortRight extends LinearOpMode {
     private final ElapsedTime runtime = new ElapsedTime();
     PIDController headingControl = null;
     private MotorGroup armMotors;
@@ -37,6 +37,10 @@ public class Auto_right_PID extends LinearOpMode {
     double back = 180; // south
     double right = -90; // east
     double left = 90; //west
+    double northDist = 0;
+    double eastDist = 0;
+    double southDist = 0;
+    double westDist = 0;
     double headingCorrection = 0;
     MecanumDrive drivebase = null;
     private IMU imu;// BHI260AP imu on this hub
