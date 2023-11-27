@@ -100,6 +100,7 @@ public class CleanTeleop extends OpMode {
         double turnSpeed = driver.getRightX() * Constants. SPEED_RATIO;
 
         // tell ftclib its inputs  strafeSpeed,forwardSpeed,turn,heading
+        // If we want to turn the robot, lets do it
         if(!turning && turnSpeed > 0.8) {
             driveTrain.TurnRight();
             turning = true;
