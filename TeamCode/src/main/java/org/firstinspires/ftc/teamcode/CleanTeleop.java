@@ -116,7 +116,7 @@ public class CleanTeleop extends OpMode {
                 strafeSpeed);
 
         arm.loop();
-
+// ========== Get Operator control commands: ========================
         if (operator.wasJustPressed(GamepadKeys.Button.A)) arm.setArmPosition(1);// set arm and wrist for pickup
         if (operator.wasJustPressed(GamepadKeys.Button.Y)) arm.setArmPosition(2);// set arm and wrist for mid deposit
         if (operator.wasJustPressed(GamepadKeys.Button.X)) arm.setFinger(true);// finger defaults closed;this is to open it
@@ -125,6 +125,12 @@ public class CleanTeleop extends OpMode {
         if (operator.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) arm.setArmInAuto();    // toggle arm auto mode
         if (arm.getArmInAuto()) message = "arm in auto mode";
         else message = "arm in manual mode";
+
+
+
+
+
+
         // ================ Launch Drone ===============================
         if (gamepad2.right_trigger > 0) {
             drone.launch();

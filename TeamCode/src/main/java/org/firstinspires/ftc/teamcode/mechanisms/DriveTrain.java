@@ -23,10 +23,9 @@ public class DriveTrain {
     private Motor xPea = null;
     private Motor yPea = null;
     private PIDController headingControl = null;
-    public final double ticks_to_mm = Math.PI * 48 /2000;// for use in odometry
 
     // Define IMU
-    private IMU imu;// BHI260AP imu on this hub
+    private IMU imu;// BHO055 imu on this hub
     private RevHubOrientationOnRobot orientationOnRobot;
 
     // Auto alignment directions
@@ -72,8 +71,8 @@ public class DriveTrain {
         rightBackDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         rightFrontDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         leftFrontDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-        xPea.setDistancePerPulse(ticks_to_mm);
-        yPea.setDistancePerPulse(ticks_to_mm);
+        xPea.setDistancePerPulse(Constants.TICKS_TO_INCHES);
+        yPea.setDistancePerPulse(Constants.TICKS_TO_INCHES);
     }
 
     public void start() {
@@ -92,6 +91,7 @@ public class DriveTrain {
     }
 
     public void setDirection(double newHeading) {
+
         headingDirection = newHeading;
     }
     public void drive(double forwardSpeed, double strafeSpeed) {
