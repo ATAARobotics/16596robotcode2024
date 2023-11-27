@@ -32,18 +32,13 @@ public class DriveTrain {
     // Auto alignment directions
     public double forward = 0; // north
     public double back = 180; // south
+
     public double right = -90; // east
     public double left = 90; //west
     private double headingDirection = forward;
 
 
-    // Define Drive constants.  Make them public so they CAN be used by the calling OpMode
-    public static final double F_MAX_ANGLE       =  90 ;
-    public static final double F_MIN_ANGLE     =  0 ;
-    public static final double W_MAX_ANGLE       =  90 ;
-    public static final double W_MIN_ANGLE     =  0 ;
-    public static final double D_MAX_ANGLE       =  90 ;
-    public static final double D_MIN_ANGLE     =  0;
+
     HardwareMap hwMap;
 
     public DriveTrain(HardwareMap hwMap)

@@ -37,6 +37,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.mechanisms.Airplane;
 import org.firstinspires.ftc.teamcode.mechanisms.Arm;
+import org.firstinspires.ftc.teamcode.mechanisms.Constants;
 import org.firstinspires.ftc.teamcode.mechanisms.DriveTrain;
 
 @TeleOp(name="CleanTeleop", group="teleop")
@@ -50,9 +51,9 @@ public class CleanTeleop extends OpMode {
     public GamepadEx driver = null;
     public GamepadEx operator = null;
 
-    private static final double SPEED_RATIO = 0.4;  // Use this to slow down robot
+/*    private static final double SPEED_RATIO = 0.4;  // Use this to slow down robot
     private static final double TURN_RATIO = 0.4; // use this to slow turn rate
-    private static final double ARM_DRIVE_RATIO = 0.4; // use this to slow down arm
+    private static final double ARM_DRIVE_RATIO = 0.4; // use this to slow down arm*/
 
     private String message = " ";
     boolean climbing = false;
@@ -94,9 +95,9 @@ public class CleanTeleop extends OpMode {
         driver.readButtons();  // enable 'was just pressed' methods
 
         //======= get human inputs for drive and arm =============
-        double strafeSpeed = driver.getLeftX() * SPEED_RATIO;
-        double forwardSpeed = driver.getLeftY() * SPEED_RATIO;
-        double turnSpeed = driver.getRightX() * SPEED_RATIO;
+        double strafeSpeed = driver.getLeftX() * Constants.SPEED_RATIO;
+        double forwardSpeed = driver.getLeftY() * Constants.SPEED_RATIO;
+        double turnSpeed = driver.getRightX() * Constants. SPEED_RATIO;
 
         // tell ftclib its inputs  strafeSpeed,forwardSpeed,turn,heading
         if(!turning && turnSpeed > 0.8) {

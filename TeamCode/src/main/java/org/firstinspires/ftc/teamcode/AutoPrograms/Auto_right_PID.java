@@ -16,6 +16,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.teamcode.mechanisms.Constants;
 
 //@Autonomous(name = "Short Right",group = "")
 @TeleOp(name="TestHeadingPID", group="teleop")
@@ -33,7 +34,7 @@ public class Auto_right_PID extends LinearOpMode {
     private Motor ypod = null;// fake motor to use encoder for odometry module
     private Servo finger, wrist, drone, hook;
     private String message = " ";
-    public final double ticks_to_mm = Math.PI * 48 / (25.4 * 2000);// for use in odometry
+  //  public final double TICKS_TO_INCHES = Math.PI * 48 / (25.4 * 2000);// for use in odometry
     double xDistance = 0;
     double yDistance = 0;
     double xTarget = -48;
@@ -69,8 +70,8 @@ public class Auto_right_PID extends LinearOpMode {
         winch = new Motor(hardwareMap, "winch");
 ypod.resetEncoder();
 winch.resetEncoder();
-        ypod.setDistancePerPulse(ticks_to_mm);
-        winch.setDistancePerPulse(ticks_to_mm);
+        ypod.setDistancePerPulse(Constants.TICKS_TO_INCHES);
+        winch.setDistancePerPulse(Constants.TICKS_TO_INCHES );
 
         RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
         RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
@@ -103,9 +104,9 @@ winch.resetEncoder();
             heading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
             if(heading - forward > 180) heading -= 360;
             headingCorrection = -headingControl.calculate(heading);
-//            xDistance = winch.getCurrentPosition() * ticks_to_mm;
+//            xDistance = winch.getCurrentPosition() * TICKS_TO_INCHES;
             xDistance = ypod.getDistance();
-            //yDistance = ypod.getCurrentPosition() * ticks_to_mm; use this for testing
+            //yDistance = ypod.getCurrentPosition() * TICKS_TO_INCHES; use this for testing
             // tell ftclib its inputs  strafeSpeed,forwardSpeed,turn,heading
 // if we can't get good strafing then try PID Heading control
 

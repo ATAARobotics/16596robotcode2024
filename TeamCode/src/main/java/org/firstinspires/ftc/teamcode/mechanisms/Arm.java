@@ -21,14 +21,7 @@ public class Arm {
     private Servo finger, wrist, hook;
 
     // TODO clean up these before Comp2- how many presets are used?
-    static final int ARM_PICKUP = -44;
-    static final int ARM_DEPOSIT_MID = 113;
-    static final int ARM_DEPOSIT_LONG = 188;
-    static final double WRIST_PICKUP = 0.31;
-    static final double WRIST_DEPOSIT_MID = 0.31;
-    static final double WRIST_DEPOSIT_LONG = 0.02;
-    static final int ARM_MAX = 95;
-    static final int ARM_MIN = -75;
+
 
     double position2 = (0.35);// start wrist at pickup?
     double armSpeed;
@@ -70,8 +63,8 @@ public class Arm {
     }
 
     public void loop() {
-        if ((armSpeed < 0 && armPosition < ARM_MIN) || (armSpeed > 0 && armPosition > ARM_MAX))
-            armSpeed = 0;//avoid trying to lower arm when on chassis and limit extension
+        if ((armSpeed < 0 && armPosition < Constants .ARM_MIN) || (armSpeed > 0 && armPosition > Constants .ARM_MAX))
+            armSpeed = 0;       //avoid trying to lower arm when on chassis and limit extension
 
         if (!armInAuto ) armMotors.set(armDriveRatio * armSpeed);
         else  {
@@ -81,35 +74,36 @@ public class Arm {
         armPosition = arm1.getCurrentPosition();
     }
 
-    public void overrideArmSpeed(boolean enabled) {
+    /*public void overrideArmSpeed(boolean enabled) {
         armDriveRatio = enabled?1:0.4;
-    }
+    }*/  // confirm what this was supposed to do??
 
     public void setArmPosition(int armSetPosition) {
         switch (armSetPosition) {
             case 1:
-                armPID.setSetPoint(ARM_PICKUP);
-                armMotors.setTargetPosition(ARM_PICKUP);
-                wrist.setPosition(WRIST_PICKUP);
+                armPID.setSetPoint(Constants .ARM_PICKUP);
+                armMotors.setTargetPosition(Constants .ARM_PICKUP);
+                wrist.setPosition(Constants .WRIST_PICKUP);
                 break;
             case 2:
-                armPID.setSetPoint(ARM_DEPOSIT_MID);
-                armMotors.setTargetPosition(ARM_DEPOSIT_MID);
-                wrist.setPosition(WRIST_DEPOSIT_MID);
+                armPID.setSetPoint(Constants.ARM_DEPOSIT_MID);
+                armMotors.setTargetPosition(Constants .ARM_DEPOSIT_MID);
+                wrist.setPosition(Constants .WRIST_DEPOSIT_MID);
                 break;
             case 3:
-                armPID.setSetPoint(ARM_DEPOSIT_LONG);
-                armMotors.setTargetPosition(ARM_DEPOSIT_LONG);
-                wrist.setPosition(WRIST_DEPOSIT_LONG);
+                armPID.setSetPoint(Constants .ARM_DEPOSIT_LONG);
+                armMotors.setTargetPosition(Constants .ARM_DEPOSIT_LONG);
+                wrist.setPosition(Constants .WRIST_DEPOSIT_LONG);
                 break;
         }
-        armMotors.setRunMode(Motor.RunMode.PositionControl);
+        //armMotors.setRunMode(Motor.RunMode.PositionControl);
+
     }
 
     public void setFinger(boolean enabled) {
         finger.setPosition(enabled?FINGER_ENABLED:FINGER_DISABLED);
     }
-
+// these use ternary operator: boolean (expression) ? actionIfTrue : actionIfFalse
     public boolean getArmInAuto() {
         return armInAuto;
     }
