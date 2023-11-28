@@ -4,7 +4,7 @@ public class Constants {
     public static final double TICKS_TO_INCHES = Math.PI * 48 / (25.4 * 2000);                      // for use in odometry
    public static final double SPEED_RATIO = 0.4;  // Use this to slow down robot
   public static final double TURN_RATIO = 0.4; // use this to slow turn rate
- public final double ARM_DRIVE_RATIO = 0.4; // use this to slow down arm
+ public static double ARM_DRIVE_RATIO = 0.4; // use this to slow down arm
 
     // Define Drive constants.  Make them public so they CAN be used by the calling OpMode
 

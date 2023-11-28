@@ -69,7 +69,7 @@ public int fingerPosition;
             armSpeed = 0;       //avoid trying to lower arm when on chassis and limit extension
 
         if (!armInAuto ){
-            armMotors.set(armDriveRatio * armSpeed);
+            armMotors.set(Constants.ARM_DRIVE_RATIO* armSpeed);
         }
         else  {
             double armOut = armPID.calculate(arm1.getCurrentPosition());// calculate final arm speed to send

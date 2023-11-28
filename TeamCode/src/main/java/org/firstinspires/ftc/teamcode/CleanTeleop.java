@@ -94,16 +94,16 @@ private boolean looptest = false; // temp for debugging
         //======= get human inputs for drive and arm =============
         double strafeSpeed = driver.getLeftX() * Constants.SPEED_RATIO;
         double forwardSpeed = driver.getLeftY() * Constants.SPEED_RATIO;
-        double turnSpeed = driver.getRightX() * Constants. SPEED_RATIO;
+        double turnSpeed = driver.getRightX() * Constants. TURN_RATIO;
 
         if (driver.getLeftX() < -0.5) {
-            driveTrain.setDirection(90.0); //west
+            driveTrain.setDirection(Constants.left); //west
         } else if (driver.getLeftX() > 0.5) {
-            driveTrain.setDirection(-90.0) ; // east
+            driveTrain.setDirection(Constants.right) ; // east
         } else if (driver.getLeftY() < -0.5) {
-            driveTrain.setDirection(180.0); //south
+            driveTrain.setDirection(Constants.back); //south
         } else if (driver.getLeftY() > 0.5) {
-            driveTrain.setDirection(90.0); // north
+            driveTrain.setDirection(Constants.forward); // north
         }
         arm.setArmSpeed(operator.getLeftY()) ;
 
