@@ -50,19 +50,10 @@ public class CleanTeleop extends OpMode {
     private Airplane drone;
     public GamepadEx driver = null;
     public GamepadEx operator = null;
-
-
     private String message = " ";
     boolean climbing = false;
     boolean turning = false;
 
-
-    /**
-     * Initialize all the robot's hardware.
-     * This method must be called ONCE when the OpMode is initialized.
-     * <p>
-     * All of the hardware devices are accessed via the hardware map, and initialized.
-     */
     @Override
     public void init() {
         telemetry.addData("Status", "Initializing");
@@ -89,10 +80,12 @@ public class CleanTeleop extends OpMode {
     }
     @Override
     public void loop() {
+
         driver.readButtons();  // enable 'was just pressed' methods
         arm.loop();
         driveTrain.loop();
-
+        telemetry.addData("Status", "In Loop");
+        telemetry.update();
         //======= get human inputs for drive and arm =============
         double strafeSpeed = driver.getLeftX() * Constants.SPEED_RATIO;
         double forwardSpeed = driver.getLeftY() * Constants.SPEED_RATIO;
@@ -115,7 +108,8 @@ public class CleanTeleop extends OpMode {
         if (operator.wasJustPressed(GamepadKeys.Button.X)) arm.setFinger(true);// finger defaults closed;this is to open it
         else arm.setFinger(false);
         if (operator.wasJustPressed(GamepadKeys.Button.B)) arm.setArmPosition(3);// set arm and wrist for long deposit
-        if (operator.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) arm.setArmInAuto();    // toggle arm auto mode
+        if(operator.getButton(GamepadKeys.Button.DPAD_LEFT)) arm.setArmInAuto();
+       // if (operator.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) arm.setArmInAuto();    // toggle arm auto mode
         if (arm.getArmInAuto()) message = "arm in auto mode";
         else message = "arm in manual mode";
         // If we want to turn the robot, lets do it
