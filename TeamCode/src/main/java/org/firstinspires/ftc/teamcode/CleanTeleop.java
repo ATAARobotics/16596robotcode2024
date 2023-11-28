@@ -117,7 +117,7 @@ private boolean looptest = false; // temp for debugging
        if (operator.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) arm.setArmInAuto();    // toggle arm auto mode
         if (arm.getArmInAuto()) message = "arm in auto mode";
         else message = "arm in manual mode";
-        if(arm.findPixel()) operator.gamepad.rumble(500);       // tell operator a pixel was found
+        if(arm.findPixel() && arm.fingerPosition > .2 ) operator.gamepad.rumble(500);       // tell operator a pixel was found but only when finger is open, else it would rumble all time with pixel.
 
         // If we want to turn the robot, lets do it
         if(!turning && turnSpeed > 0.5) {

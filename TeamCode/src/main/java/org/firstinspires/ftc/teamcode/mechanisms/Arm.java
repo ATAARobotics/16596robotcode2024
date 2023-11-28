@@ -32,7 +32,7 @@ private DistanceSensor seePixel = null;
     double winchspeed = .25;
     boolean climbing = false;
     double armDriveRatio = 0.4; // use this to slow down arm
-int fingerPosition;
+public int fingerPosition;
     private boolean armInAuto = false;
     double armPosition = 0;
     public Arm(HardwareMap hwMap) {
@@ -68,11 +68,15 @@ int fingerPosition;
         if ((armSpeed < 0 && armPosition < Constants .ARM_MIN) || (armSpeed > 0 && armPosition > Constants .ARM_MAX))
             armSpeed = 0;       //avoid trying to lower arm when on chassis and limit extension
 
-        if (!armInAuto ) armMotors.set(armDriveRatio * armSpeed);
+        if (!armInAuto ){
+            armMotors.set(armDriveRatio * armSpeed);
+        }
         else  {
             double armOut = armPID.calculate(arm1.getCurrentPosition());// calculate final arm speed to send
             armMotors.set(armOut);
         }
+
+
         armPosition = arm1.getCurrentPosition();
         finger.setPosition(.5*fingerPosition);
     }
