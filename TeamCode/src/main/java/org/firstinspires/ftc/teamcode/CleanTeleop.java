@@ -51,9 +51,6 @@ public class CleanTeleop extends OpMode {
     public GamepadEx driver = null;
     public GamepadEx operator = null;
 
-/*    private static final double SPEED_RATIO = 0.4;  // Use this to slow down robot
-    private static final double TURN_RATIO = 0.4; // use this to slow turn rate
-    private static final double ARM_DRIVE_RATIO = 0.4; // use this to slow down arm*/
 
     private String message = " ";
     boolean climbing = false;

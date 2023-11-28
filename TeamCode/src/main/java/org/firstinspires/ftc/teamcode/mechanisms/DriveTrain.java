@@ -115,19 +115,13 @@ public class DriveTrain {
         headingDirection);
     }
 
-    /**
-     * Pass the requested wheel motor powers to the appropriate hardware drive motors.
-     *
-     * @param leftWheel     Fwd/Rev driving power (-1.0 to 1.0) +ve is forward
-     * @param rightWheel    Fwd/Rev driving power (-1.0 to 1.0) +ve is forward
-     */
-    public void setDrivePower(double leftWheel, double rightWheel) {
+   /* public void setDrivePower(double leftWheel, double rightWheel) {
         // Output the values to the motor drives.
         leftFrontDrive.set(leftWheel);
         leftBackDrive.set(leftWheel);
         rightFrontDrive.set(rightWheel);
         rightBackDrive.set(rightWheel);
-    }
+    }*/
 
     public double getXPosition() {
         return xPea.getDistance();
@@ -138,7 +132,7 @@ public class DriveTrain {
 
     public void printTelemetry(Telemetry telemetry) {
         telemetry.addData("heading:", "%5.2f", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
-        telemetry.addData("X Distance mm:", "%5.2f", getXPosition());
-        telemetry.addData("Y Distance mm:", "%5.2f", getYPosition());
+        telemetry.addData("X Distance inches:", "%5.2f", getXPosition());
+        telemetry.addData("Y Distance inches:", "%5.2f", getYPosition());
     }
 }
