@@ -61,6 +61,7 @@ int fingerPosition;
     }
 
     public void loop() {
+
         if ((armSpeed < 0 && armPosition < Constants .ARM_MIN) || (armSpeed > 0 && armPosition > Constants .ARM_MAX))
             armSpeed = 0;       //avoid trying to lower arm when on chassis and limit extension
 
@@ -103,6 +104,9 @@ int fingerPosition;
      fingerPosition = enabled;
         //else finger.setPosition(0);
         //finger.setPosition(enabled?FINGER_ENABLED:FINGER_DISABLED);
+    }
+    public void setArmSpeed(double speed){
+        armSpeed = speed;
     }
 // these use ternary operator: boolean (expression) ? actionIfTrue : actionIfFalse
     public boolean getArmInAuto() {

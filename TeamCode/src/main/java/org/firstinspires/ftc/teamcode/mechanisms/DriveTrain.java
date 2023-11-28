@@ -81,9 +81,8 @@ public double headingCorrection = 0;
         imu.resetYaw();
     }
     public void loop(){
-        headingControl.setSetPoint(headingDirection);
         headingCorrection = headingControl.calculate(headingDirection);
-
+        headingControl.setSetPoint(headingDirection);
     }
 // ========== Turn the robot  ================
     public  void TurnLeft(){
@@ -96,16 +95,9 @@ public double headingCorrection = 0;
     }
 //============== Move in new Direction ==========
 
-    public void MoveForward(){
-        headingDirection = Constants.forward;
-    }
     public void setDirection(double newHeading) {
         headingDirection = newHeading;
     }
-
-
-
-
     /*public void drive(double forwardSpeed, double strafeSpeed) {
         double heading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
         if(heading - forward > 180) heading -= 360;

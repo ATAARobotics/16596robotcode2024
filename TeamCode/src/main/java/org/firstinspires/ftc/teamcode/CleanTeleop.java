@@ -86,11 +86,11 @@ private boolean looptest = false; // temp for debugging
 
         arm.loop();
         driveTrain.loop();
-        if(!looptest) {
+      /*  if(!looptest) {
             telemetry.addData("Status", "In Loop");
             telemetry.update();
         }
-        looptest = true;
+        looptest = true;*/
         //======= get human inputs for drive and arm =============
         double strafeSpeed = driver.getLeftX() * Constants.SPEED_RATIO;
         double forwardSpeed = driver.getLeftY() * Constants.SPEED_RATIO;
@@ -105,7 +105,7 @@ private boolean looptest = false; // temp for debugging
         } else if (driver.getLeftY() > 0.5) {
             driveTrain.setDirection(90.0); // north
         }
-
+        arm.setArmSpeed(operator.getLeftY()) ;
 
 // ========== Get Operator control commands: ========================
         if (operator.wasJustPressed(GamepadKeys.Button.A)) arm.setArmPosition(1);// set arm and wrist for pickup
