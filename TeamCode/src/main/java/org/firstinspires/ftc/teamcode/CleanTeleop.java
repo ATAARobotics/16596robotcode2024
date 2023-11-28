@@ -98,7 +98,15 @@ public class CleanTeleop extends OpMode {
         double strafeSpeed = driver.getLeftX() * Constants.SPEED_RATIO;
         double forwardSpeed = driver.getLeftY() * Constants.SPEED_RATIO;
         double turnSpeed = driver.getRightX() * Constants. SPEED_RATIO;
-
+        if (driver.getLeftX() < -0.5) {
+            headingControl.setSetPoint(90.0); // west
+        } else if (driver.getLeftX() > 0.5) {
+            headingControl.setSetPoint(-90.0); // east
+        } else if (driver.getLeftY() < -0.5) {
+            headingControl.setSetPoint(180.0); // south
+        } else if (driver.getLeftY() > 0.5) {
+            headingControl.setSetPoint(0); // north
+        }
 
         // If we want to turn the robot, lets do it
         if(!turning && turnSpeed > 0.5) {
