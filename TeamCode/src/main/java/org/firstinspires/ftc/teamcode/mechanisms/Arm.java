@@ -118,7 +118,7 @@ int fingerPosition;
         else return false;
         }
 
-    }
+
 // these use ternary operator: boolean (expression) ? actionIfTrue : actionIfFalse
     public boolean getArmInAuto() {
         return armInAuto;
