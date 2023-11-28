@@ -117,6 +117,8 @@ private boolean looptest = false; // temp for debugging
        if (operator.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) arm.setArmInAuto();    // toggle arm auto mode
         if (arm.getArmInAuto()) message = "arm in auto mode";
         else message = "arm in manual mode";
+        if(arm.findPixel()) operator.gamepad.rumble(500);       // tell operator a pixel was found
+
         // If we want to turn the robot, lets do it
         if(!turning && turnSpeed > 0.5) {
             driveTrain.TurnRight();

@@ -3,10 +3,12 @@ package org.firstinspires.ftc.teamcode.mechanisms;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class Arm {
     HardwareMap hwMap;
@@ -19,7 +21,8 @@ public class Arm {
     private Motor winch = null;
     private MotorGroup armMotors;
     private Servo finger, wrist, hook;
-
+    public boolean isPixel = false;
+private DistanceSensor seePixel = null;
     // TODO clean up these before Comp2- how many presets are used?
 
 
@@ -107,6 +110,14 @@ int fingerPosition;
     }
     public void setArmSpeed(double speed){
         armSpeed = speed;
+    }
+    public  boolean findPixel (){
+        // TODO: add code here for claw sensor to 'see' pixel at intake.
+        double pixelDistance = seePixel.getDistance(DistanceUnit.MM);
+        if (pixelDistance < 5) return true;
+        else return false;
+        }
+
     }
 // these use ternary operator: boolean (expression) ? actionIfTrue : actionIfFalse
     public boolean getArmInAuto() {
