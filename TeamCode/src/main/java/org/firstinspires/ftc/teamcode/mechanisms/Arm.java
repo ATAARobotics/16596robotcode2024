@@ -13,7 +13,7 @@ public class Arm {
     private static final double HOOK_ENABLED = 0.0;
     private static final double HOOK_DISABLED = 1.0;
     private static final double FINGER_DISABLED = 1.0;
-    private static final double FINGER_ENABLED = 0.6;
+    private static final double FINGER_ENABLED = 0.0;
     private Motor arm1 = null;
     private Motor arm2 = null;
     private Motor winch = null;
@@ -29,7 +29,7 @@ public class Arm {
     double winchspeed = .25;
     boolean climbing = false;
     double armDriveRatio = 0.4; // use this to slow down arm
-
+int fingerPosition;
     private boolean armInAuto = false;
     double armPosition = 0;
     public Arm(HardwareMap hwMap) {
@@ -70,6 +70,7 @@ public class Arm {
             armMotors.set(armOut);
         }
         armPosition = arm1.getCurrentPosition();
+        finger.setPosition(.5*fingerPosition);
     }
 
     /*public void overrideArmSpeed(boolean enabled) {
@@ -98,8 +99,10 @@ public class Arm {
 
     }
 
-    public void setFinger(boolean enabled) {
-        finger.setPosition(enabled?FINGER_ENABLED:FINGER_DISABLED);
+    public void setFinger(int  enabled) {
+     fingerPosition = enabled;
+        //else finger.setPosition(0);
+        //finger.setPosition(enabled?FINGER_ENABLED:FINGER_DISABLED);
     }
 // these use ternary operator: boolean (expression) ? actionIfTrue : actionIfFalse
     public boolean getArmInAuto() {

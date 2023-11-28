@@ -53,7 +53,7 @@ public class CleanTeleop extends OpMode {
     private String message = " ";
     boolean climbing = false;
     boolean turning = false;
-
+private boolean looptest = false; // temp for debugging
     @Override
     public void init() {
         telemetry.addData("Status", "Initializing");
@@ -77,15 +77,20 @@ public class CleanTeleop extends OpMode {
         driver = new GamepadEx(gamepad1);
         operator = new GamepadEx(gamepad2);
         runtime.reset();
+
     }
     @Override
     public void loop() {
-
         driver.readButtons();  // enable 'was just pressed' methods
+        operator.readButtons() ;
+
         arm.loop();
         driveTrain.loop();
-        telemetry.addData("Status", "In Loop");
-        telemetry.update();
+        if(!looptest) {
+            telemetry.addData("Status", "In Loop");
+            telemetry.update();
+        }
+        looptest = true;
         //======= get human inputs for drive and arm =============
         double strafeSpeed = driver.getLeftX() * Constants.SPEED_RATIO;
         double forwardSpeed = driver.getLeftY() * Constants.SPEED_RATIO;
@@ -105,11 +110,11 @@ public class CleanTeleop extends OpMode {
 // ========== Get Operator control commands: ========================
         if (operator.wasJustPressed(GamepadKeys.Button.A)) arm.setArmPosition(1);// set arm and wrist for pickup
         if (operator.wasJustPressed(GamepadKeys.Button.Y)) arm.setArmPosition(2);// set arm and wrist for mid deposit
-        if (operator.wasJustPressed(GamepadKeys.Button.X)) arm.setFinger(true);// finger defaults closed;this is to open it
-        else arm.setFinger(false);
+        if (operator.wasJustPressed(GamepadKeys.Button.X)) arm.setFinger(0);// finger defaults closed;this is to open it
+        else arm.setFinger(1);
         if (operator.wasJustPressed(GamepadKeys.Button.B)) arm.setArmPosition(3);// set arm and wrist for long deposit
-        if(operator.getButton(GamepadKeys.Button.DPAD_LEFT)) arm.setArmInAuto();
-       // if (operator.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) arm.setArmInAuto();    // toggle arm auto mode
+       // if(operator.getButton(GamepadKeys.Button.DPAD_LEFT)) arm.setArmInAuto();
+       if (operator.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) arm.setArmInAuto();    // toggle arm auto mode
         if (arm.getArmInAuto()) message = "arm in auto mode";
         else message = "arm in manual mode";
         // If we want to turn the robot, lets do it
