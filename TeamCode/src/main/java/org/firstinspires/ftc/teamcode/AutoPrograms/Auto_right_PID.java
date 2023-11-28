@@ -16,11 +16,15 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.teamcode.mechanisms.Arm;
 import org.firstinspires.ftc.teamcode.mechanisms.Constants;
+import org.firstinspires.ftc.teamcode.mechanisms.DriveTrain;
 
 //@Autonomous(name = "Short Right",group = "")
 @TeleOp(name="TestHeadingPID", group="teleop")
 public class Auto_right_PID extends LinearOpMode {
+    private DriveTrain driveTrain;
+    private Arm arm;
     private final ElapsedTime runtime = new ElapsedTime();
     PIDController headingControl = null;
     private MotorGroup armMotors;
@@ -38,10 +42,7 @@ public class Auto_right_PID extends LinearOpMode {
     double xDistance = 0;
     double yDistance = 0;
     double xTarget = -48;
-    double forward = 0; // north
-    double back = 180; // south
-    double right = -90; // east
-    double left = 90; //west
+
     double headingCorrection = 0;
     MecanumDrive drivebase = null;
     private IMU imu;// BHI260AP imu on this hub
@@ -83,7 +84,7 @@ winch.resetEncoder();
 
         YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
         double heading = orientation.getYaw(AngleUnit.DEGREES);
-        headingControl.setSetPoint(forward);// get set points for directions
+        headingControl.setSetPoint(Constants.forward);// get set points for directions
 
         drivebase = new MecanumDrive(
                 leftFrontDrive,
@@ -102,7 +103,7 @@ winch.resetEncoder();
         runtime.reset(); // reset timer
         while (opModeIsActive()) {
             heading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
-            if(heading - forward > 180) heading -= 360;
+            if(heading - Constants.forward > 180) heading -= 360;
             headingCorrection = -headingControl.calculate(heading);
 //            xDistance = winch.getCurrentPosition() * TICKS_TO_INCHES;
             xDistance = ypod.getDistance();
@@ -110,7 +111,7 @@ winch.resetEncoder();
             // tell ftclib its inputs  strafeSpeed,forwardSpeed,turn,heading
 // if we can't get good strafing then try PID Heading control
 
-            if(xDistance > xTarget) drivebase.driveFieldCentric(
+            if(xDistance < xTarget) drivebase.driveFieldCentric(
                     0,
                     0.0,
                     headingCorrection,
@@ -128,7 +129,7 @@ winch.resetEncoder();
             telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
             telemetry.addData("Current Heading", "%5.2f", heading);
             telemetry.addData("Heading Correction", "%5.2f", headingCorrection);
-            telemetry.addData("Heading Target", "%5.2f", forward);
+            //telemetry.addData("Heading Target", "%5.2f",driveTrain.);
             telemetry.addData("X Distance mm:", "%5.2f", xDistance);
             telemetry.addData("Y Distance mm:", "%5.2f", winch.getDistance());
             telemetry.update();
@@ -141,7 +142,7 @@ winch.resetEncoder();
             pack.put("yDistance", winch.getDistance());
             pack.put("Current Heading", heading);
             pack.put("Heading Correction", headingCorrection);
-            pack.put("Heading Target", forward);
+            pack.put("Heading Target",driveTrain. forward);
             pack.put("message", message);
 
             FtcDashboard.getInstance().sendTelemetryPacket(pack);

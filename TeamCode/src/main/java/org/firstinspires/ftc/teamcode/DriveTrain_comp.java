@@ -48,6 +48,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.teamcode.mechanisms.Constants;
 
 
 /* TODO:
@@ -199,8 +200,8 @@ double testYencoder;
 
         xDistance = winch.getDistance() ;
         yDistance = -ypod.getDistance() ;
-        double calcX_Distance = winch.getCurrentPosition()* ticks_to_mm;
-        double calcY_Distance = -ypod.getCurrentPosition()* ticks_to_mm;
+        double calcX_Distance = winch.getCurrentPosition()* Constants.TICKS_TO_INCHES;
+        double calcY_Distance = -ypod.getCurrentPosition()* Constants.TICKS_TO_INCHES;
 
         driver.readButtons();  // enable 'was just pressed' methods
         YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();

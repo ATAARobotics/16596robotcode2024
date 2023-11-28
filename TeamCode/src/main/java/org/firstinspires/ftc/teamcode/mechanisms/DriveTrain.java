@@ -80,7 +80,7 @@ public class DriveTrain {
         yPea.resetEncoder();
         imu.resetYaw();
     }
-
+// ========== Turn the robot  ================
     public  void TurnLeft(){
         headingDirection = headingDirection +90;
         headingDirection = headingDirection % 360;
@@ -89,17 +89,23 @@ public class DriveTrain {
         headingDirection = headingDirection -90;
         headingDirection = headingDirection % 360;
     }
+//============== Move in new Direction ==========
 
+    public void MoveForward(){
+        headingDirection = Constants.forward;
+    }
     public void setDirection(double newHeading) {
 
         headingDirection = newHeading;
     }
-    public void drive(double forwardSpeed, double strafeSpeed) {
+
+
+    /*public void drive(double forwardSpeed, double strafeSpeed) {
         double heading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
         if(heading - forward > 180) heading -= 360;
         double headingCorrection = -headingControl.calculate(heading);
         drive(forwardSpeed,headingCorrection,strafeSpeed);
-    }
+    }*/
     public void drive(double forwardSpeed, double turnSpeed, double strafeSpeed) {
         // tell ftclib its inputs  strafeSpeed,forwardSpeed,turn,heading
         driveBase.driveFieldCentric(

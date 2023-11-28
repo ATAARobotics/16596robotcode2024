@@ -7,6 +7,11 @@ public class Constants {
  public final double ARM_DRIVE_RATIO = 0.4; // use this to slow down arm
 
     // Define Drive constants.  Make them public so they CAN be used by the calling OpMode
+
+    public static final double forward = 0; // north
+    public  static final double back = 180; // south
+    public  static final double right = -90; // east
+    public static  final double left = 90; //west
     public static final double F_MAX_ANGLE       =  90 ;// finger servo
     public static final double F_MIN_ANGLE     =  0 ;
     public static final double W_MAX_ANGLE       =  90 ; // wrist servo

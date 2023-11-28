@@ -99,22 +99,23 @@ public class CleanTeleop extends OpMode {
         double forwardSpeed = driver.getLeftY() * Constants.SPEED_RATIO;
         double turnSpeed = driver.getRightX() * Constants. SPEED_RATIO;
 
-        // tell ftclib its inputs  strafeSpeed,forwardSpeed,turn,heading
+
         // If we want to turn the robot, lets do it
-        if(!turning && turnSpeed > 0.8) {
+        if(!turning && turnSpeed > 0.5) {
             driveTrain.TurnRight();
             turning = true;
         }
-        else if(!turning && turnSpeed < -0.8) {
+        else if(!turning && turnSpeed < -0.5) {
             driveTrain.TurnLeft();
             turning = true;
         }
-        if (Math.abs(turnSpeed)< 0.8){
+        if (Math.abs(turnSpeed)< 0.5){
             turning  = false;
         }
-        driveTrain.drive(
+        // tell ftclib its inputs  strafeSpeed,forwardSpeed,turn,heading
+      /*  driveTrain.drive(
                 forwardSpeed,
-                strafeSpeed);
+                strafeSpeed);*/
 
         arm.loop();
 // ========== Get Operator control commands: ========================
