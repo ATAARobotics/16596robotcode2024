@@ -34,26 +34,24 @@ public class Arm {
     double armPosition = 0;
     public Arm(HardwareMap hwMap) {
         this.hwMap = hwMap;
-
+// set up servos
+        wrist = hwMap.get(Servo.class, "Wrist");
+        finger = hwMap.get(Servo.class, "Finger");
+        hook = hwMap.get(Servo.class, "Hook");
+//set up Motors:
         arm1 = new Motor(hwMap, "arm1");
         arm2 = new Motor(hwMap, "arm2");
         winch = new Motor(hwMap, "winch");
         // set up arm motors for master/slave
         armMotors = new MotorGroup(arm1, arm2);
-// see if there is way of putting motor group into brake mode?
         armMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         armMotors.setInverted(true);    // confirm if we need to invert
-// Creates a PID Controller with gains kP, kI, kD
-        // testing [without the wrist!] and 0 setpoint: Kp=0.02,Ki=0.004,Kd=0
-        armPID = new PIDController(.02, .004, 0);
-        // set up servos
-        wrist = hwMap.get(Servo.class, "Wrist");
-        finger = hwMap.get(Servo.class, "Finger");
-        hook = hwMap.get(Servo.class, "Hook");
-
         winch.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         arm1.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         arm2.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+// Creates a PID Controller with gains kP, kI, kD
+        // testing [without the wrist!] and 0 setpoint: Kp=0.02,Ki=0.004,Kd=0
+        armPID = new PIDController(.02, .004, 0);
     }
 
     public void init() {

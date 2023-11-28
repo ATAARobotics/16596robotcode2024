@@ -31,7 +31,7 @@ public class DriveTrain {
     // Auto alignment directions
     public double forward = 0; // north
     public double back = 180; // south
-
+public double headingCorrection = 0;
     public double right = -90; // east
     public double left = 90; //west
     private double headingDirection = forward;
@@ -66,7 +66,7 @@ public class DriveTrain {
     }
     public void init() {
         headingControl = new PIDController(0.02, 0.004, 0.0);
-        headingControl.setSetPoint(headingDirection);
+
         leftBackDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         rightBackDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         rightFrontDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
@@ -79,6 +79,11 @@ public class DriveTrain {
         xPea.resetEncoder();
         yPea.resetEncoder();
         imu.resetYaw();
+    }
+    public void loop(){
+        headingControl.setSetPoint(headingDirection);
+        headingCorrection = headingControl.calculate(headingDirection);
+
     }
 // ========== Turn the robot  ================
     public  void TurnLeft(){
@@ -95,9 +100,10 @@ public class DriveTrain {
         headingDirection = Constants.forward;
     }
     public void setDirection(double newHeading) {
-
         headingDirection = newHeading;
     }
+
+
 
 
     /*public void drive(double forwardSpeed, double strafeSpeed) {
@@ -106,13 +112,15 @@ public class DriveTrain {
         double headingCorrection = -headingControl.calculate(heading);
         drive(forwardSpeed,headingCorrection,strafeSpeed);
     }*/
-    public void drive(double forwardSpeed, double turnSpeed, double strafeSpeed) {
+    public void drive(double forwardSpeed,  double strafeSpeed) {
         // tell ftclib its inputs  strafeSpeed,forwardSpeed,turn,heading
+
+        double heading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
         driveBase.driveFieldCentric(
                 strafeSpeed,
                 forwardSpeed,
-                turnSpeed,
-        headingDirection);
+                headingCorrection,
+                heading);
     }
 
    /* public void setDrivePower(double leftWheel, double rightWheel) {

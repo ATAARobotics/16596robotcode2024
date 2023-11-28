@@ -90,11 +90,14 @@ public class CleanTeleop extends OpMode {
     @Override
     public void loop() {
         driver.readButtons();  // enable 'was just pressed' methods
+        arm.loop();
+        driveTrain.loop();
 
         //======= get human inputs for drive and arm =============
         double strafeSpeed = driver.getLeftX() * Constants.SPEED_RATIO;
         double forwardSpeed = driver.getLeftY() * Constants.SPEED_RATIO;
         double turnSpeed = driver.getRightX() * Constants. SPEED_RATIO;
+
         if (driver.getLeftX() < -0.5) {
             driveTrain.setDirection(90.0); //west
         } else if (driver.getLeftX() > 0.5) {
@@ -105,6 +108,16 @@ public class CleanTeleop extends OpMode {
             driveTrain.setDirection(90.0); // north
         }
 
+
+// ========== Get Operator control commands: ========================
+        if (operator.wasJustPressed(GamepadKeys.Button.A)) arm.setArmPosition(1);// set arm and wrist for pickup
+        if (operator.wasJustPressed(GamepadKeys.Button.Y)) arm.setArmPosition(2);// set arm and wrist for mid deposit
+        if (operator.wasJustPressed(GamepadKeys.Button.X)) arm.setFinger(true);// finger defaults closed;this is to open it
+        else arm.setFinger(false);
+        if (operator.wasJustPressed(GamepadKeys.Button.B)) arm.setArmPosition(3);// set arm and wrist for long deposit
+        if (operator.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) arm.setArmInAuto();    // toggle arm auto mode
+        if (arm.getArmInAuto()) message = "arm in auto mode";
+        else message = "arm in manual mode";
         // If we want to turn the robot, lets do it
         if(!turning && turnSpeed > 0.5) {
             driveTrain.TurnRight();
@@ -117,23 +130,9 @@ public class CleanTeleop extends OpMode {
         if (Math.abs(turnSpeed)< 0.5){
             turning  = false;
         }
-        // tell ftclib its inputs  strafeSpeed,forwardSpeed,turn,heading
-      /*  driveTrain.drive(
-                forwardSpeed,
-                strafeSpeed);*/
 
-        arm.loop();
-// ========== Get Operator control commands: ========================
-        if (operator.wasJustPressed(GamepadKeys.Button.A)) arm.setArmPosition(1);// set arm and wrist for pickup
-        if (operator.wasJustPressed(GamepadKeys.Button.Y)) arm.setArmPosition(2);// set arm and wrist for mid deposit
-        if (operator.wasJustPressed(GamepadKeys.Button.X)) arm.setFinger(true);// finger defaults closed;this is to open it
-        else arm.setFinger(false);
-        if (operator.wasJustPressed(GamepadKeys.Button.B)) arm.setArmPosition(3);// set arm and wrist for long deposit
-        if (operator.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) arm.setArmInAuto();    // toggle arm auto mode
-        if (arm.getArmInAuto()) message = "arm in auto mode";
-        else message = "arm in manual mode";
-
-
+        // move the robot!!
+        driveTrain.drive(forwardSpeed,strafeSpeed); // turning and heading control happen in driveTrain
 
 
 
