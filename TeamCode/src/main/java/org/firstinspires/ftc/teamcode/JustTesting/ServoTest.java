@@ -99,19 +99,19 @@ public class ServoTest extends LinearOpMode {
 
            // simple servo tests:
             // move finger: test results: 1 is pickup, 0.85 is release
-/*
+
             if (gamepad2.a && position < MAX_POS) position += STEP;
             if(operator.wasJustPressed(GamepadKeys.Button.A) && position<MAX_POS)position += STEP;
             if(operator.wasJustPressed(GamepadKeys.Button.Y) && position>MIN_POS)position -= STEP;
             if(operator.wasJustPressed(GamepadKeys.Button.X) && position2<MAX_POS)position2 += STEP;
-            if(operator.wasJustPressed(GamepadKeys.Button.B) && position2>MIN_POS)position2 -= STEP;*/
+            if(operator.wasJustPressed(GamepadKeys.Button.B) && position2>MIN_POS)position2 -= STEP;
 
 
 
             // Display the current value
             telemetry.addData("Finger Position:", "%5.2f", position);
             telemetry.addData("Wrist Position:", "%5.2f", position2);
-            telemetry.addData("pixel distance: ","%5.2f",findPixel.getDistance(DistanceUnit.MM));
+            telemetry.addData("pixel distance mm: ","%5.2f",findPixel.getDistance(DistanceUnit.MM));
             telemetry.addData(">", "Press Stop to end test." );
             telemetry.update();
 

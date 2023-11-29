@@ -67,6 +67,7 @@ public class PID_armTest extends OpMode {
 
 
     double armPosition = 0;
+    double armPositionX =0;
     MecanumDrive drivebase = null;
     DistanceSensor findPixel ;
     private final ElapsedTime runtime = new ElapsedTime();
@@ -128,13 +129,14 @@ public class PID_armTest extends OpMode {
         arm1 = new Motor(hardwareMap, "arm1");
         arm2 = new Motor(hardwareMap, "arm2");
         arm1.resetEncoder();
+        arm2.resetEncoder();
         // set up arm motors for master/slave
         armMotors = new MotorGroup(arm1, arm2);
         armMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         armMotors.setInverted(true);    // confirm if we need to invert
 
 // Creates a PID Controller with gains kP, kI, kD
-        armPID = new PIDController(.04, .004, .0);
+        armPID = new PIDController(.015, .004, .0);
 
         // set up servos
         wrist = hardwareMap.get(Servo.class, "Wrist");
@@ -178,7 +180,7 @@ public class PID_armTest extends OpMode {
         imu.resetYaw(); // THIS SHOULD NOT BE HERE IF AUTO IS RUN AHEAD OF THIS!!
        // runtime.reset();
         resetRuntime();
-       // arm1.resetEncoder();
+       arm1.resetEncoder();
     }
 
     /*
@@ -197,20 +199,6 @@ public class PID_armTest extends OpMode {
         double speed_ratio = 0.6;  // Use this to slow down robot
         double turn_ratio = 0.4; // use this to slow turn rate
         double armDriveRatio = 0.4; // use this to slow down arm
-/*
-
-        //======= get human inputs for drive and arm =============
-        double strafeSpeed = driver.getLeftX() * speed_ratio;
-        double forwardSpeed = driver.getLeftY() * speed_ratio;
-        double turnSpeed = driver.getRightX() * turn_ratio;
-
-        // tell ftclib its inputs  strafeSpeed,forwardSpeed,turn,heading
-        drivebase.driveFieldCentric(
-                strafeSpeed,
-                forwardSpeed,
-                turnSpeed,
-                heading);
-*/
 
         // move the arm:
         //TODO: need to confirm armPosition at start, it will NOT be zero.
@@ -227,7 +215,7 @@ public class PID_armTest extends OpMode {
             telemetry.addData("armPower",armOut);
         }
         armPosition = arm1.getCurrentPosition();
-
+        armPositionX = arm1.getDistance();
         //if (gamepad2.a && !lastA) setArmPID(0);// set arm back to initial position via PID
 
         if (gamepad2.dpad_left) armInAuto = !armInAuto;    // toggle arm auto mode
@@ -254,7 +242,7 @@ public class PID_armTest extends OpMode {
         // Show the elapsed game time and arm position.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.addData("arm position:", armPosition);
-
+        telemetry.addData("arm positionX:", armPositionX);
 
         telemetry.addData("heading:", "%5.2f", heading);
         telemetry.addData("X Distance:", "%5.2f", xDistance);
