@@ -28,8 +28,6 @@
  */
 
 package org.firstinspires.ftc.teamcode.JustTesting;
-
-
 import com.arcrobotics.ftclib.controller.PIDController;
 
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
@@ -50,8 +48,6 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
-
-
 /* TODO:
 1: SET UP ENCODERS
 2: USE ENCODER IN AUTO

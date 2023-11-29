@@ -72,7 +72,7 @@ public double headingCorrection = 0;
         rightBackDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         rightFrontDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         leftFrontDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-        xPea.setDistancePerPulse(Constants.TICKS_TO_INCHES);
+        xPea.setDistancePerPulse(Constants.TICKS_TO_INCHES); // this will make getDistance in inches, not ticks
         yPea.setDistancePerPulse(Constants.TICKS_TO_INCHES);
     }
 
@@ -133,6 +133,7 @@ public double headingCorrection = 0;
 
     public void printTelemetry(Telemetry telemetry) {
         telemetry.addData("heading:", "%5.2f", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+        telemetry.addData("heading Target:",headingDirection);
         telemetry.addData("X Distance inches:", "%5.2f", getXPosition());
         telemetry.addData("Y Distance inches:", "%5.2f", getYPosition());
     }

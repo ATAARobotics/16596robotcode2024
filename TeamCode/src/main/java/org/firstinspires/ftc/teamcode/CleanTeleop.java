@@ -88,11 +88,7 @@ private boolean looptest = false; // temp for debugging
         operator.readButtons() ;
         arm.loop();
         driveTrain.loop();
-      /*  if(!looptest) {
-            telemetry.addData("Status", "In Loop");
-            telemetry.update();
-        }
-        looptest = true;*/
+
         //======= get human inputs for drive and arm =============
         double strafeSpeed = driver.getLeftX() * Constants.SPEED_RATIO;
         double forwardSpeed = driver.getLeftY() * Constants.SPEED_RATIO;

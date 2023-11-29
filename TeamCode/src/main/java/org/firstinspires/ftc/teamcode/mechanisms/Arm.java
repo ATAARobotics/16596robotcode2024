@@ -57,16 +57,18 @@ public int fingerPosition;
 // Creates a PID Controller with gains kP, kI, kD
         // testing [without the wrist!] and 0 setpoint: Kp=0.02,Ki=0.004,Kd=0
         armPID = new PIDController(.01, .004, 0);
+        //armPID = new PIDController(.015, .004, .0);
     }
 
     public void init() {
-        arm1.resetEncoder();// use this for arm position & PID
-        arm2.resetEncoder();// use this for arm position & PID
-        winch.resetEncoder();// this motor's encoder is used for Xpod
+
          setFinger(false); // close finger at start
     }
     public void start() {
-        arm1.resetEncoder();
+        arm1.resetEncoder();// use this for arm position & PID
+        arm2.resetEncoder();// use this for arm position & PID
+        winch.resetEncoder();// this motor's encoder is used for Xpod
+
     }
     public void loop() {
 
