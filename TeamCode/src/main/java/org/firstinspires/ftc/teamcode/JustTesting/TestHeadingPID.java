@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.AutoPrograms;
+package org.firstinspires.ftc.teamcode.JustTesting;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
@@ -7,7 +7,6 @@ import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -22,7 +21,7 @@ import org.firstinspires.ftc.teamcode.mechanisms.DriveTrain;
 
 //@Autonomous(name = "Short Right",group = "")
 @TeleOp(name="TestHeadingPID", group="teleop")
-public class Auto_right_PID extends LinearOpMode {
+public class TestHeadingPID extends LinearOpMode {
     private DriveTrain driveTrain;
     private Arm arm;
     private final ElapsedTime runtime = new ElapsedTime();

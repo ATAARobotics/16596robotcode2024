@@ -130,6 +130,8 @@ public double headingCorrection = 0;
     public double getYPosition() {
         return yPea.getDistance();
     }
+    public void resetXencoder(){xPea.resetEncoder();}
+    public void resetYencoder(){yPea.resetEncoder();}
 
     public void printTelemetry(Telemetry telemetry) {
         telemetry.addData("heading:", "%5.2f", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
