@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.mechanisms.Airplane;
 import org.firstinspires.ftc.teamcode.mechanisms.Arm;
 import org.firstinspires.ftc.teamcode.mechanisms.DriveTrain;
 
-@Autonomous(name = "Short_Right",)
+@Autonomous(name = "Short_Right")
 public class ShortRIGHT extends LinearOpMode{
     private final ElapsedTime runtime = new ElapsedTime();
 
@@ -32,8 +32,13 @@ public class ShortRIGHT extends LinearOpMode{
         // all lines up to here are 'boilerplate' for all autos
         // add auto steps here:
         // STEP1:   STRAFE right for  X inches
-        while(opModeIsActive()&& driveTrain.getXPosition() < 50) {
-            driveTrain.drive(0, .4);
+        while(opModeIsActive()&& driveTrain.getXPosition() > -24) {
+            driveTrain.drive(0, .3);
+            /*telemetry.addData("heading SP:",driveTrain.headingDirection);
+            telemetry.addData("actual heading:",driveTrain.heading);
+            telemetry.addData("X distance::",driveTrain.getXPosition());*/
+            driveTrain.printTelemetry(telemetry);
+            telemetry.update();
         }
         //STEP2: drop pixel
         arm.setFinger(true); // open finger to let pixel drop
