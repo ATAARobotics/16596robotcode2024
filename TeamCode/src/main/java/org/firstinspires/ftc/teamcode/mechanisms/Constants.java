@@ -12,12 +12,12 @@ public class Constants {
     public  static final double back = 180; // south
     public  static final double right = -90; // east
     public static  final double left = 90; //west
-    public static final double F_MAX_ANGLE       =  90 ;// finger servo
-    public static final double F_MIN_ANGLE     =  0 ;
-    public static final double W_MAX_ANGLE       =  90 ; // wrist servo
-    public static final double W_MIN_ANGLE     =  0 ;
-    public static final double D_MAX_ANGLE       =  90 ;    // drone servo
-    public static final double D_MIN_ANGLE     =  0;
+    public static final double  F_CLOSED       =  .96 ;// finger servo closed position
+    public static final double  F_OPEN    =  .85; // open position
+    public static final double W_MAX_ANGLE       =  1 ; // wrist servo
+    public static final double  W_MIN_ANGLE     =  0 ;
+    public static final double D_MAX_ANGLE       =  1 ;    // drone servo
+    public static final double  D_MIN_ANGLE     =  0;
 
 // ===========  for arm movements ======================
     public static final int ARM_PICKUP = -44;

@@ -34,7 +34,8 @@ public class DriveTrain {
 public double headingCorrection = 0;
     public double right = -90; // east
     public double left = 90; //west
-    private double headingDirection = forward;
+    public double headingDirection = forward;
+    public double heading;
 
 
 
@@ -107,7 +108,7 @@ public double headingCorrection = 0;
     public void drive(double forwardSpeed,  double strafeSpeed) {
         // tell ftclib its inputs  strafeSpeed,forwardSpeed,turn,heading
 
-        double heading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+        heading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
         driveBase.driveFieldCentric(
                 strafeSpeed,
                 forwardSpeed,

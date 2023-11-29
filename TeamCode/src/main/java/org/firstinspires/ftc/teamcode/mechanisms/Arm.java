@@ -31,12 +31,14 @@ private DistanceSensor seePixel = null;
     public PIDController armPID;
     double winchspeed = .25;
     boolean climbing = false;
-    double armDriveRatio = 0.4; // use this to slow down arm
+
 public int fingerPosition;
     private boolean armInAuto = false;
     double armPosition = 0;
     public Arm(HardwareMap hwMap) {
         this.hwMap = hwMap;
+        seePixel = hwMap.get(DistanceSensor.class,"seePixel");
+
 // set up servos
         wrist = hwMap.get(Servo.class, "Wrist");
         finger = hwMap.get(Servo.class, "Finger");
@@ -54,15 +56,18 @@ public int fingerPosition;
         arm2.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
 // Creates a PID Controller with gains kP, kI, kD
         // testing [without the wrist!] and 0 setpoint: Kp=0.02,Ki=0.004,Kd=0
-        armPID = new PIDController(.02, .004, 0);
+        armPID = new PIDController(.01, .004, 0);
     }
 
     public void init() {
         arm1.resetEncoder();// use this for arm position & PID
         arm2.resetEncoder();// use this for arm position & PID
         winch.resetEncoder();// this motor's encoder is used for Xpod
+         setFinger(false); // close finger at start
     }
-
+    public void start() {
+        arm1.resetEncoder();
+    }
     public void loop() {
 
         if ((armSpeed < 0 && armPosition < Constants .ARM_MIN) || (armSpeed > 0 && armPosition > Constants .ARM_MAX))
@@ -78,7 +83,7 @@ public int fingerPosition;
 
 
         armPosition = arm1.getCurrentPosition();
-        finger.setPosition(.5*fingerPosition);
+        finger.setPosition(Constants.F_CLOSED); // default closed
     }
 
     /*public void overrideArmSpeed(boolean enabled) {
@@ -107,10 +112,10 @@ public int fingerPosition;
 
     }
 
-    public void setFinger(int  enabled) {
-     fingerPosition = enabled;
-        //else finger.setPosition(0);
-        //finger.setPosition(enabled?FINGER_ENABLED:FINGER_DISABLED);
+    public void setFinger(boolean open) {
+     if (open) finger.setPosition(Constants.F_OPEN);
+        else finger.setPosition(Constants.F_CLOSED);
+
     }
     public void setArmSpeed(double speed){
         armSpeed = speed;
@@ -123,11 +128,11 @@ public int fingerPosition;
         }
 
 
-// these use ternary operator: boolean (expression) ? actionIfTrue : actionIfFalse
+// these did use ternary operator: boolean (expression) ? actionIfTrue : actionIfFalse
     public boolean getArmInAuto() {
         return armInAuto;
     }
-    public void setArmInAuto() {
+    public void toggleArmInAuto() {
         armInAuto = !armInAuto;
     }
     public void setHook(boolean enabled) {
@@ -144,6 +149,7 @@ public int fingerPosition;
     }
 
     public void printTelemetry(Telemetry telemetry) {
+        telemetry.addData("arm set point:",armPID.getSetPoint());
         telemetry.addData("arm position:", armMotors.getPositions());
         telemetry.addData("Finger Position:", "%5.2f", finger.getPosition());
         telemetry.addData("Wrist Position:", "%5.2f", wrist.getPosition());

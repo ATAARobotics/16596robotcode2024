@@ -29,6 +29,8 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -74,6 +76,7 @@ private boolean looptest = false; // temp for debugging
     @Override
     public void start() {
         driveTrain.start();
+        arm.start();
         driver = new GamepadEx(gamepad1);
         operator = new GamepadEx(gamepad2);
         runtime.reset();
@@ -83,7 +86,6 @@ private boolean looptest = false; // temp for debugging
     public void loop() {
         driver.readButtons();  // enable 'was just pressed' methods
         operator.readButtons() ;
-
         arm.loop();
         driveTrain.loop();
       /*  if(!looptest) {
@@ -110,12 +112,18 @@ private boolean looptest = false; // temp for debugging
 // ========== Get Operator control commands: ========================
         if (operator.wasJustPressed(GamepadKeys.Button.A)) arm.setArmPosition(1);// set arm and wrist for pickup
         if (operator.wasJustPressed(GamepadKeys.Button.Y)) arm.setArmPosition(2);// set arm and wrist for mid deposit
-        if (operator.wasJustPressed(GamepadKeys.Button.X)) arm.setFinger(0);// finger defaults closed;this is to open it
-        else arm.setFinger(1);
+        if (operator.wasJustPressed(GamepadKeys.Button.X)) arm.setFinger(true);// finger defaults closed;this is to open it
+        else arm.setFinger(false); // false closes
         if (operator.wasJustPressed(GamepadKeys.Button.B)) arm.setArmPosition(3);// set arm and wrist for long deposit
-       // if(operator.getButton(GamepadKeys.Button.DPAD_LEFT)) arm.setArmInAuto();
-       if (operator.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) arm.setArmInAuto();    // toggle arm auto mode
-        if (arm.getArmInAuto()) message = "arm in auto mode";
+       /*if(operator.getButton(GamepadKeys.Button.DPAD_LEFT)) {
+           arm.toggleArmInAuto();
+           telemetry.addData("saw dpad pressed!", "");
+       }*/
+     if (operator.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
+          arm.toggleArmInAuto();    // toggle arm auto mode
+          telemetry.addData("saw dpad pressed!","");
+      }
+        if (arm.getArmInAuto()) message = "arm in auto mode";  // debugging message
         else message = "arm in manual mode";
         if(arm.findPixel() && arm.fingerPosition > .2 ) operator.gamepad.rumble(500);       // tell operator a pixel was found but only when finger is open, else it would rumble all time with pixel.
 
@@ -163,8 +171,22 @@ private boolean looptest = false; // temp for debugging
         telemetry.addData("forward:", "%5.2f", forwardSpeed);
         telemetry.addData("turn:", "%5.2f", turnSpeed);
         telemetry.addData("Message",message);
+
         // Push telemetry to the Driver Station.
         telemetry.update();
+
+        // use this only for testing, not competition!
+        // ftc-dashboard telemetry
+        TelemetryPacket pack = new TelemetryPacket();
+
+        pack.put("heading target", driveTrain.headingDirection);
+        pack.put("xDistance", driveTrain.getXPosition());
+        //pack.put("yDistance", winch.getDistance());
+       pack.put("Current Heading", driveTrain.heading);
+
+        pack.put("message", message);
+
+        FtcDashboard.getInstance().sendTelemetryPacket(pack);
     }
 }
 

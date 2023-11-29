@@ -35,6 +35,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
@@ -50,6 +51,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
 /*
  * This OpMode scans a single servo back and forward until Stop is pressed.
  * The code is structured as a LinearOpMode
@@ -58,8 +61,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
  */
 @TeleOp(name = "ServoTest", group = "")
-@Disabled
+//@Disabled
 public class ServoTest extends LinearOpMode {
+ DistanceSensor findPixel ;
 
     static final double STEP   = 0.01;     // amount to slew servo each CYCLE_MS cycle
     static final int    CYCLE_MS    =   50;     // period of each cycle
@@ -82,7 +86,7 @@ public class ServoTest extends LinearOpMode {
         wrist = hardwareMap.get(Servo.class, "Wrist");
         finger = hardwareMap.get(Servo.class, "Finger");
         drone = hardwareMap.get(Servo.class, "Drone");
-
+        findPixel =  hardwareMap.get(DistanceSensor .class,"seePixel");
         // Wait for the start button
         telemetry.addData(">", "Press Start to scan Servo." );
         telemetry.update();
@@ -126,6 +130,7 @@ public class ServoTest extends LinearOpMode {
             // Display the current value
             telemetry.addData("Finger Position:", "%5.2f", position);
             telemetry.addData("Wrist Position:", "%5.2f", position2);
+            telemetry.addData("pixel distance: ","%5.2f",findPixel.getDistance(DistanceUnit.MM));
             telemetry.addData(">", "Press Stop to end test." );
             telemetry.update();
 
