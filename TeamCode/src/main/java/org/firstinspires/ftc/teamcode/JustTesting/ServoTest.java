@@ -99,12 +99,12 @@ public class ServoTest extends LinearOpMode {
 
            // simple servo tests:
             // move finger: test results: 1 is pickup, 0.85 is release
-
+/*
             if (gamepad2.a && position < MAX_POS) position += STEP;
             if(operator.wasJustPressed(GamepadKeys.Button.A) && position<MAX_POS)position += STEP;
             if(operator.wasJustPressed(GamepadKeys.Button.Y) && position>MIN_POS)position -= STEP;
             if(operator.wasJustPressed(GamepadKeys.Button.X) && position2<MAX_POS)position2 += STEP;
-            if(operator.wasJustPressed(GamepadKeys.Button.B) && position2>MIN_POS)position2 -= STEP;
+            if(operator.wasJustPressed(GamepadKeys.Button.B) && position2>MIN_POS)position2 -= STEP;*/
 
 
 

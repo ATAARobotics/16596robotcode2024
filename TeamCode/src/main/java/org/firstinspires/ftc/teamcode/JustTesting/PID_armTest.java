@@ -134,7 +134,7 @@ public class PID_armTest extends OpMode {
         armMotors.setInverted(true);    // confirm if we need to invert
 
 // Creates a PID Controller with gains kP, kI, kD
-        armPID = new PIDController(.06, .004, .0);
+        armPID = new PIDController(.04, .004, .0);
 
         // set up servos
         wrist = hardwareMap.get(Servo.class, "Wrist");
@@ -176,8 +176,9 @@ public class PID_armTest extends OpMode {
     @Override
     public void start() {
         imu.resetYaw(); // THIS SHOULD NOT BE HERE IF AUTO IS RUN AHEAD OF THIS!!
-        runtime.reset();
-        arm1.resetEncoder();
+       // runtime.reset();
+        resetRuntime();
+       // arm1.resetEncoder();
     }
 
     /*
@@ -185,7 +186,7 @@ public class PID_armTest extends OpMode {
      */
     @Override
     public void loop() {
-        this.init();
+        // why did we have this.init()??
         driver.readButtons();  // enable 'was just pressed' methods
         operator.readButtons() ;
         YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
@@ -236,16 +237,17 @@ public class PID_armTest extends OpMode {
         // move finger: test results: 1 is pickup, 0.85 is release
 
         if (gamepad2.a && position < MAX_POS) position += STEP;
-        if(operator.wasJustPressed(GamepadKeys.Button.A) && position<MAX_POS)position += STEP;
-        if(operator.wasJustPressed(GamepadKeys.Button.Y) && position>MIN_POS)position -= STEP;
+        //if(operator.wasJustPressed(GamepadKeys.Button.A) && position<MAX_POS)position += STEP;
+        if(gamepad2.y && position >MIN_POS) position-= STEP;
+        //if(operator.wasJustPressed(GamepadKeys.Button.Y) && position>MIN_POS)position -= STEP;
         if(operator.wasJustPressed(GamepadKeys.Button.X) && position2<MAX_POS)position2 += STEP;
         if(operator.wasJustPressed(GamepadKeys.Button.B) && position2>MIN_POS)position2 -= STEP;
 
         // Set the servo to the new position and pause;
         finger.setPosition(position);
         wrist.setPosition(position2);
-
-
+        telemetry.addData("finger target position:",position);
+        telemetry.addData(" wrist target position:",position2);
 
 
 
