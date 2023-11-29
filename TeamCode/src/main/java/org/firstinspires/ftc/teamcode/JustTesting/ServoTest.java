@@ -65,8 +65,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 public class ServoTest extends LinearOpMode {
  DistanceSensor findPixel ;
 
-    static final double STEP   = 0.01;     // amount to slew servo each CYCLE_MS cycle
-    static final int    CYCLE_MS    =   50;     // period of each cycle
+    static final double STEP   = 0.05;     // amount to slew servo each CYCLE_MS cycle
+    static final int    CYCLE_MS    =   20;     // period of each cycle
     static final double MAX_POS     =  1.0;     // Maximum rotational position
     static final double MIN_POS     =  0.0;     // Minimum rotational position
 
@@ -75,12 +75,13 @@ public class ServoTest extends LinearOpMode {
     double  position = 0.85; // Start at open position
     double position2 = (MAX_POS - MIN_POS) / 2; // Start at halfway position
     //boolean rampUp = true;
-    //GamepadEx driver = new GamepadEx(gamepad1);
-    //GamepadEx operator = new GamepadEx(gamepad2);
+    GamepadEx driver = new GamepadEx(gamepad1);
+    GamepadEx operator = new GamepadEx(gamepad2);
 
     @Override
     public void runOpMode() {
-
+        driver.readButtons();  // enable 'was just pressed' methods
+        operator.readButtons() ;
         // Connect to servos
         // Change the text in quotes to match any servo name on your robot.
         wrist = hardwareMap.get(Servo.class, "Wrist");
@@ -95,37 +96,17 @@ public class ServoTest extends LinearOpMode {
 
         // Scan servo till stop pressed.
         while(opModeIsActive()){
-/*
-            // slew the servo, according to the rampUp (direction) variable.
-            if (rampUp) {
-                // Keep stepping up until we hit the max value.
-                position += INCREMENT ;
-                if (position >= MAX_POS ) {
-                    position = MAX_POS;
-                    rampUp = !rampUp;   // Switch ramp direction
-                }
-            }
-            else {
-                // Keep stepping down until we hit the min value.
-                position -= INCREMENT ;
-                if (position <= MIN_POS ) {
-                    position = MIN_POS;
-                    rampUp = !rampUp;  // Switch ramp direction
-                }
-            }
-*/
+
            // simple servo tests:
-
-
             // move finger: test results: 1 is pickup, 0.85 is release
 
-           // if (operator.getButton(GamepadKeys.Button.Y) && position < MAX_POS) position += STEP;
-            //if (operator.getButton(GamepadKeys.Button.A) && position > MIN_POS) position -= STEP;
-
             if (gamepad2.a && position < MAX_POS) position += STEP;
-            if (gamepad2.y && position > MIN_POS) position -= STEP;
-            if (gamepad2.x && position < MAX_POS) position2 += STEP;
-            if (gamepad2.b && position > MIN_POS) position2 -= STEP;
+            if(operator.wasJustPressed(GamepadKeys.Button.A) && position<MAX_POS)position += STEP;
+            if(operator.wasJustPressed(GamepadKeys.Button.Y) && position>MIN_POS)position -= STEP;
+            if(operator.wasJustPressed(GamepadKeys.Button.X) && position2<MAX_POS)position2 += STEP;
+            if(operator.wasJustPressed(GamepadKeys.Button.B) && position2>MIN_POS)position2 -= STEP;
+
+
 
             // Display the current value
             telemetry.addData("Finger Position:", "%5.2f", position);
