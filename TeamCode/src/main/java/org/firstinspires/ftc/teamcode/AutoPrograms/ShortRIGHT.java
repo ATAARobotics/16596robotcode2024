@@ -50,6 +50,7 @@ public class ShortRIGHT extends LinearOpMode{
             driveTrain.printTelemetry(telemetry);
             telemetry.update();
         }
+        // Step 4: stop robot
         driveTrain.stop();
     }
 

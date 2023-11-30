@@ -34,7 +34,7 @@ public class DriveTrain {
 public double headingCorrection = 0;
     public double right = -90; // east
     public double left = 90; //west
-    public double headingDirection = forward;
+    public double headingSetPoint = forward;
     public double heading;
 
 
@@ -82,22 +82,35 @@ public double headingCorrection = 0;
         imu.resetYaw();
     }
     public void loop(){
-        headingControl.setSetPoint(headingDirection);
-        headingCorrection = -headingControl.calculate(heading);
+        headingControl.setSetPoint(headingSetPoint);
+        if (headingControl.getSetPoint()== 180.0) {
+            // "south" is special because it's around the 180/-180 toggle-point
+            double h = heading;
+            // okay so if imu heading is actually -175 then we want to pretend
+            // the heading is 185 (for example) to get right "correction" out of the
+            // PID controller
+            if (h < 0.0) {
+                h = 180 + (heading + 180);
+            }
+            headingCorrection = headingControl.calculate(h);
+        } else {
+            headingCorrection = headingControl.calculate(heading);
+        }
     }
 // ========== Turn the robot  ================
     public  void TurnLeft(){
-        headingDirection = headingDirection + 90;
-        if(headingDirection > 180) headingDirection -= 360;
+        headingSetPoint = headingSetPoint + 90;
+        if(headingSetPoint > 180) headingSetPoint -= 360;
     }
     public  void TurnRight(){
-        headingDirection = headingDirection -90;
-        if(headingDirection < -180) headingDirection += 360;
+        headingSetPoint = headingSetPoint -90;
+        if(headingSetPoint < -180) headingSetPoint += 360;
     }
 //============== Move in new Direction ==========
 
+
     public void setDirection(double newHeading) {
-        headingDirection = newHeading;
+        headingSetPoint = newHeading;
     }
     /*public void drive(double forwardSpeed, double strafeSpeed) {
         double heading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
@@ -113,7 +126,7 @@ public double headingCorrection = 0;
                 strafeSpeed,
                 forwardSpeed,
                 headingCorrection,
-                headingDirection);
+                headingSetPoint);
     }
 
    /* public void setDrivePower(double leftWheel, double rightWheel) {
@@ -138,7 +151,7 @@ public double headingCorrection = 0;
     }
     public void printTelemetry(Telemetry telemetry) {
         telemetry.addData("heading:", "%5.2f", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
-        telemetry.addData("heading Target:",headingDirection);
+        telemetry.addData("heading Target:", headingSetPoint);
         telemetry.addData("X Distance inches:", "%5.2f", getXPosition());
         telemetry.addData("Y Distance inches:", "%5.2f", getYPosition());
     }

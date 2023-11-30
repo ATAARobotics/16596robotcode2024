@@ -36,12 +36,11 @@ public class LongRight extends LinearOpMode {
         driveTrain.start();
         arm.start();
         // Step through each leg of the path, ensuring that the Auto mode has not been stopped along the way
-        //step 1 : move forward to clear frame
-        // Step 2:  strafe right for X seconds:
-        // Replace with encoder measured distance if needed
-
-        //move forward 2 inches
-
+        //step 1 : move forward to reach pass through
+        // Step 2:  strafe right  to reach backstage:
+        // Step 3: deposit pixel on floor
+        // Step 4 back away from pixel
+// Step 1: forward  ================================
         while (opModeIsActive() && driveTrain.getYPosition() > -48) {
             driveTrain.loop();
             driveTrain.drive(.3, 0);
@@ -51,17 +50,19 @@ public class LongRight extends LinearOpMode {
         driveTrain.stop();
         driveTrain.resetXencoder();
         driveTrain.resetYencoder();  // reset encoders to avoid doing relative move calculation
-        while (opModeIsActive() && driveTrain.getXPosition() > -84) {
+// Step 2: strafe right ==============================
+        while (opModeIsActive() && driveTrain.getXPosition() > -84) { // odometer is (-) in right direction
             driveTrain.loop();
-            driveTrain.drive(0, .3);
+            driveTrain.drive(0, .3);// Positive X   is going right
             driveTrain.printTelemetry(telemetry);
             telemetry.update();
         }
         driveTrain.stop();
-
+// Step 3: deposit pixel
         arm.setFinger(true);
         driveTrain.resetXencoder();
         driveTrain.resetYencoder();
+// Step 4: back away from pixel
         while (opModeIsActive() && driveTrain.getYPosition() < 5) {
             driveTrain.loop();
             driveTrain.drive(-.3, 0);
@@ -69,6 +70,6 @@ public class LongRight extends LinearOpMode {
             telemetry.update();
         }
         driveTrain.stop();
-
+// Step 5: Stop Robot
     }
 }

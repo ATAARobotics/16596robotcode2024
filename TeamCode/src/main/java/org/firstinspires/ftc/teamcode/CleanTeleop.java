@@ -175,7 +175,7 @@ private boolean looptest = false; // temp for debugging
         // ftc-dashboard telemetry
         TelemetryPacket pack = new TelemetryPacket();
 
-        pack.put("heading target", driveTrain.headingDirection);
+        pack.put("heading target", driveTrain.headingSetPoint);
         pack.put("xDistance", driveTrain.getXPosition());
         //pack.put("yDistance", winch.getDistance());
        pack.put("Current Heading", driveTrain.heading);

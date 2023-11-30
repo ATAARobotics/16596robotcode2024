@@ -30,7 +30,8 @@ public class ShortLeft extends LinearOpMode{
         arm.start();
         // all lines up to here are 'boilerplate' for all autos
         // add auto steps here:
-        // STEP1:   STRAFE right for  X inches
+
+        // STEP1:   STRAFE left for  X inches
         while(opModeIsActive()&& driveTrain.getXPosition() < 24) {
             driveTrain.loop();
             driveTrain.drive(0, -.3);
@@ -49,6 +50,7 @@ public class ShortLeft extends LinearOpMode{
             driveTrain.printTelemetry(telemetry);
             telemetry.update();
         }
+// Step 4: stop robot
         driveTrain.stop();
     }
 
