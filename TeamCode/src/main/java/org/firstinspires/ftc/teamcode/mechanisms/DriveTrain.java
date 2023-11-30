@@ -23,27 +23,22 @@ public class DriveTrain {
     private Motor xPea = null;
     private Motor yPea = null;
     private PIDController headingControl = null;
-    public final double ticks_to_mm = Math.PI * 48 /2000;// for use in odometry
 
     // Define IMU
-    private IMU imu;// BHI260AP imu on this hub
+    private IMU imu;// BHO055 imu on this hub
     private RevHubOrientationOnRobot orientationOnRobot;
 
     // Auto alignment directions
     public double forward = 0; // north
     public double back = 180; // south
+public double headingCorrection = 0;
     public double right = -90; // east
     public double left = 90; //west
-    private double headingDirection = forward;
+    public double headingDirection = forward;
+    public double heading;
 
 
-    // Define Drive constants.  Make them public so they CAN be used by the calling OpMode
-    public static final double F_MAX_ANGLE       =  90 ;
-    public static final double F_MIN_ANGLE     =  0 ;
-    public static final double W_MAX_ANGLE       =  90 ;
-    public static final double W_MIN_ANGLE     =  0 ;
-    public static final double D_MAX_ANGLE       =  90 ;
-    public static final double D_MIN_ANGLE     =  0;
+
     HardwareMap hwMap;
 
     public DriveTrain(HardwareMap hwMap)
@@ -72,13 +67,13 @@ public class DriveTrain {
     }
     public void init() {
         headingControl = new PIDController(0.02, 0.004, 0.0);
-        headingControl.setSetPoint(headingDirection);
+
         leftBackDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         rightBackDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         rightFrontDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         leftFrontDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-        xPea.setDistancePerPulse(ticks_to_mm);
-        yPea.setDistancePerPulse(ticks_to_mm);
+        xPea.setDistancePerPulse(Constants.TICKS_TO_INCHES); // this will make getDistance in inches, not ticks
+        yPea.setDistancePerPulse(Constants.TICKS_TO_INCHES);
     }
 
     public void start() {
@@ -86,7 +81,11 @@ public class DriveTrain {
         yPea.resetEncoder();
         imu.resetYaw();
     }
-
+    public void loop(){
+        headingCorrection = headingControl.calculate(headingDirection);
+        headingControl.setSetPoint(headingDirection);
+    }
+// ========== Turn the robot  ================
     public  void TurnLeft(){
         headingDirection = headingDirection +90;
         headingDirection = headingDirection % 360;
@@ -95,38 +94,35 @@ public class DriveTrain {
         headingDirection = headingDirection -90;
         headingDirection = headingDirection % 360;
     }
+//============== Move in new Direction ==========
 
     public void setDirection(double newHeading) {
         headingDirection = newHeading;
     }
-    public void drive(double forwardSpeed, double strafeSpeed) {
+    /*public void drive(double forwardSpeed, double strafeSpeed) {
         double heading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
         if(heading - forward > 180) heading -= 360;
         double headingCorrection = -headingControl.calculate(heading);
         drive(forwardSpeed,headingCorrection,strafeSpeed);
-    }
-    public void drive(double forwardSpeed, double turnSpeed, double strafeSpeed) {
+    }*/
+    public void drive(double forwardSpeed,  double strafeSpeed) {
         // tell ftclib its inputs  strafeSpeed,forwardSpeed,turn,heading
+
+        heading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
         driveBase.driveFieldCentric(
                 strafeSpeed,
                 forwardSpeed,
-                turnSpeed,
-        headingDirection);
+                headingCorrection,
+                heading);
     }
 
-    /**
-     * Pass the requested wheel motor powers to the appropriate hardware drive motors.
-     *
-     * @param leftWheel     Fwd/Rev driving power (-1.0 to 1.0) +ve is forward
-     * @param rightWheel    Fwd/Rev driving power (-1.0 to 1.0) +ve is forward
-     */
-    public void setDrivePower(double leftWheel, double rightWheel) {
+   /* public void setDrivePower(double leftWheel, double rightWheel) {
         // Output the values to the motor drives.
         leftFrontDrive.set(leftWheel);
         leftBackDrive.set(leftWheel);
         rightFrontDrive.set(rightWheel);
         rightBackDrive.set(rightWheel);
-    }
+    }*/
 
     public double getXPosition() {
         return xPea.getDistance();
@@ -134,10 +130,13 @@ public class DriveTrain {
     public double getYPosition() {
         return yPea.getDistance();
     }
+    public void resetXencoder(){xPea.resetEncoder();}
+    public void resetYencoder(){yPea.resetEncoder();}
 
     public void printTelemetry(Telemetry telemetry) {
         telemetry.addData("heading:", "%5.2f", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
-        telemetry.addData("X Distance mm:", "%5.2f", getXPosition());
-        telemetry.addData("Y Distance mm:", "%5.2f", getYPosition());
+        telemetry.addData("heading Target:",headingDirection);
+        telemetry.addData("X Distance inches:", "%5.2f", getXPosition());
+        telemetry.addData("Y Distance inches:", "%5.2f", getYPosition());
     }
 }

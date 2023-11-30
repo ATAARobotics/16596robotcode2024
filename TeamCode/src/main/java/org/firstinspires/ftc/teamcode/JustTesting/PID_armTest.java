@@ -28,8 +28,6 @@
  */
 
 package org.firstinspires.ftc.teamcode.JustTesting;
-
-
 import com.arcrobotics.ftclib.controller.PIDController;
 
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
@@ -40,6 +38,7 @@ import com.arcrobotics.ftclib.hardware.motors.MotorGroup;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -47,9 +46,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
-
-
 /* TODO:
 1: SET UP ENCODERS
 2: USE ENCODER IN AUTO
@@ -65,8 +63,9 @@ public class PID_armTest extends OpMode {
 
 
     double armPosition = 0;
+    double armPositionX =0;
     MecanumDrive drivebase = null;
-
+    DistanceSensor findPixel ;
     private final ElapsedTime runtime = new ElapsedTime();
     private Motor leftFrontDrive = null;
     private Motor rightFrontDrive = null;
@@ -78,8 +77,12 @@ public class PID_armTest extends OpMode {
     private Motor ypod = null;// fake motor to use encoder for odometry module
     private Servo finger, wrist, drone, hook;
     private String message = " ";
-
-
+    static final double STEP   = 0.05;     // amount to slew servo each CYCLE_MS cycle
+    static final int    CYCLE_MS    =   20;     // period of each cycle
+    static final double MAX_POS     =  1.0;     // Maximum rotational position
+    static final double MIN_POS     =  0.0;     // Minimum rotational position
+    double  position = 0.85; // Start at open position
+    double position2 = (MAX_POS - MIN_POS) / 2; // Start at halfway position
     // TODO clean up these before Comp2- how many presets are used?
     static final int ARM_PICKUP = -44;
     static final int ARM_DEPOSIT_MID = 113;
@@ -88,7 +91,7 @@ public class PID_armTest extends OpMode {
     static final double WRIST_DEPOSIT_MID = 0.31;
     static final double WRIST_DEPOSIT_LONG = 0.02;
 
-    double position2 = (0.35);// start wrist at pickup?
+   // double position2 = (0.35);            // start wrist at pickup?
 
     double armSpeed;
     public PIDController armPID;
@@ -122,20 +125,21 @@ public class PID_armTest extends OpMode {
         arm1 = new Motor(hardwareMap, "arm1");
         arm2 = new Motor(hardwareMap, "arm2");
         arm1.resetEncoder();
+        arm2.resetEncoder();
         // set up arm motors for master/slave
         armMotors = new MotorGroup(arm1, arm2);
         armMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         armMotors.setInverted(true);    // confirm if we need to invert
 
 // Creates a PID Controller with gains kP, kI, kD
-        armPID = new PIDController(.06, .004, .0);
+        armPID = new PIDController(.015, .004, .0);
 
         // set up servos
         wrist = hardwareMap.get(Servo.class, "Wrist");
         finger = hardwareMap.get(Servo.class, "Finger");
         drone = hardwareMap.get(Servo.class, "Drone");
         hook = hardwareMap.get(Servo.class, "Hook");
-
+        findPixel =  hardwareMap.get(DistanceSensor .class,"seePixel");
         driver = new GamepadEx(gamepad1);
         operator = new GamepadEx(gamepad2);
         //winch.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
@@ -170,8 +174,9 @@ public class PID_armTest extends OpMode {
     @Override
     public void start() {
         imu.resetYaw(); // THIS SHOULD NOT BE HERE IF AUTO IS RUN AHEAD OF THIS!!
-        runtime.reset();
-        arm1.resetEncoder();
+       // runtime.reset();
+        resetRuntime();
+       arm1.resetEncoder();
     }
 
     /*
@@ -179,8 +184,9 @@ public class PID_armTest extends OpMode {
      */
     @Override
     public void loop() {
-        this.init();
-
+        // why did we have this.init()??
+        driver.readButtons();  // enable 'was just pressed' methods
+        operator.readButtons() ;
         YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
         double heading = orientation.getYaw(AngleUnit.DEGREES);
         double turn = 0;  // set up 'turn' variable
@@ -190,49 +196,59 @@ public class PID_armTest extends OpMode {
         double turn_ratio = 0.4; // use this to slow turn rate
         double armDriveRatio = 0.4; // use this to slow down arm
 
-        //======= get human inputs for drive and arm =============
-        double strafeSpeed = driver.getLeftX() * speed_ratio;
-        double forwardSpeed = driver.getLeftY() * speed_ratio;
-        double turnSpeed = driver.getRightX() * turn_ratio;
-
-        // tell ftclib its inputs  strafeSpeed,forwardSpeed,turn,heading
-        drivebase.driveFieldCentric(
-                strafeSpeed,
-                forwardSpeed,
-                turnSpeed,
-                heading);
-
         // move the arm:
         //TODO: need to confirm armPosition at start, it will NOT be zero.
         if ((armSpeed < 0 && armPosition < ARM_MIN) || (armSpeed > 0 && armPosition > ARM_MAX))
             armSpeed = 0;//avoid trying to lower arm when on chassis and limit extension
         if (armSpeed > 0 && driver.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0)
-            armDriveRatio = 1;// override speed limit using trigger
+            armDriveRatio = .6;// override speed limit using trigger
 // ============== use either operator speed or PID =====
         if (!armInAuto) armMotors.set(armDriveRatio * armSpeed);
         else {
-            armPID.setSetPoint(0);
+            armPID.setSetPoint(0);  // return to start position via PID
             double armOut = armPID.calculate(arm1.getCurrentPosition());// calculate final arm speed to send
             armMotors.set(armOut);
             telemetry.addData("armPower",armOut);
         }
         armPosition = arm1.getCurrentPosition();
-
+        armPositionX = arm1.getDistance();
         //if (gamepad2.a && !lastA) setArmPID(0);// set arm back to initial position via PID
 
-        if (gamepad2.x) armInAuto = !armInAuto;    // toggle arm auto mode
+        if (gamepad2.dpad_left) armInAuto = !armInAuto;    // toggle arm auto mode
         if (armInAuto) message = "arm in auto mode";
         else message = "arm in manual mode";
+        // simple servo tests:
+        // move finger: test results: 1 is pickup, 0.85 is release
+
+        if (gamepad2.a && position < MAX_POS) position += STEP;
+        //if(operator.wasJustPressed(GamepadKeys.Button.A) && position<MAX_POS)position += STEP;
+        if(gamepad2.y && position >MIN_POS) position-= STEP;
+        //if(operator.wasJustPressed(GamepadKeys.Button.Y) && position>MIN_POS)position -= STEP;
+        if(operator.wasJustPressed(GamepadKeys.Button.X) && position2<MAX_POS)position2 += STEP;
+        if(operator.wasJustPressed(GamepadKeys.Button.B) && position2>MIN_POS)position2 -= STEP;
+
+        // Set the servo to the new position and pause;
+        finger.setPosition(position);
+        wrist.setPosition(position2);
+        telemetry.addData("finger target position:",position);
+        telemetry.addData(" wrist target position:",position2);
+
+
+
         // Show the elapsed game time and arm position.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.addData("arm position:", armPosition);
+        telemetry.addData("arm positionX:", armPositionX);
 
-        //  telemetry.addData("Finger Position:", "%5.2f", finger.getPosition());
-        //   telemetry.addData("Wrist Position:", "%5.2f", wrist.getPosition());
         telemetry.addData("heading:", "%5.2f", heading);
         telemetry.addData("X Distance:", "%5.2f", xDistance);
         telemetry.addData("Y Distance:", "%5.2f", yDistance);
         telemetry.addData("Message", message);
+        // Display the current value
+        telemetry.addData("Finger Position:", "%5.2f", position);
+        telemetry.addData("Wrist Position:", "%5.2f", position2);
+        telemetry.addData("pixel distance: ","%5.2f",findPixel.getDistance(DistanceUnit.MM));
+
         // Push telemetry to the Driver Station.
         telemetry.update();
         // ftc-dashboard telemetry
