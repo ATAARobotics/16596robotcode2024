@@ -94,14 +94,14 @@ private boolean looptest = false; // temp for debugging
         double forwardSpeed = driver.getLeftY() * Constants.SPEED_RATIO;
         double turnSpeed = driver.getRightX() * Constants. TURN_RATIO;
 
-        if (driver.getLeftX() < -0.5) {
+        if (driver.getRightX() < -0.5) {
             driveTrain.setDirection(Constants.left); //west
-        } else if (driver.getLeftX() > 0.5) {
+        } else if (driver.getRightX() > 0.5) {
             driveTrain.setDirection(Constants.right) ; // east
-        } else if (driver.getLeftY() < -0.5) {
-            driveTrain.setDirection(Constants.back); //south
-        } else if (driver.getLeftY() > 0.5) {
-            driveTrain.setDirection(Constants.forward); // north
+        } else if (driver.getRightY() < -0.5) {
+            driveTrain.setDirection(Constants.forward); //south
+        } else if (driver.getRightY() > 0.5) {
+            driveTrain.setDirection(Constants.back); // north
         }
         arm.setArmSpeed(operator.getLeftY()) ;
 
@@ -124,17 +124,17 @@ private boolean looptest = false; // temp for debugging
         if(arm.findPixel() && arm.fingerPosition > .2 ) operator.gamepad.rumble(500);       // tell operator a pixel was found but only when finger is open, else it would rumble all time with pixel.
 
         // If we want to turn the robot, lets do it
-        if(!turning && turnSpeed > 0.5) {
-            driveTrain.TurnRight();
-            turning = true;
-        }
-        else if(!turning && turnSpeed < -0.5) {
-            driveTrain.TurnLeft();
-            turning = true;
-        }
-        if (Math.abs(turnSpeed)< 0.5){
-            turning  = false;
-        }
+//        if(!turning && turnSpeed > 0.5) {
+//            driveTrain.TurnRight();
+//            turning = true;
+//        }
+//        else if(!turning && turnSpeed < -0.5) {
+//            driveTrain.TurnLeft();
+//            turning = true;
+//        }
+//        if (Math.abs(turnSpeed)< 0.5){
+//            turning  = false;
+//        }
 
         // move the robot!!
         driveTrain.drive(forwardSpeed,strafeSpeed); // turning and heading control happen in driveTrain

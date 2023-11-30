@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.IMU;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
-public class DriveTrain {
+public class TestDriveTrain {
 
     // Driving Motors
     private Motor leftFrontDrive = null;
@@ -20,8 +20,8 @@ public class DriveTrain {
     MecanumDrive driveBase = null;
 
     // Odometry Motors and variables
-    private Motor xPea = null;
-    private Motor yPea = null;
+//    private Motor xPea = null;
+//    private Motor yPea = null;
     private PIDController headingControl = null;
 
     // Define IMU
@@ -31,7 +31,7 @@ public class DriveTrain {
     // Auto alignment directions
     public double forward = 0; // north
     public double back = 180; // south
-public double headingCorrection = 0;
+    public double headingCorrection = 0;
     public double right = -90; // east
     public double left = 90; //west
     public double headingDirection = forward;
@@ -41,7 +41,7 @@ public double headingCorrection = 0;
 
     HardwareMap hwMap;
 
-    public DriveTrain(HardwareMap hwMap)
+    public TestDriveTrain(HardwareMap hwMap)
     {
         this.hwMap = hwMap;
 
@@ -52,8 +52,8 @@ public double headingCorrection = 0;
         leftBackDrive = new Motor(hwMap, "left_back_drive");
         rightBackDrive = new Motor(hwMap, "right_back_drive");
 
-        xPea = new Motor(hwMap, "winch");
-        yPea = new Motor(hwMap, "y_encoder");
+//        xPea = new Motor(hwMap, "winch");
+//        yPea = new Motor(hwMap, "y_encoder");
 
         // need to confirm orientation of the HUB so that IMU directions are correct
         imu = hwMap.get(IMU.class, "imu");// need to use IMU in expansion hub, not control hub
@@ -72,13 +72,13 @@ public double headingCorrection = 0;
         rightBackDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         rightFrontDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         leftFrontDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-        xPea.setDistancePerPulse(Constants.TICKS_TO_INCHES); // this will make getDistance in inches, not ticks
-        yPea.setDistancePerPulse(Constants.TICKS_TO_INCHES);
+//        xPea.setDistancePerPulse(Constants.TICKS_TO_INCHES); // this will make getDistance in inches, not ticks
+//        yPea.setDistancePerPulse(Constants.TICKS_TO_INCHES);
     }
 
     public void start() {
-        xPea.resetEncoder();
-        yPea.resetEncoder();
+//        xPea.resetEncoder();
+//        yPea.resetEncoder();
         imu.resetYaw();
     }
     public void loop(){
@@ -87,12 +87,12 @@ public double headingCorrection = 0;
     }
 // ========== Turn the robot  ================
     public  void TurnLeft(){
-        headingDirection = headingDirection + 90;
-        if(headingDirection > 180) headingDirection -= 360;
+        headingDirection = headingDirection +90;
+        headingDirection = headingDirection % 360;
     }
     public  void TurnRight(){
         headingDirection = headingDirection -90;
-        if(headingDirection < -180) headingDirection += 360;
+        headingDirection = headingDirection % 360;
     }
 //============== Move in new Direction ==========
 
@@ -116,6 +116,9 @@ public double headingCorrection = 0;
                 headingDirection);
     }
 
+    public void stop() {
+        driveBase.stop();
+    }
    /* public void setDrivePower(double leftWheel, double rightWheel) {
         // Output the values to the motor drives.
         leftFrontDrive.set(leftWheel);
@@ -124,22 +127,20 @@ public double headingCorrection = 0;
         rightBackDrive.set(rightWheel);
     }*/
 
-    public double getXPosition() {
-        return xPea.getDistance();
-    }
-    public double getYPosition() {
-        return yPea.getDistance();
-    }
-    public void resetXencoder(){xPea.resetEncoder();}
-    public void resetYencoder(){yPea.resetEncoder();}
+//    public double getXPosition() {
+//        return xPea.getDistance();
+//    }
+//    public double getYPosition() {
+//        return yPea.getDistance();
+//    }
+//    public void resetXencoder(){xPea.resetEncoder();}
+//    public void resetYencoder(){yPea.resetEncoder();}
 
-    public void stop() {
-        driveBase.stop();
-    }
     public void printTelemetry(Telemetry telemetry) {
         telemetry.addData("heading:", "%5.2f", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
         telemetry.addData("heading Target:",headingDirection);
-        telemetry.addData("X Distance inches:", "%5.2f", getXPosition());
-        telemetry.addData("Y Distance inches:", "%5.2f", getYPosition());
+        telemetry.addData("heading Correction:",headingCorrection);
+//        telemetry.addData("X Distance inches:", "%5.2f", getXPosition());
+//        telemetry.addData("Y Distance inches:", "%5.2f", getYPosition());
     }
 }

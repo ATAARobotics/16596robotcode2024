@@ -4,12 +4,11 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.mechanisms.Airplane;
 import org.firstinspires.ftc.teamcode.mechanisms.Arm;
 import org.firstinspires.ftc.teamcode.mechanisms.DriveTrain;
 
-@Autonomous(name = "Short_Right")
-public class ShortRIGHT extends LinearOpMode{
+@Autonomous(name = "Short_Left")
+public class ShortLeft extends LinearOpMode{
     private final ElapsedTime runtime = new ElapsedTime();
 
     private DriveTrain driveTrain;
@@ -32,9 +31,9 @@ public class ShortRIGHT extends LinearOpMode{
         // all lines up to here are 'boilerplate' for all autos
         // add auto steps here:
         // STEP1:   STRAFE right for  X inches
-        while(opModeIsActive()&& driveTrain.getXPosition() > -24) {
+        while(opModeIsActive()&& driveTrain.getXPosition() < 24) {
             driveTrain.loop();
-            driveTrain.drive(0, .3);
+            driveTrain.drive(0, -.3);
             driveTrain.printTelemetry(telemetry);
             telemetry.update();
         }
