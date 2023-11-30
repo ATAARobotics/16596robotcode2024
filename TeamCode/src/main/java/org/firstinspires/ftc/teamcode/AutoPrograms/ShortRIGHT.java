@@ -31,26 +31,28 @@ public class ShortRIGHT extends LinearOpMode{
         arm.start();
         // all lines up to here are 'boilerplate' for all autos
         // add auto steps here:
-        // STEP1:   STRAFE right for  X inches
+
+// STEP1:   STRAFE right for  X inches
+        driveTrain.resetOdomoetry(); // reset encoders to avoid doing relative move calculation
         while(opModeIsActive()&& driveTrain.getXPosition() > -24) {
-            driveTrain.loop();
-            driveTrain.drive(0, .3);
+            driveTrain.autoDrive(0, .3);
             driveTrain.printTelemetry(telemetry);
             telemetry.update();
         }
         driveTrain.stop(); //its stopping the previous drive that completed.
-        //STEP2: drop pixel
+
+//STEP2: drop pixel
         arm.setFinger(true); // open finger to let pixel drop
-        // step 3: back up 2 inches to clear pixel?? ... may not be needed Do we need to move arm/wrist?
-        driveTrain.resetXencoder();
-        driveTrain.resetYencoder();  // reset encoders to avoid doing relative move calculation
+
+// step 3: back up 2 inches to clear pixel?? ... may not be needed Do we need to move arm/wrist?
+        driveTrain.resetOdomoetry(); // reset encoders to avoid doing relative move calculation
         while(opModeIsActive()&& driveTrain.getYPosition() < 2) {
-            driveTrain.loop();
-            driveTrain.drive(-.3,0);
+            driveTrain.autoDrive(-.3,0);
             driveTrain.printTelemetry(telemetry);
             telemetry.update();
         }
-        // Step 4: stop robot
+
+// Step 4: stop robot
         driveTrain.stop();
     }
 

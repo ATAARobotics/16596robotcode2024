@@ -83,19 +83,23 @@ public double headingCorrection = 0;
     }
     public void loop(){
         headingControl.setSetPoint(headingSetPoint);
-        if (headingControl.getSetPoint()== 180.0) {
+
+        // Because it's a double, can't check for exactly 180, so we check if it's almost 180 in either direction.
+        if (Math.abs(headingControl.getSetPoint()) > 178.0) {
+
             // "south" is special because it's around the 180/-180 toggle-point
-            double h = heading;
-            // okay so if imu heading is actually -175 then we want to pretend
-            // the heading is 185 (for example) to get right "correction" out of the
-            // PID controller
-            if (h < 0.0) {
-                h = 180 + (heading + 180);
+            // Change setpoint between 180/-180 depending on which is closer.
+            if (heading < 0.0) {
+                headingSetPoint = -180;
             }
-            headingCorrection = headingControl.calculate(h);
-        } else {
-            headingCorrection = headingControl.calculate(heading);
+            else {
+                headingSetPoint = 180;
+            }
         }
+
+        // PID controller
+        headingControl.setSetPoint(headingSetPoint);
+        headingCorrection = headingControl.calculate(heading);
     }
 // ========== Turn the robot  ================
     public  void TurnLeft(){
@@ -112,12 +116,17 @@ public double headingCorrection = 0;
     public void setDirection(double newHeading) {
         headingSetPoint = newHeading;
     }
-    /*public void drive(double forwardSpeed, double strafeSpeed) {
-        double heading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
-        if(heading - forward > 180) heading -= 360;
-        double headingCorrection = -headingControl.calculate(heading);
-        drive(forwardSpeed,headingCorrection,strafeSpeed);
-    }*/
+
+    public void autoDrive(double forwardSpeed,  double strafeSpeed) {
+        heading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+        this.loop();
+        driveBase.driveFieldCentric(
+                strafeSpeed,
+                forwardSpeed,
+                headingCorrection,
+                headingSetPoint);
+    }
+
     public void drive(double forwardSpeed,  double strafeSpeed) {
         // tell ftclib its inputs  strafeSpeed,forwardSpeed,turn,heading
 
@@ -154,5 +163,10 @@ public double headingCorrection = 0;
         telemetry.addData("heading Target:", headingSetPoint);
         telemetry.addData("X Distance inches:", "%5.2f", getXPosition());
         telemetry.addData("Y Distance inches:", "%5.2f", getYPosition());
+    }
+
+    public void resetOdomoetry() {
+        resetXencoder();
+        resetYencoder();
     }
 }

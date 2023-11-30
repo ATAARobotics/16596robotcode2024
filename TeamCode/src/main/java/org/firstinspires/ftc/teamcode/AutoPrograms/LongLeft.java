@@ -39,32 +39,29 @@ public class LongLeft extends LinearOpMode {
 
 
 // Step 1: forward  ================================
+        driveTrain.resetOdomoetry(); // reset encoders to avoid doing relative move calculation
         while (opModeIsActive() && driveTrain.getYPosition() > -48) {
-            driveTrain.loop();
-            driveTrain.drive(.3, 0);
+            driveTrain.autoDrive(.3, 0);
             driveTrain.printTelemetry(telemetry);
             telemetry.update();
         }
         driveTrain.stop();
-        driveTrain.resetXencoder();
-        driveTrain.resetYencoder();  // reset encoders to avoid doing relative move calculation
 
-        // Step 2: strafe left ==============================
+// Step 2: strafe left ==============================
+        driveTrain.resetOdomoetry(); // reset encoders to avoid doing relative move calculation
         while (opModeIsActive() && driveTrain.getXPosition() < 84) {
-            driveTrain.loop();
-            driveTrain.drive(0, -.3);// strafe left
+            driveTrain.autoDrive(0, -.3);// strafe left
             driveTrain.printTelemetry(telemetry);
             telemetry.update();
         }
         driveTrain.stop();
 // Step 3: deposit pixel
         arm.setFinger(true);
-        driveTrain.resetXencoder();
-        driveTrain.resetYencoder();
-// Step 4: back away from pixel
+
+        // Step 4: back away from pixel
+        driveTrain.resetOdomoetry();
         while (opModeIsActive() && driveTrain.getYPosition() < 5) {
-            driveTrain.loop();
-            driveTrain.drive(-.3, 0);
+            driveTrain.autoDrive(-.3, 0);
             driveTrain.printTelemetry(telemetry);
             telemetry.update();
         }
