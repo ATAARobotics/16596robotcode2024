@@ -53,7 +53,7 @@ public class LongRight extends LinearOpMode {
         }
         driveTrain.stop();
 // Step 3: deposit pixel
-        arm.setFinger(true);
+        arm.setFinger();
 
 // Step 4: back away from pixel
         driveTrain.resetOdomoetry(); // reset encoders to avoid doing relative move calculation

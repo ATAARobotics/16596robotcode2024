@@ -99,7 +99,7 @@ public double headingCorrection = 0;
 
         // PID controller
         headingControl.setSetPoint(headingSetPoint);
-        headingCorrection = headingControl.calculate(heading);
+        headingCorrection = -headingControl.calculate(heading);
     }
 // ========== Turn the robot  ================
     public  void TurnLeft(){

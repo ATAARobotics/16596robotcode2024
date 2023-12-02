@@ -55,7 +55,9 @@ public class CleanTeleop extends OpMode {
     private String message = " ";
     boolean climbing = false;
     boolean turning = false;
-private boolean looptest = false; // temp for debugging
+    private boolean looptest = false; // temp for debugging
+    private boolean pixelFound = false;
+
     @Override
     public void init() {
         telemetry.addData("Status", "Initializing");
@@ -108,8 +110,7 @@ private boolean looptest = false; // temp for debugging
 // ========== Get Operator control commands: ========================
         if (operator.wasJustPressed(GamepadKeys.Button.A)) arm.setArmPosition(1);// set arm and wrist for pickup
         if (operator.wasJustPressed(GamepadKeys.Button.Y)) arm.setArmPosition(2);// set arm and wrist for mid deposit
-        if (operator.wasJustPressed(GamepadKeys.Button.X)) arm.setFinger(true);// finger defaults closed;this is to open it
-        else arm.setFinger(false); // false closes
+        if (operator.wasJustPressed(GamepadKeys.Button.X)) arm.setFinger();// finger defaults closed;this is to open it
         if (operator.wasJustPressed(GamepadKeys.Button.B)) arm.setArmPosition(3);// set arm and wrist for long deposit
        /*if(operator.getButton(GamepadKeys.Button.DPAD_LEFT)) {
            arm.toggleArmInAuto();
@@ -121,7 +122,14 @@ private boolean looptest = false; // temp for debugging
       }
         if (arm.getArmInAuto()) message = "arm in auto mode";  // debugging message
         else message = "arm in manual mode";
-        if(arm.findPixel() && arm.fingerPosition > .2 ) operator.gamepad.rumble(500);       // tell operator a pixel was found but only when finger is open, else it would rumble all time with pixel.
+        if(arm.findPixel() && arm.fingerPosition > .2 ) {
+            if (!pixelFound) {
+                operator.gamepad.rumble(500);       // tell operator a pixel was found but only when finger is open, else it would rumble all time with pixel.
+            }
+            pixelFound = true;
+        }
+        else pixelFound = false;
+
 
         // If we want to turn the robot, lets do it
 //        if(!turning && turnSpeed > 0.5) {
@@ -143,12 +151,12 @@ private boolean looptest = false; // temp for debugging
 
 
         // ================ Launch Drone ===============================
-        if (gamepad2.right_trigger > 0) {
+        if (gamepad2.right_trigger > 0.1) {
             drone.launch();
             message = "drone launched";
         }
         // =============== go climbing! =============================
-        if (gamepad2.left_trigger > 0 && gamepad2.right_trigger > 0) {
+        if (gamepad2.left_trigger > 0.1 && gamepad2.right_trigger > 0.1) {
             arm.setHook(true);
             climbing = true;
             message = "climbing!";

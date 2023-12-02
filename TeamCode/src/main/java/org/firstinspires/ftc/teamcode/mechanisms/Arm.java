@@ -14,17 +14,15 @@ public class Arm {
     HardwareMap hwMap;
     private static final double HOOK_ENABLED = 0.0;
     private static final double HOOK_DISABLED = 1.0;
-    private static final double FINGER_DISABLED = 1.0;
-    private static final double FINGER_ENABLED = 0.0;
+    private static  final double PIXEL_THRESHOLD = 40.0;
     private Motor arm1 = null;
     private Motor arm2 = null;
     private Motor winch = null;
     private MotorGroup armMotors;
     private Servo finger, wrist, hook;
     public boolean isPixel = false;
-private DistanceSensor seePixel = null;
+    private DistanceSensor seePixel = null;
     // TODO clean up these before Comp2- how many presets are used?
-
 
     double position2 = (0.35);// start wrist at pickup?
     double armSpeed;
@@ -32,9 +30,12 @@ private DistanceSensor seePixel = null;
     double winchspeed = .25;
     boolean climbing = false;
 
-public int fingerPosition;
-    private boolean armInAuto = false;
+    public int fingerPosition;
+    private boolean armInAuto = true;
     double armPosition = 0;
+    private boolean fingerOpen = false;
+
+
     public Arm(HardwareMap hwMap) {
         this.hwMap = hwMap;
         seePixel = hwMap.get(DistanceSensor.class,"seePixel");
@@ -56,13 +57,12 @@ public int fingerPosition;
         arm2.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
 // Creates a PID Controller with gains kP, kI, kD
         // testing [without the wrist!] and 0 setpoint: Kp=0.02,Ki=0.004,Kd=0
-        armPID = new PIDController(.01, .004, 0);
+        armPID = new PIDController(.005, .0004, 0);
         //armPID = new PIDController(.015, .004, .0);
     }
 
     public void init() {
-
-         setFinger(false); // close finger at start
+        finger.setPosition(Constants.F_CLOSED);
     }
     public void start() {
         arm1.resetEncoder();// use this for arm position & PID
@@ -80,12 +80,12 @@ public int fingerPosition;
         }
         else  {
             double armOut = armPID.calculate(arm1.getCurrentPosition());// calculate final arm speed to send
+            if(armPosition < 0 && armOut > 0) armOut = armOut * Constants.ARM_LIFT_MULTIPLIER;
             armMotors.set(armOut);
         }
 
 
         armPosition = arm1.getCurrentPosition();
-        finger.setPosition(Constants.F_CLOSED); // default closed
     }
 
     /*public void overrideArmSpeed(boolean enabled) {
@@ -114,18 +114,23 @@ public int fingerPosition;
 
     }
 
-    public void setFinger(boolean open) {
-     if (open) finger.setPosition(Constants.F_OPEN);
-        else finger.setPosition(Constants.F_CLOSED);
+    public void setFinger() {
+     if (!fingerOpen) {
+         fingerOpen = true;
+         finger.setPosition(Constants.F_OPEN);
+     }
+     else {
+         fingerOpen = false;
+         finger.setPosition(Constants.F_CLOSED);
+     }
 
     }
     public void setArmSpeed(double speed){
         armSpeed = speed;
     }
     public  boolean findPixel (){
-        // TODO: add code here for claw sensor to 'see' pixel at intake.
         double pixelDistance = seePixel.getDistance(DistanceUnit.MM);
-        if (pixelDistance < 5) return true;
+        if (pixelDistance < PIXEL_THRESHOLD) return true;
         else return false;
         }
 

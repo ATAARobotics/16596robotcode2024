@@ -48,11 +48,12 @@ public class ServoTest extends LinearOpMode {
     double  position = 0.85; // Start at open position
     double position2 = (MAX_POS - MIN_POS) / 2; // Start at halfway position
     //boolean rampUp = true;
-    GamepadEx driver = new GamepadEx(gamepad1);
-    GamepadEx operator = new GamepadEx(gamepad2);
 
     @Override
     public void runOpMode() {
+        GamepadEx driver = new GamepadEx(gamepad1);
+        GamepadEx operator = new GamepadEx(gamepad2);
+
         driver.readButtons();  // enable 'was just pressed' methods
         operator.readButtons() ;
         // Connect to servos

@@ -56,7 +56,7 @@ public class LongLeft extends LinearOpMode {
         }
         driveTrain.stop();
 // Step 3: deposit pixel
-        arm.setFinger(true);
+        arm.setFinger();
 
         // Step 4: back away from pixel
         driveTrain.resetOdomoetry();

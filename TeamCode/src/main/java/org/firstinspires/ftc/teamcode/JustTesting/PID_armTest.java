@@ -82,7 +82,7 @@ public class PID_armTest extends OpMode {
     static final double MAX_POS     =  1.0;     // Maximum rotational position
     static final double MIN_POS     =  0.0;     // Minimum rotational position
     double  position = 0.85; // Start at open position
-    double position2 = (MAX_POS - MIN_POS) / 2; // Start at halfway position
+    double position2 = 0.5; // Start at halfway position
     // TODO clean up these before Comp2- how many presets are used?
     static final int ARM_PICKUP = -44;
     static final int ARM_DEPOSIT_MID = 113;
@@ -103,7 +103,7 @@ public class PID_armTest extends OpMode {
     private IMU imu;// BHO055 imu on this hub
     boolean armInAuto = false;
     private RevHubOrientationOnRobot orientationOnRobot;
-    static int ARM_MAX = 95;
+    static int ARM_MAX = 200;
     static int ARM_MIN = -75;
 
     @Override
@@ -230,7 +230,7 @@ public class PID_armTest extends OpMode {
         // Set the servo to the new position and pause;
         finger.setPosition(position);
         wrist.setPosition(position2);
-        telemetry.addData("finger target position:",position);
+//        telemetry.addData("finger target position:",position);
         telemetry.addData(" wrist target position:",position2);
 
 
