@@ -33,8 +33,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  * CYCLE_MS sets the update period.
 
  */
-@TeleOp(name = "ServoTest", group = "")
-//@Disabled
+//@TeleOp(name = "ServoTest", group = "")
+@Disabled
 public class ServoTest extends LinearOpMode {
  DistanceSensor findPixel ;
 

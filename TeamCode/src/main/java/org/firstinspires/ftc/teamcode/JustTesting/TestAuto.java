@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.JustTesting;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -10,7 +11,8 @@ import org.firstinspires.ftc.teamcode.mechanisms.Arm;
 import org.firstinspires.ftc.teamcode.mechanisms.DriveTrain;
 import org.firstinspires.ftc.teamcode.mechanisms.TestDriveTrain;
 
-@Autonomous(name = "TestAuto",group = "")
+//@Autonomous(name = "TestAuto",group = "")
+@Disabled
 public class TestAuto extends LinearOpMode {
     private TestDriveTrain driveTrain;
 //    private Arm arm;

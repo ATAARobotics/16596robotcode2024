@@ -49,7 +49,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
-@TeleOp(name="DriveTrainPracticeBOT", group="teleop")
+//@TeleOp(name="DriveTrainPracticeBOT", group="teleop")
 @Disabled
 public class practiceBOT extends OpMode {
     private static final double MIN_ANGLE = 0 ;

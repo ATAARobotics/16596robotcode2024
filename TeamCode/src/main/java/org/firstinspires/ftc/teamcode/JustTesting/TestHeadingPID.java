@@ -7,6 +7,7 @@ import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -20,7 +21,8 @@ import org.firstinspires.ftc.teamcode.mechanisms.Constants;
 import org.firstinspires.ftc.teamcode.mechanisms.DriveTrain;
 
 //@Autonomous(name = "Short Right",group = "")
-@TeleOp(name="TestHeadingPID", group="teleop")
+//@TeleOp(name="TestHeadingPID", group="teleop")
+@Disabled
 public class TestHeadingPID extends LinearOpMode {
     private DriveTrain driveTrain;
     private Arm arm;
