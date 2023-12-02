@@ -33,6 +33,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -42,7 +43,7 @@ import org.firstinspires.ftc.teamcode.mechanisms.Arm;
 import org.firstinspires.ftc.teamcode.mechanisms.Constants;
 import org.firstinspires.ftc.teamcode.mechanisms.DriveTrain;
 
-@TeleOp(name="Comp2", group="teleop")
+@TeleOp (name = "Comp2")
 public class Comp2 extends OpMode {
 
     private final ElapsedTime runtime = new ElapsedTime();

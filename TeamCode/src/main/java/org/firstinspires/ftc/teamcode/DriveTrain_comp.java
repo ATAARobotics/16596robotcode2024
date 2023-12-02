@@ -58,7 +58,6 @@ import org.firstinspires.ftc.teamcode.mechanisms.Constants;
 
  */
 
-@TeleOp(name="DriveTrain_comp", group="teleop")
 @Disabled
 public class DriveTrain_comp extends OpMode {
 

@@ -55,7 +55,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
  */
 
-@TeleOp(name="Comp1", group="teleop")
 @Disabled
 public class Comp1 extends OpMode {
 

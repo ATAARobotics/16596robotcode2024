@@ -143,6 +143,12 @@ public class Arm {
         armInAuto = !armInAuto;
     }
     public void setHook(boolean enabled) {
+        wrist.setPosition(Constants.WRIST_DEPOSIT_MID);
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         hook.setPosition(enabled?HOOK_ENABLED:HOOK_DISABLED);
     }
 
@@ -150,6 +156,7 @@ public class Arm {
         if(enabled) {
             winch.set(1);
             armMotors.set(1);
+
         }
         else winch.set(0);
 
