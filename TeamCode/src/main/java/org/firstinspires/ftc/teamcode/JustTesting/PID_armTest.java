@@ -81,7 +81,7 @@ public class PID_armTest extends OpMode {
     static final int    CYCLE_MS    =   20;     // period of each cycle
     static final double MAX_POS     =  1.0;     // Maximum rotational position
     static final double MIN_POS     =  0.0;     // Minimum rotational position
-    double  position = 0.85; // Start at open position
+    double  position = 1.0 ; // Start at open position
     double position2 = 0.5; // Start at halfway position
     // TODO clean up these before Comp2- how many presets are used?
     static final int ARM_PICKUP = -44;
