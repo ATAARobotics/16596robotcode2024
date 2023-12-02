@@ -143,7 +143,7 @@ public class Arm {
         armInAuto = !armInAuto;
     }
     public void setHook(boolean enabled) {
-        wrist.setPosition(Constants.WRIST_DEPOSIT_MID);
+        wrist.setPosition(Constants.WRIST_CLIMB_POS);
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
