@@ -38,6 +38,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -58,6 +59,7 @@ import org.firstinspires.ftc.teamcode.mechanisms.Constants;
  */
 
 @TeleOp(name="DriveTrain_comp", group="teleop")
+@Disabled
 public class DriveTrain_comp extends OpMode {
 
     private static final int WINCHTIME = 5; //Test time

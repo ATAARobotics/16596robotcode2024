@@ -42,8 +42,8 @@ import org.firstinspires.ftc.teamcode.mechanisms.Arm;
 import org.firstinspires.ftc.teamcode.mechanisms.Constants;
 import org.firstinspires.ftc.teamcode.mechanisms.DriveTrain;
 
-@TeleOp(name="CleanTeleop", group="teleop")
-public class CleanTeleop extends OpMode {
+@TeleOp(name="Comp2", group="teleop")
+public class Comp2 extends OpMode {
 
     private final ElapsedTime runtime = new ElapsedTime();
 
