@@ -133,7 +133,10 @@ public class Arm {
         if (pixelDistance < PIXEL_THRESHOLD) return true;
         else return false;
         }
+    public void   setWristPostion(double manualWrist){
+        wrist.setPosition(manualWrist);
 
+}
 
 // these did use ternary operator: boolean (expression) ? actionIfTrue : actionIfFalse
     public boolean getArmInAuto() {

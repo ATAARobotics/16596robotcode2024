@@ -47,7 +47,7 @@ import org.firstinspires.ftc.teamcode.mechanisms.DriveTrain;
 public class Comp2 extends OpMode {
 
     private final ElapsedTime runtime = new ElapsedTime();
-
+    public double wristMan;
     private DriveTrain driveTrain;
     private Arm arm;
     private Airplane drone;
@@ -73,9 +73,11 @@ public class Comp2 extends OpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
     }
+
     @Override
     public void init_loop() {
     }
+
     @Override
     public void start() {
         driveTrain.start();
@@ -85,54 +87,61 @@ public class Comp2 extends OpMode {
         runtime.reset();
 
     }
+
     @Override
     public void loop() {
         driver.readButtons();  // enable 'was just pressed' methods
-        operator.readButtons() ;
+        operator.readButtons();
         arm.loop();
         driveTrain.loop();
 
         //======= get human inputs for drive and arm =============
         double strafeSpeed = driver.getLeftX() * Constants.SPEED_RATIO;
         double forwardSpeed = driver.getLeftY() * Constants.SPEED_RATIO;
-        double turnSpeed = driver.getRightX() * Constants. TURN_RATIO;
+        double turnSpeed = driver.getRightX() * Constants.TURN_RATIO;
+        //double public manualWrist = operator.getRightY();
+
 
         if (driver.getRightX() < -0.5) {
             driveTrain.setDirection(Constants.left); //west
         } else if (driver.getRightX() > 0.5) {
-            driveTrain.setDirection(Constants.right) ; // east
+            driveTrain.setDirection(Constants.right); // east
         } else if (driver.getRightY() < -0.5) {
             driveTrain.setDirection(Constants.forward); //south
         } else if (driver.getRightY() > 0.5) {
             driveTrain.setDirection(Constants.back); // north
         }
-        arm.setArmSpeed(operator.getLeftY()) ;
+        arm.setArmSpeed(operator.getLeftY());
 
 // ========== Get Operator control commands: ========================
-        if (operator.wasJustPressed(GamepadKeys.Button.A)) arm.setArmPosition(1);// set arm and wrist for pickup
-        if (operator.wasJustPressed(GamepadKeys.Button.Y)) arm.setArmPosition(2);// set arm and wrist for mid deposit
-        if (operator.wasJustPressed(GamepadKeys.Button.X)) arm.setFinger();// finger defaults closed;this is to open it
-        if (operator.wasJustPressed(GamepadKeys.Button.B)) arm.setArmPosition(3);// set arm and wrist for long deposit
+        if (operator.wasJustPressed(GamepadKeys.Button.A))
+            arm.setArmPosition(1);// set arm and wrist for pickup
+        if (operator.wasJustPressed(GamepadKeys.Button.Y))
+            arm.setArmPosition(2);// set arm and wrist for mid deposit
+        if (operator.wasJustPressed(GamepadKeys.Button.X))
+            arm.setFinger();// finger defaults closed;this is to open it
+        if (operator.wasJustPressed(GamepadKeys.Button.B))
+            arm.setArmPosition(3);// set arm and wrist for long deposit
        /*if(operator.getButton(GamepadKeys.Button.DPAD_LEFT)) {
            arm.toggleArmInAuto();
            telemetry.addData("saw dpad pressed!", "");
        }*/
-     if (operator.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
-          arm.toggleArmInAuto();    // toggle arm auto mode
-          telemetry.addData("saw dpad pressed!","");
-      }
+        if (operator.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
+            arm.toggleArmInAuto();    // toggle arm auto mode
+            telemetry.addData("saw dpad pressed!", "");
+        }
         if (arm.getArmInAuto()) message = "arm in auto mode";  // debugging message
         else message = "arm in manual mode";
-        if(arm.findPixel() && arm.fingerPosition > .2 ) {
+        if (arm.findPixel() && arm.fingerPosition > .2) {
             if (!pixelFound) {
                 operator.gamepad.rumble(500);       // tell operator a pixel was found but only when finger is open, else it would rumble all time with pixel.
             }
             pixelFound = true;
-        }
-        else pixelFound = false;
+        } else pixelFound = false;
+        if (!arm.getArmInAuto()) {
+            arm.setWristPostion(operator.getRightY());
 
-
-        // If we want to turn the robot, lets do it
+            // If we want to turn the robot, lets do it
 //        if(!turning && turnSpeed > 0.5) {
 //            driveTrain.TurnRight();
 //            turning = true;
@@ -145,53 +154,52 @@ public class Comp2 extends OpMode {
 //            turning  = false;
 //        }
 
-        // move the robot!!
-        driveTrain.drive(forwardSpeed,strafeSpeed); // turning and heading control happen in driveTrain
+            // move the robot!!
+            driveTrain.drive(forwardSpeed, strafeSpeed); // turning and heading control happen in driveTrain
 
 
+            // ================ Launch Drone ===============================
+            if (gamepad2.right_trigger > 0.1) {
+                drone.launch();
+                message = "drone launched";
+            }
+            // =============== go climbing! =============================
+            if (gamepad2.left_trigger > 0.1 && gamepad2.right_trigger > 0.1) {
+                arm.setHook(true);
+                climbing = true;
+                message = "climbing!";
+            }
 
+            if (climbing && gamepad2.right_bumper) {
+                arm.Climb(true);
+            } else arm.Climb(false);
 
-        // ================ Launch Drone ===============================
-        if (gamepad2.right_trigger > 0.1) {
-            drone.launch();
-            message = "drone launched";
+            // Show the elapsed game time and arm position.
+            telemetry.addData("Status", "Run Time: " + runtime.toString());
+            arm.printTelemetry(telemetry);
+            driveTrain.printTelemetry(telemetry);
+            telemetry.addData("===== motor data ====", "");
+            telemetry.addData("strafe:", "%5.2f", strafeSpeed);
+            telemetry.addData("forward:", "%5.2f", forwardSpeed);
+            telemetry.addData("turn:", "%5.2f", turnSpeed);
+            telemetry.addData("Message", message);
+
+            // Push telemetry to the Driver Station.
+            telemetry.update();
+
+            // use this only for testing, not competition!
+            // ftc-dashboard telemetry
+            TelemetryPacket pack = new TelemetryPacket();
+
+            pack.put("heading target", driveTrain.headingSetPoint);
+            pack.put("xDistance", driveTrain.getXPosition());
+            //pack.put("yDistance", winch.getDistance());
+            pack.put("Current Heading", driveTrain.heading);
+
+            pack.put("message", message);
+
+            FtcDashboard.getInstance().sendTelemetryPacket(pack);
         }
-        // =============== go climbing! =============================
-        if (gamepad2.left_trigger > 0.1 && gamepad2.right_trigger > 0.1) {
-            arm.setHook(true);
-            climbing = true;
-            message = "climbing!";
-        }
-
-        if (climbing && gamepad2.right_bumper) {
-            arm.Climb(true);
-        } else arm.Climb(false);
-
-        // Show the elapsed game time and arm position.
-        telemetry.addData("Status", "Run Time: " + runtime.toString());
-        arm.printTelemetry(telemetry);
-        driveTrain.printTelemetry(telemetry);
-        telemetry.addData("===== motor data ====", "");
-        telemetry.addData("strafe:", "%5.2f", strafeSpeed);
-        telemetry.addData("forward:", "%5.2f", forwardSpeed);
-        telemetry.addData("turn:", "%5.2f", turnSpeed);
-        telemetry.addData("Message",message);
-
-        // Push telemetry to the Driver Station.
-        telemetry.update();
-
-        // use this only for testing, not competition!
-        // ftc-dashboard telemetry
-        TelemetryPacket pack = new TelemetryPacket();
-
-        pack.put("heading target", driveTrain.headingSetPoint);
-        pack.put("xDistance", driveTrain.getXPosition());
-        //pack.put("yDistance", winch.getDistance());
-       pack.put("Current Heading", driveTrain.heading);
-
-        pack.put("message", message);
-
-        FtcDashboard.getInstance().sendTelemetryPacket(pack);
     }
 }
 

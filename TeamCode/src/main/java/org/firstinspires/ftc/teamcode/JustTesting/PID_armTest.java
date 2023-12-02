@@ -203,7 +203,6 @@ public class PID_armTest extends OpMode {
         if (armSpeed > 0 && driver.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0)
             armDriveRatio = .6;// override speed limit using trigger
 // ============== use either operator speed or PID =====
-        if (!armInAuto) armMotors.set(armDriveRatio * armSpeed);
         else {
             armPID.setSetPoint(0);  // return to start position via PID
             double armOut = armPID.calculate(arm1.getCurrentPosition());// calculate final arm speed to send
