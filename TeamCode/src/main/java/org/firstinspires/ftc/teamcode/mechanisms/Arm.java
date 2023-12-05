@@ -76,37 +76,33 @@ public class Arm {
             armSpeed = 0;       //avoid trying to lower arm when on chassis and limit extension
 
         if (!armInAuto ){
-            armMotors.set(Constants.ARM_DRIVE_RATIO* armSpeed);
+            armMotors.set(Constants.ARM_DRIVE_RATIO* armSpeed);  // Move arm manually
         }
         else  {
-            double armOut = armPID.calculate(arm1.getCurrentPosition());// calculate final arm speed to send
+            double armOut = armPID.calculate(arm1.getCurrentPosition()) - setArmFeedForward();// calculate final arm speed to send; confirm if - setArmFeedForward works.
             if(armPosition < 0 && armOut > 0) armOut = armOut * Constants.ARM_LIFT_MULTIPLIER;
-            armMotors.set(armOut);
+            armMotors.set(armOut);                          //Move arm with PID
         }
 
 
         armPosition = arm1.getCurrentPosition();
     }
 
-    /*public void overrideArmSpeed(boolean enabled) {
-        armDriveRatio = enabled?1:0.4;
-    }*/  // confirm what this was supposed to do??
-
     public void setArmPosition(int armSetPosition) {
         switch (armSetPosition) {
             case 1:
                 armPID.setSetPoint(Constants .ARM_PICKUP);
-                armMotors.setTargetPosition(Constants .ARM_PICKUP);
+                //armMotors.setTargetPosition(Constants .ARM_PICKUP);
                 wrist.setPosition(Constants .WRIST_PICKUP);
                 break;
             case 2:
                 armPID.setSetPoint(Constants.ARM_DEPOSIT_MID);
-                armMotors.setTargetPosition(Constants .ARM_DEPOSIT_MID);
+                //armMotors.setTargetPosition(Constants .ARM_DEPOSIT_MID);
                 wrist.setPosition(Constants .WRIST_DEPOSIT_MID);
                 break;
             case 3:
                 armPID.setSetPoint(Constants .ARM_DEPOSIT_LONG);
-                armMotors.setTargetPosition(Constants .ARM_DEPOSIT_LONG);
+               // armMotors.setTargetPosition(Constants .ARM_DEPOSIT_LONG);
                 wrist.setPosition(Constants .WRIST_DEPOSIT_LONG);
                 break;
         }
@@ -135,9 +131,7 @@ public class Arm {
         }
     public void setWristPosition(double manualWrist){
         wrist.setPosition(manualWrist);
-
 }
-
 // these did use ternary operator: boolean (expression) ? actionIfTrue : actionIfFalse
     public boolean getArmInAuto() {
         return armInAuto;
@@ -145,9 +139,11 @@ public class Arm {
     public void toggleArmInAuto() {
         armInAuto = !armInAuto;
     }
-    public void setArmFeedForward(){
+    public double setArmFeedForward(){
 double armAngle = (armPosition/Constants.ARM_TICKS_PER_90DEG)*90;   // convert arm position to arm angle
-        return ( Math.cos(armAngle)*Constants.FEED_FWD_FACTOR)
+        if (armSpeed >0) return (0);
+        else
+        return ( Math.cos(armAngle)*Constants.FEED_FWD_FACTOR);  // add feedforward if moving down
     }
     public void setHook(boolean enabled) {
         wrist.setPosition(Constants.WRIST_CLIMB_POS);

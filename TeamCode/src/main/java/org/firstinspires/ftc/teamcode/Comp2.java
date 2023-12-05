@@ -110,7 +110,7 @@ public class Comp2 extends OpMode {
         } else if (driver.getRightY() > 0.5) {
             driveTrain.setDirection(Constants.back); // north
         }
-        arm.setArmSpeed(operator.getLeftY());
+        arm.setArmSpeed(operator.getLeftY());// is this correct sign??....
 
 // ========== Get Operator control commands: ========================
         if (operator.wasJustPressed(GamepadKeys.Button.A))
