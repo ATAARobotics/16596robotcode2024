@@ -133,7 +133,7 @@ public class Arm {
         if (pixelDistance < PIXEL_THRESHOLD) return true;
         else return false;
         }
-    public void   setWristPostion(double manualWrist){
+    public void setWristPosition(double manualWrist){
         wrist.setPosition(manualWrist);
 
 }
@@ -144,6 +144,10 @@ public class Arm {
     }
     public void toggleArmInAuto() {
         armInAuto = !armInAuto;
+    }
+    public void setArmFeedForward(){
+double armAngle = (armPosition/Constants.ARM_TICKS_PER_90DEG)*90;   // convert arm position to arm angle
+        return ( Math.cos(armAngle)*Constants.FEED_FWD_FACTOR)
     }
     public void setHook(boolean enabled) {
         wrist.setPosition(Constants.WRIST_CLIMB_POS);

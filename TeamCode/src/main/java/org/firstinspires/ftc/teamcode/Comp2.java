@@ -33,7 +33,6 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -139,7 +138,7 @@ public class Comp2 extends OpMode {
             pixelFound = true;
         } else pixelFound = false;
         if (!arm.getArmInAuto()) {
-            arm.setWristPostion(operator.getRightY());
+            arm.setWristPosition(operator.getRightY());
 
             // If we want to turn the robot, lets do it
 //        if(!turning && turnSpeed > 0.5) {
