@@ -32,7 +32,7 @@ public class Arm {
 
     public int fingerPosition;
     private boolean armInAuto = true;
-    double armPosition = 0;
+    public double armPosition = 0;
     private boolean fingerOpen = false;
 
 
@@ -138,7 +138,9 @@ public class Arm {
     public boolean getArmInAuto() {
         return armInAuto;
     }
-
+public double getArmPosition(){
+        return armPosition;
+}
     public void toggleArmInAuto() {
         armInAuto = !armInAuto;
     }

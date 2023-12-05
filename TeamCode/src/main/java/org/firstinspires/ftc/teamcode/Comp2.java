@@ -94,6 +94,7 @@ public class Comp2 extends OpMode {
         arm.loop();
         driveTrain.loop();
 
+
         //======= get human inputs for drive and arm =============
         double strafeSpeed = driver.getLeftX() * Constants.SPEED_RATIO;
         double forwardSpeed = driver.getLeftY() * Constants.SPEED_RATIO;
@@ -139,19 +140,8 @@ public class Comp2 extends OpMode {
         } else pixelFound = false;
         if (!arm.getArmInAuto()) {
             arm.setWristPosition(operator.getRightY());
+        }
 
-            // If we want to turn the robot, lets do it
-//        if(!turning && turnSpeed > 0.5) {
-//            driveTrain.TurnRight();
-//            turning = true;
-//        }
-//        else if(!turning && turnSpeed < -0.5) {
-//            driveTrain.TurnLeft();
-//            turning = true;
-//        }
-//        if (Math.abs(turnSpeed)< 0.5){
-//            turning  = false;
-//        }
 
             // move the robot!!
             driveTrain.drive(forwardSpeed, strafeSpeed); // turning and heading control happen in driveTrain
@@ -177,10 +167,10 @@ public class Comp2 extends OpMode {
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             arm.printTelemetry(telemetry);
             driveTrain.printTelemetry(telemetry);
-            telemetry.addData("===== motor data ====", "");
+            /*telemetry.addData("===== motor data ====", "");
             telemetry.addData("strafe:", "%5.2f", strafeSpeed);
             telemetry.addData("forward:", "%5.2f", forwardSpeed);
-            telemetry.addData("turn:", "%5.2f", turnSpeed);
+            telemetry.addData("turn:", "%5.2f", turnSpeed);*/
             telemetry.addData("Message", message);
 
             // Push telemetry to the Driver Station.
@@ -194,11 +184,11 @@ public class Comp2 extends OpMode {
             pack.put("xDistance", driveTrain.getXPosition());
             //pack.put("yDistance", winch.getDistance());
             pack.put("Current Heading", driveTrain.heading);
-
+            pack.put("arm position",arm.getArmPosition());
             pack.put("message", message);
 
             FtcDashboard.getInstance().sendTelemetryPacket(pack);
         }
     }
-}
+
 

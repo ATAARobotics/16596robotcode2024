@@ -200,8 +200,9 @@ public class PID_armTest extends OpMode {
         //TODO: need to confirm armPosition at start, it will NOT be zero.
         if ((armSpeed < 0 && armPosition < ARM_MIN) || (armSpeed > 0 && armPosition > ARM_MAX))
             armSpeed = 0;//avoid trying to lower arm when on chassis and limit extension
-        if (armSpeed > 0 && driver.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0)
-            armDriveRatio = .6;// override speed limit using trigger
+        if (!armInAuto){
+            armMotors.set(armSpeed * armDriveRatio);
+        }
 // ============== use either operator speed or PID =====
         else {
             armPID.setSetPoint(0);  // return to start position via PID

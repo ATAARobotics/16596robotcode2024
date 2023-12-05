@@ -30,8 +30,8 @@ public class Constants {
     public static final int ARM_MAX = 175;
     public static final int ARM_MIN = -50;
     public static final double ARM_LIFT_MULTIPLIER = 5.0;
-    public static final double FEED_FWD_FACTOR = 0; // USED to slow arm in down direction
+    public static final double FEED_FWD_FACTOR = 0.2; // USED to slow arm in down direction
 
-    public static final double ARM_TICKS_PER_90DEG = 199;   // CONFIRM #TICKS PER 90.
+    public static final double ARM_TICKS_PER_90DEG = 113;   // CONFIRM #TICKS PER 90.
 
 }
