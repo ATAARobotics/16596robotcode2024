@@ -87,26 +87,26 @@ public class Arm {
         if ((armSpeed < 0 && armPosition < Constants.ARM_MIN) || (armSpeed > 0 && armPosition > Constants.ARM_MAX))
             armSpeed = 0;       //avoid trying to lower arm when on chassis and limit extension
 
+//================  use up or down PID gains depending on arm direction =======================
+
         if (!armInAuto) {
             armMotors.set(Constants.ARM_DRIVE_RATIO * armSpeed);  // Move arm manually
         } else {
              //armOut = armPID.calculate(arm1.getCurrentPosition()) - setArmFeedForward();// calculate final arm speed to send; confirm if - setArmFeedForward works.
-           // if(armPosition > Constants.ARM_DEPOSIT_MID && armTarget < armPosition) { // target is to move down, use down PID
-               // armPID.setPID(KpDown, KiDown, KdDown);
-
+           if(armPosition >  armTarget ) { // target is to move down, use down PID
+               armPID.setPID(KpDown, KiDown, KdDown);
                 armOut = armPID.calculate(arm1.getCurrentPosition());
-          //  } else {            // Otherwise use 'up' PID gains
-           //     armPID.setPID(KpUp,KiUp,KdUp);
+            } else {            // Otherwise use 'up' PID gains
+                armPID.setPID(KpUp,KiUp,KdUp);
                 armOut = armPID.calculate(arm1.getCurrentPosition());
-           // }
-
-            if (armPosition < 0 && armOut > 0) armOut = armOut * Constants.ARM_LIFT_MULTIPLIER;
+            }
+            if (armPosition < 0 && armOut > 0) armOut = armOut * Constants.ARM_LIFT_MULTIPLIER;// if arm is low, needs boost
             armMotors.set(armOut);                          //Move arm with PID
         }
 
     }
 
-    public void setArmPosition(int armSetPosition) {
+    public void setArmPosition(int armSetPosition) {        // sets target for arm PID
          armTarget = armSetPosition;
         switch (armSetPosition) {
             case 1:
@@ -124,8 +124,8 @@ public class Arm {
                 // armMotors.setTargetPosition(Constants .ARM_DEPOSIT_LONG);
                 wrist.setPosition(Constants.WRIST_DEPOSIT_LONG);
                 break;
-            case 4:
-                armPID.setSetPoint(armPosition); // keep last position as target when going to auto from manual
+            case 4:// keep last position as target when going to auto from manual
+                armPID.setSetPoint(armPosition);
         }
         //armMotors.setRunMode(Motor.RunMode.PositionControl);
 
