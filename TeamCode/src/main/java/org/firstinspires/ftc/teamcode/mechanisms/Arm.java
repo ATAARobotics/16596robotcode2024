@@ -21,6 +21,7 @@ public class Arm {
     private MotorGroup armMotors;
     private Servo finger, wrist, hook;
     public boolean isPixel = false;
+    public String armMessage = "nothing happened";   // use for debugging
     private DistanceSensor seePixel = null;
     // TODO clean up these before Comp2- how many presets are used?
 
@@ -33,8 +34,8 @@ public class Arm {
     public double KpUp = 0.005;
     public double KiUp = 0.0004;
     public double KdUp = 0.0;
-    public double KpDown = 0.0005;
-    public double KiDown = 0.00004;
+    public double KpDown = 0.002;
+    public double KiDown = 0.0004;
     public double KdDown= 0.0;
 
     double winchspeed = .25;
@@ -84,6 +85,7 @@ public class Arm {
 
     public void loop() {
         armPosition = arm1.getCurrentPosition();
+        armTarget = armPID.getSetPoint();
         if ((armSpeed < 0 && armPosition < Constants.ARM_MIN) || (armSpeed > 0 && armPosition > Constants.ARM_MAX))
             armSpeed = 0;       //avoid trying to lower arm when on chassis and limit extension
 
@@ -96,9 +98,11 @@ public class Arm {
            if(armPosition >  armTarget ) { // target is to move down, use down PID
                armPID.setPID(KpDown, KiDown, KdDown);
                 armOut = armPID.calculate(arm1.getCurrentPosition());
+                armMessage = "using down gains";
             } else {            // Otherwise use 'up' PID gains
                 armPID.setPID(KpUp,KiUp,KdUp);
                 armOut = armPID.calculate(arm1.getCurrentPosition());
+                armMessage = "using up gains";
             }
             if (armPosition < 0 && armOut > 0) armOut = armOut * Constants.ARM_LIFT_MULTIPLIER;// if arm is low, needs boost
             armMotors.set(armOut);                          //Move arm with PID
@@ -107,7 +111,7 @@ public class Arm {
     }
 
     public void setArmPosition(int armSetPosition) {        // sets target for arm PID
-         armTarget = armSetPosition;
+
         switch (armSetPosition) {
             case 1:
                 armPID.setSetPoint(Constants.ARM_PICKUP);
@@ -205,6 +209,7 @@ if( armSpeed < 0.1 && armTarget != 3){
             telemetry.addData("motor power:",armOut);
             telemetry.addData("arm angle:",armAngle);
             telemetry.addData("arm speed:",armSpeed);
+            telemetry.addData("message2:",armMessage);
         }
 
 }

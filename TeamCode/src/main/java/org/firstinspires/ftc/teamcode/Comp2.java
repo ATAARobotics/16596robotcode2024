@@ -128,7 +128,6 @@ public class Comp2 extends OpMode {
        }*/
         if (operator.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
             arm.toggleArmInAuto();    // toggle arm auto mode
-            telemetry.addData("saw dpad pressed!", "");
         }
         if (arm.getArmInAuto()) message = "arm in auto mode";  // debugging message
         else message = "arm in manual mode";
@@ -171,7 +170,7 @@ public class Comp2 extends OpMode {
             telemetry.addData("strafe:", "%5.2f", strafeSpeed);
             telemetry.addData("forward:", "%5.2f", forwardSpeed);
             telemetry.addData("turn:", "%5.2f", turnSpeed);*/
-            telemetry.addData("Message", message);
+            telemetry.addData("Message1", message);
 
             // Push telemetry to the Driver Station.
             telemetry.update();
