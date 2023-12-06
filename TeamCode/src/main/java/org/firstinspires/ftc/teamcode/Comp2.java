@@ -116,11 +116,11 @@ public class Comp2 extends OpMode {
 // ========== Get Operator control commands: ========================
         if (operator.wasJustPressed(GamepadKeys.Button.A))
             arm.setArmPosition(1);// set arm and wrist for pickup
-        if (operator.wasJustPressed(GamepadKeys.Button.Y))
+        if (operator.wasJustPressed(GamepadKeys.Button.B))
             arm.setArmPosition(2);// set arm and wrist for mid deposit
         if (operator.wasJustPressed(GamepadKeys.Button.X))
             arm.setFinger();// finger defaults closed;this is to open it
-        if (operator.wasJustPressed(GamepadKeys.Button.B))
+        if (operator.wasJustPressed(GamepadKeys.Button.Y))
             arm.setArmPosition(3);// set arm and wrist for long deposit
        /*if(operator.getButton(GamepadKeys.Button.DPAD_LEFT)) {
            arm.toggleArmInAuto();
@@ -185,6 +185,8 @@ public class Comp2 extends OpMode {
             //pack.put("yDistance", winch.getDistance());
             pack.put("Current Heading", driveTrain.heading);
             pack.put("arm position",arm.getArmPosition());
+            pack.put("FeedForward",arm.setArmFeedForward());
+
             pack.put("message", message);
 
             FtcDashboard.getInstance().sendTelemetryPacket(pack);

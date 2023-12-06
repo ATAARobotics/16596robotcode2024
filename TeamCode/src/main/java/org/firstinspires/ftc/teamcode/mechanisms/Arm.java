@@ -26,7 +26,17 @@ public class Arm {
 
     double position2 = (0.35);// start wrist at pickup?
     double armSpeed;
+    double armAngle;
+    double armOut;
+    public double armTarget;
     public PIDController armPID;
+    public double KpUp = 0.005;
+    public double KiUp = 0.0004;
+    public double KdUp = 0.0;
+    public double KpDown = 0.005;
+    public double KiDown = 0.0004;
+    public double KdDown= 0.0;
+
     double winchspeed = .25;
     boolean climbing = false;
 
@@ -57,7 +67,7 @@ public class Arm {
         arm2.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
 // Creates a PID Controller with gains kP, kI, kD
         // testing [without the wrist!] and 0 setpoint: Kp=0.02,Ki=0.004,Kd=0
-        armPID = new PIDController(.005, .0004, 0);
+        armPID = new PIDController(KpUp, KiUp, KdUp);
         //armPID = new PIDController(.015, .004, .0);
     }
 
@@ -80,7 +90,8 @@ public class Arm {
         if (!armInAuto) {
             armMotors.set(Constants.ARM_DRIVE_RATIO * armSpeed);  // Move arm manually
         } else {
-            double armOut = armPID.calculate(arm1.getCurrentPosition()) - setArmFeedForward();// calculate final arm speed to send; confirm if - setArmFeedForward works.
+             //armOut = armPID.calculate(arm1.getCurrentPosition()) - setArmFeedForward();// calculate final arm speed to send; confirm if - setArmFeedForward works.
+            armOut = armPID.calculate(arm1.getCurrentPosition());
             if (armPosition < 0 && armOut > 0) armOut = armOut * Constants.ARM_LIFT_MULTIPLIER;
             armMotors.set(armOut);                          //Move arm with PID
         }
@@ -88,6 +99,7 @@ public class Arm {
     }
 
     public void setArmPosition(int armSetPosition) {
+         armTarget = armSetPosition;
         switch (armSetPosition) {
             case 1:
                 armPID.setSetPoint(Constants.ARM_PICKUP);
@@ -104,6 +116,8 @@ public class Arm {
                 // armMotors.setTargetPosition(Constants .ARM_DEPOSIT_LONG);
                 wrist.setPosition(Constants.WRIST_DEPOSIT_LONG);
                 break;
+            case 4:
+                armPID.setSetPoint(armPosition); // keep last position as target when going to auto from manual
         }
         //armMotors.setRunMode(Motor.RunMode.PositionControl);
 
@@ -142,17 +156,19 @@ public double getArmPosition(){
         return armPosition;
 }
     public void toggleArmInAuto() {
+        if (!armInAuto) setArmPosition(4);  // set current arm position as setpoint before going to auto
         armInAuto = !armInAuto;
     }
 
     public double setArmFeedForward() {
-        double armAngle = (armPosition / Constants.ARM_TICKS_PER_90DEG) * 90;   // convert arm position to arm angle
-        if (armSpeed > 0) {
-            return (0);
-        } else {
+        armAngle = (armPosition / Constants.ARM_TICKS_PER_90DEG) * 90;   // convert arm position to arm angle
+        if(armAngle < 50) return (0);
+        if (armSpeed > 0) return (0);
+
+if( armSpeed < 0.1 && armTarget != 3){
             return (Math.cos(armAngle) * Constants.FEED_FWD_FACTOR);  // add feedforward if moving down
         }
-    }
+    return (0);}
         public void setHook ( boolean enabled){
             wrist.setPosition(Constants.WRIST_CLIMB_POS);
             try {
@@ -177,6 +193,10 @@ public double getArmPosition(){
             telemetry.addData("arm position:", armMotors.getPositions());
             telemetry.addData("Finger Position:", "%5.2f", finger.getPosition());
             telemetry.addData("Wrist Position:", "%5.2f", wrist.getPosition());
+            telemetry.addData("feedforward factor:",setArmFeedForward());
+            telemetry.addData("motor power:",armOut);
+            telemetry.addData("arm angle:",armAngle);
+            telemetry.addData("arm speed:",armSpeed);
         }
 
 }
