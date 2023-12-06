@@ -33,8 +33,8 @@ public class Arm {
     public double KpUp = 0.005;
     public double KiUp = 0.0004;
     public double KdUp = 0.0;
-    public double KpDown = 0.005;
-    public double KiDown = 0.0004;
+    public double KpDown = 0.0005;
+    public double KiDown = 0.00004;
     public double KdDown= 0.0;
 
     double winchspeed = .25;
@@ -83,7 +83,7 @@ public class Arm {
     }
 
     public void loop() {
-
+        armPosition = arm1.getCurrentPosition();
         if ((armSpeed < 0 && armPosition < Constants.ARM_MIN) || (armSpeed > 0 && armPosition > Constants.ARM_MAX))
             armSpeed = 0;       //avoid trying to lower arm when on chassis and limit extension
 
@@ -91,11 +91,19 @@ public class Arm {
             armMotors.set(Constants.ARM_DRIVE_RATIO * armSpeed);  // Move arm manually
         } else {
              //armOut = armPID.calculate(arm1.getCurrentPosition()) - setArmFeedForward();// calculate final arm speed to send; confirm if - setArmFeedForward works.
-            armOut = armPID.calculate(arm1.getCurrentPosition());
+           // if(armPosition > Constants.ARM_DEPOSIT_MID && armTarget < armPosition) { // target is to move down, use down PID
+               // armPID.setPID(KpDown, KiDown, KdDown);
+
+                armOut = armPID.calculate(arm1.getCurrentPosition());
+          //  } else {            // Otherwise use 'up' PID gains
+           //     armPID.setPID(KpUp,KiUp,KdUp);
+                armOut = armPID.calculate(arm1.getCurrentPosition());
+           // }
+
             if (armPosition < 0 && armOut > 0) armOut = armOut * Constants.ARM_LIFT_MULTIPLIER;
             armMotors.set(armOut);                          //Move arm with PID
         }
-        armPosition = arm1.getCurrentPosition();
+
     }
 
     public void setArmPosition(int armSetPosition) {
