@@ -35,7 +35,7 @@ public class LongRight extends LinearOpMode {
         waitForStart();
         driveTrain.start();
         arm.start();
-
+        driveTrain.resetIMU();
 // Step 1: forward  ================================
         driveTrain.resetOdomoetry(); // reset encoders to avoid doing relative move calculation
         while (opModeIsActive() && driveTrain.getYPosition() > -52) {

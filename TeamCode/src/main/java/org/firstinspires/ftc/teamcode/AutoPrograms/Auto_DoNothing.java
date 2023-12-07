@@ -30,8 +30,9 @@ public class Auto_DoNothing extends LinearOpMode {
         telemetry.update();
         waitForStart();
 
-//        driveTrain.start();
-//        arm.start();
+      driveTrain.start();
+      driveTrain.resetIMU();
+      arm.start();
 //
 //        while (opModeIsActive() && driveTrain.getYPosition() > -60) {
 //            driveTrain.loop();

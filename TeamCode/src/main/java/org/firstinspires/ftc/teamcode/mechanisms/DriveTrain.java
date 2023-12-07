@@ -79,7 +79,7 @@ public double headingCorrection = 0;
     public void start() {
         xPea.resetEncoder();
         yPea.resetEncoder();
-        imu.resetYaw();
+        //imu.resetYaw();
     }
     public void loop(){
         headingControl.setSetPoint(headingSetPoint);
@@ -154,7 +154,7 @@ public double headingCorrection = 0;
     }
     public void resetXencoder(){xPea.resetEncoder();}
     public void resetYencoder(){yPea.resetEncoder();}
-
+public void resetIMU(){imu.resetYaw();}
     public void stop() {
         driveBase.stop();
     }

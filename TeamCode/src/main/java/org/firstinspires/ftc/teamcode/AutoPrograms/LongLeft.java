@@ -30,6 +30,7 @@ public class LongLeft extends LinearOpMode {
         waitForStart();
         driveTrain.start();
         arm.start();
+        driveTrain.resetIMU();
         // Step through each leg of the path, ensuring that the Auto mode has not been stopped along the way
         //step 1 : move forward to reach pass through
         // Step 2:  strafe left to reach backstage:

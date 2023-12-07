@@ -84,6 +84,7 @@ public class Comp2 extends OpMode {
         driver = new GamepadEx(gamepad1);
         operator = new GamepadEx(gamepad2);
         runtime.reset();
+        driveTrain.resetIMU();      // IMPORTANT !! LEAVE THIS IN FOR TESTING BUT COMMENT OUT FOR COMPETITION !!!!!!
 
     }
 

@@ -28,6 +28,7 @@ public class ShortLeft extends LinearOpMode{
         waitForStart();
         driveTrain.start();
         arm.start();
+        driveTrain.resetIMU();
         // all lines up to here are 'boilerplate' for all autos
         // add auto steps here:
 
