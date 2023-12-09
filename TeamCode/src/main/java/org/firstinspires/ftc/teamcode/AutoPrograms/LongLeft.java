@@ -4,8 +4,12 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.Vision.ReverseTeamElementPipeline;
 import org.firstinspires.ftc.teamcode.mechanisms.Arm;
+import org.firstinspires.ftc.teamcode.mechanisms.Camera;
 import org.firstinspires.ftc.teamcode.mechanisms.DriveTrain;
+import org.firstinspires.ftc.teamcode.mechanisms.TestDriveTrain;
+import org.openftc.easyopencv.OpenCvWebcam;
 
 @Autonomous(name = "LongLeft",group = "")
 public class LongLeft extends LinearOpMode {
@@ -15,6 +19,7 @@ public class LongLeft extends LinearOpMode {
     private Arm arm;
 
     boolean turning = false;
+    private Camera cam;
 
     public void runOpMode() {
         // Initialize the drive system variables.
@@ -23,6 +28,7 @@ public class LongLeft extends LinearOpMode {
         arm = new Arm(hardwareMap);
         driveTrain.init();
         arm.init();
+        cam.init();
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
@@ -30,6 +36,7 @@ public class LongLeft extends LinearOpMode {
         waitForStart();
         driveTrain.start();
         arm.start();
+        cam.start();
         driveTrain.resetIMU();
         // Step through each leg of the path, ensuring that the Auto mode has not been stopped along the way
         //step 1 : move forward to reach pass through

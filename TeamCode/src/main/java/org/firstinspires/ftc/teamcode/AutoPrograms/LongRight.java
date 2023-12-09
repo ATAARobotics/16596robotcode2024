@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.mechanisms.Arm;
+import org.firstinspires.ftc.teamcode.mechanisms.Camera;
 import org.firstinspires.ftc.teamcode.mechanisms.DriveTrain;
 
 @Autonomous(name = "Long_Right",group = "")
@@ -20,7 +21,7 @@ public class LongRight extends LinearOpMode {
     private Arm arm;
 
     boolean turning = false;
-
+    private Camera cam;
     public void runOpMode() {
         // Initialize the drive system variables.
         telemetry.addData("Status", "Initializing");
@@ -28,6 +29,7 @@ public class LongRight extends LinearOpMode {
         arm = new Arm(hardwareMap);
         driveTrain.init();
         arm.init();
+        cam.init();
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
@@ -35,6 +37,7 @@ public class LongRight extends LinearOpMode {
         waitForStart();
         driveTrain.start();
         arm.start();
+        cam.start();
         driveTrain.resetIMU();
 // Step 1: forward  ================================
         driveTrain.resetOdomoetry(); // reset encoders to avoid doing relative move calculation
