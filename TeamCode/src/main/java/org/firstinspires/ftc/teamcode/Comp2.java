@@ -80,7 +80,7 @@ public class Comp2 extends OpMode {
     @Override
     public void start() {
         driveTrain.start();
-        arm.start();
+        arm.start();// IMPORTANT !! LEAVE THIS IN FOR TESTING BUT COMMENT OUT FOR COMPETITION if auto moves the arm.
         driver = new GamepadEx(gamepad1);
         operator = new GamepadEx(gamepad2);
         runtime.reset();
@@ -101,7 +101,7 @@ public class Comp2 extends OpMode {
         double forwardSpeed = driver.getLeftY() * Constants.SPEED_RATIO;
         double turnSpeed = driver.getRightX() * Constants.TURN_RATIO;
         //double public manualWrist = operator.getRightY();
-
+        arm.setWristPosition(operator.getRightY());
 
         if (driver.getRightX() < -0.5) {
             driveTrain.setDirection(Constants.left); //west
