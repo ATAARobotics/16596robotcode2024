@@ -10,33 +10,11 @@ import org.firstinspires.ftc.teamcode.mechanisms.Camera;
 import org.firstinspires.ftc.teamcode.mechanisms.DriveTrain;
 
 @Autonomous(name = "Short_Right")
-public class ShortRIGHT extends LinearOpMode{
-    private final ElapsedTime runtime = new ElapsedTime();
-
-    private DriveTrain driveTrain;
-    private Arm arm;
-
-    boolean turning = false;
-    private Camera cam;
+public class ShortRIGHT extends AutoOpMode {
 
     @Override
     public void runOpMode() {
-        telemetry.addData("Status", "Initializing");
-        driveTrain = new DriveTrain(hardwareMap);
-        arm = new Arm(hardwareMap);
-        driveTrain.init();
-        arm.init();
-        cam.init();
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
-
-        waitForStart();
-        driveTrain.start();
-        arm.start();
-        cam.start();
-        driveTrain.resetIMU();
-        // all lines up to here are 'boilerplate' for all autos
-        // add auto steps here:
+        super.runOpMode();
 
 // STEP1:   STRAFE right for  X inches
         driveTrain.resetOdomoetry(); // reset encoders to avoid doing relative move calculation
@@ -50,11 +28,6 @@ public class ShortRIGHT extends LinearOpMode{
 //STEP2: drop pixel
         arm.setFinger(); // open finger to let pixel drop
 
-
     }
 
-
-
-
 }
-

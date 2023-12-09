@@ -14,31 +14,12 @@ import org.firstinspires.ftc.teamcode.mechanisms.Camera;
 import org.firstinspires.ftc.teamcode.mechanisms.DriveTrain;
 
 @Autonomous(name = "Long_Right",group = "")
-public class LongRight extends LinearOpMode {
-    private final ElapsedTime runtime = new ElapsedTime();
+public class LongRight extends AutoOpMode {
 
-    private DriveTrain driveTrain;
-    private Arm arm;
-
-    boolean turning = false;
-    private Camera cam;
+    @Override
     public void runOpMode() {
-        // Initialize the drive system variables.
-        telemetry.addData("Status", "Initializing");
-        driveTrain = new DriveTrain(hardwareMap);
-        arm = new Arm(hardwareMap);
-        driveTrain.init();
-        arm.init();
-        cam.init();
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
+        super.runOpMode();
 
-        // Wait for the game to start (driver presses PLAY)
-        waitForStart();
-        driveTrain.start();
-        arm.start();
-        cam.start();
-        driveTrain.resetIMU();
 // Step 1: forward  ================================
         driveTrain.resetOdomoetry(); // reset encoders to avoid doing relative move calculation
         while (opModeIsActive() && driveTrain.getYPosition() > -52) {

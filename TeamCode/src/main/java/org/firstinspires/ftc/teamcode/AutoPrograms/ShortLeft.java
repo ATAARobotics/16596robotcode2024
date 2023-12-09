@@ -9,31 +9,11 @@ import org.firstinspires.ftc.teamcode.mechanisms.Camera;
 import org.firstinspires.ftc.teamcode.mechanisms.DriveTrain;
 
 @Autonomous(name = "Short_Left")
-public class ShortLeft extends LinearOpMode{
-    private final ElapsedTime runtime = new ElapsedTime();
-
-    private DriveTrain driveTrain;
-    private Arm arm;
-
-    boolean turning = false;
-    private Camera cam;
+public class ShortLeft extends AutoOpMode {
 
     @Override
     public void runOpMode() {
-        telemetry.addData("Status", "Initializing");
-        driveTrain = new DriveTrain(hardwareMap);
-        arm = new Arm(hardwareMap);
-        driveTrain.init();
-        arm.init();
-        cam.init();
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
-
-        waitForStart();
-        driveTrain.start();
-        arm.start();
-        cam.start();
-        driveTrain.resetIMU();
+        super.runOpMode();
         // all lines up to here are 'boilerplate' for all autos
         // add auto steps here:
 
@@ -49,12 +29,5 @@ public class ShortLeft extends LinearOpMode{
         //STEP2: drop pixel
         arm.setFinger(); // open finger to let pixel drop
 
-
-
     }
-
-
-
-
 }
-

@@ -12,39 +12,11 @@ import org.firstinspires.ftc.teamcode.mechanisms.TestDriveTrain;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 @Autonomous(name = "LongLeft",group = "")
-public class LongLeft extends LinearOpMode {
-    private final ElapsedTime runtime = new ElapsedTime();
+public class LongLeft extends AutoOpMode {
 
-    private DriveTrain driveTrain;
-    private Arm arm;
-
-    boolean turning = false;
-    private Camera cam;
-
+    @Override
     public void runOpMode() {
-        // Initialize the drive system variables.
-        telemetry.addData("Status", "Initializing");
-        driveTrain = new DriveTrain(hardwareMap);
-        arm = new Arm(hardwareMap);
-        driveTrain.init();
-        arm.init();
-        cam.init();
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
-
-        // Wait for the game to start (driver presses PLAY)
-        waitForStart();
-        driveTrain.start();
-        arm.start();
-        cam.start();
-        driveTrain.resetIMU();
-        // Step through each leg of the path, ensuring that the Auto mode has not been stopped along the way
-        //step 1 : move forward to reach pass through
-        // Step 2:  strafe left to reach backstage:
-        // Step 3: deposit pixel on floor
-        // Step 4 back away from pixel
-
-
+        super.runOpMode();
 
 // Step 1: forward  ================================
         driveTrain.resetOdomoetry(); // reset encoders to avoid doing relative move calculation

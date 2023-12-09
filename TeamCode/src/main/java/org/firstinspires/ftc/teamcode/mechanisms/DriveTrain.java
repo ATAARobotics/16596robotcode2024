@@ -23,6 +23,8 @@ public class DriveTrain {
     private Motor xPea = null;
     private Motor yPea = null;
     private PIDController headingControl = null;
+    private PIDController xControl = null;
+    private PIDController yControl = null;
 
     // Define IMU
     private IMU imu;// BHO055 imu on this hub
@@ -31,15 +33,18 @@ public class DriveTrain {
     // Auto alignment directions
     public double forward = 0; // north
     public double back = 180; // south
-public double headingCorrection = 0;
+    public double headingCorrection = 0;
     public double right = -90; // east
     public double left = 90; //west
     public double headingSetPoint = forward;
     public double heading;
 
-
+    private boolean autoEnabled = false;
 
     HardwareMap hwMap;
+    private double currentSpeed = 0;
+    private double currentXTarget = 0;
+    private double currentYTarget = 0;
 
     public DriveTrain(HardwareMap hwMap)
     {
@@ -67,6 +72,8 @@ public double headingCorrection = 0;
     }
     public void init() {
         headingControl = new PIDController(0.01, 0.004, 0.0);
+        xControl = new PIDController(0.01, 0.004, 0.0);
+        yControl = new PIDController(0.01, 0.004, 0.0);
 
         leftBackDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         rightBackDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
@@ -100,6 +107,18 @@ public double headingCorrection = 0;
         // PID controller
         headingControl.setSetPoint(headingSetPoint);
         headingCorrection = -headingControl.calculate(heading);
+
+        if(autoEnabled && Math.abs(getXPosition() - currentXTarget) + Math.abs(getYPosition() - currentYTarget) > Constants.DRIVE_PID_ERROR){
+            double xTargetSpeed = xControl.calculate();
+            double yTargetSpeed = yControl.calculate();
+            double targetSpeed = Math.sqrt(yTargetSpeed * yTargetSpeed + xTargetSpeed * xTargetSpeed) / currentSpeed;
+            double xSpeed = xTargetSpeed * targetSpeed;
+            double ySpeed = yTargetSpeed * targetSpeed;
+            autoDrive(ySpeed,xSpeed);
+        }
+        else {
+            autoEnabled = false;
+        }
     }
 // ========== Turn the robot  ================
     public  void TurnLeft(){
@@ -125,6 +144,13 @@ public double headingCorrection = 0;
                 forwardSpeed,
                 headingCorrection,
                 headingSetPoint);
+    }
+
+    public void driveTo(double speed, double xDist, double yDist) {
+        autoEnabled = true;
+        currentSpeed = speed;
+        currentXTarget = xDist;
+        currentYTarget = yDist;
     }
 
     public void drive(double forwardSpeed,  double strafeSpeed) {
