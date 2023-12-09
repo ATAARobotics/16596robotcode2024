@@ -212,7 +212,8 @@ public class Arm {
     public void printTelemetry(Telemetry telemetry) {
         telemetry.addData("arm set point:", armPID.getSetPoint());
         telemetry.addData("arm position:", armMotors.getPositions());
-        telemetry.addData("Finger Position:", "%5.2f", finger.getPosition());
+        telemetry.addData("Finger Position:", "%5.2f", LFinger.getPosition());
+        telemetry.addData("Finger Position:", "%5.2f", RFinger.getPosition());
         telemetry.addData("Wrist Position:", "%5.2f", wrist.getPosition());
         telemetry.addData("feedforward factor:", setArmFeedForward());
         telemetry.addData("motor power:", armOut);
