@@ -139,6 +139,7 @@ public class Comp2 extends OpMode {
             pixelFound = true;
         } else pixelFound = false;
         if (!arm.getArmInAuto()) {
+
             arm.setWristPosition(operator.getRightY());
         }
 
