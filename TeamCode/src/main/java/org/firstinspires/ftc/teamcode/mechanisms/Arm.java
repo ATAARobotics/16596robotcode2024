@@ -19,10 +19,10 @@ public class Arm {
     private Motor arm2 = null;
     private Motor winch = null;
     private MotorGroup armMotors;
-    private Servo finger, wrist, hook;
+    private Servo LFinger, RFinger, wrist, hook;
     public boolean isPixel = false;
     public String armMessage = "nothing happened";   // use for debugging
-    private DistanceSensor seePixel = null;
+    private DistanceSensor seePixel;
     // TODO clean up these before Comp2- how many presets are used?
 
     double position2 = (0.35);// start wrist at pickup?
@@ -52,7 +52,8 @@ public class Arm {
 
 // set up servos
         wrist = hwMap.get(Servo.class, "Wrist");
-        finger = hwMap.get(Servo.class, "Finger");
+        LFinger = hwMap.get(Servo.class, "LFinger");
+        RFinger = hwMap.get(Servo.class, "RFinger");
         hook = hwMap.get(Servo.class, "Hook");
 //set up Motors:
         arm1 = new Motor(hwMap, "arm1");
@@ -72,7 +73,8 @@ public class Arm {
     }
 
     public void init() {
-        finger.setPosition(Constants.F_CLOSED);
+        LFinger.setPosition(Constants.LF_CLOSED);
+        RFinger.setPosition(Constants.RF_CLOSED);
     }
 
     public void start() {
@@ -138,10 +140,12 @@ public class Arm {
     public void setFinger() {
         if (!fingerOpen) {
             fingerOpen = true;
-            finger.setPosition(Constants.F_OPEN);
+            LFinger.setPosition(Constants.LF_OPEN);
+            RFinger.setPosition(Constants.RF_OPEN);
         } else {
             fingerOpen = false;
-            finger.setPosition(Constants.F_CLOSED);
+            LFinger.setPosition(Constants.LF_CLOSED);
+            RFinger.setPosition(Constants.RF_CLOSED);
         }
 
     }
