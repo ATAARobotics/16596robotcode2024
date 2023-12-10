@@ -101,7 +101,7 @@ public class Comp2 extends OpMode {
         double forwardSpeed = driver.getLeftY() * Constants.SPEED_RATIO;
         double turnSpeed = driver.getRightX() * Constants.TURN_RATIO;
         //double public manualWrist = operator.getRightY();
-        arm.setWristPosition(operator.getRightY());
+
 
         if (driver.getRightX() < -0.5) {
             driveTrain.setDirection(Constants.left); //west
