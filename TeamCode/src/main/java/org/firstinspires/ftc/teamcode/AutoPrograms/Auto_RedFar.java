@@ -5,11 +5,12 @@ import org.firstinspires.ftc.teamcode.mechanisms.Constants;
 public class Auto_RedFar extends AutoOpMode {
     @Override
     public void runOpMode() {
+        super.runOpMode();
 // Step 1: find the zone
         int zone = cam.detectElement();
+        driveTrain.resetOdomoetry(); // reset encoders to avoid doing relative move calculation
         switch (zone) {
             case 1:
-                driveTrain.resetOdomoetry(); // reset encoders to avoid doing relative move calculation
                 // strafe left to align with tape
                 while (opModeIsActive() && driveTrain.getXPosition() < 10) {
                     driveTrain.autoDrive(.0, -.3);

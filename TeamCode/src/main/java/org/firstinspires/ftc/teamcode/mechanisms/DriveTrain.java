@@ -122,6 +122,7 @@ public class DriveTrain {
             double xSpeed = clamp(xTargetSpeed * targetSpeedRatio,-1.0,1.0);
             double ySpeed = clamp(yTargetSpeed * targetSpeedRatio,-1.0,1.0);
             autoDrive(ySpeed,xSpeed);
+
         }
         else {
             autoEnabled = false;
@@ -155,6 +156,7 @@ public class DriveTrain {
     }
 
     public void driveTo(double speed, double xDist, double yDist) {
+       // add reset encoder here?
         autoEnabled = true;
         currentSpeed = speed;
         xControl.setSetPoint(xDist);

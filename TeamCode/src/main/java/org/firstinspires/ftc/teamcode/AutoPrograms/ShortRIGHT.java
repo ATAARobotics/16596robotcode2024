@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.mechanisms.Camera;
 import org.firstinspires.ftc.teamcode.mechanisms.DriveTrain;
 
 @Autonomous(name = "Short_Right")
-public class ShortRIGHT extends AutoOpMode {
+public class ShortRIGHT  extends AutoOpMode {
 
     @Override
     public void runOpMode() {

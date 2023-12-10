@@ -6,11 +6,14 @@ import org.firstinspires.ftc.teamcode.mechanisms.Constants;
 
 @Autonomous(name = "BlueNear", group = "Auto")
 public class BlueNear extends AutoOpMode {
+  @Override
+    public void runOpMode() {
+      super.runOpMode();
+
+
     //Step 1: Check which tape the team element's on.
     int zone = cam.detectElement();
 
-
-    {
         switch (zone) {
             case 1:
                 //Strafe left
