@@ -36,5 +36,5 @@ public class Constants {
     public static final double FEED_FWD_FACTOR = 0.6; // USED to slow arm in down direction
 
     public static final double ARM_TICKS_PER_90DEG = 113;   // CONFIRM #TICKS PER 90.
-    public static final double DRIVE_PID_ERROR = 0.5;
+    public static final double DRIVE_PID_TOLERANCE = 0.5;
 }

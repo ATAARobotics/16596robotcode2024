@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.mechanisms;
 
+import static com.arcrobotics.ftclib.util.MathUtils.clamp;
+
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
@@ -74,6 +76,8 @@ public class DriveTrain {
         headingControl = new PIDController(0.01, 0.004, 0.0);
         xControl = new PIDController(0.01, 0.004, 0.0);
         yControl = new PIDController(0.01, 0.004, 0.0);
+        xControl.setTolerance(Constants.DRIVE_PID_TOLERANCE);
+        yControl.setTolerance(Constants.DRIVE_PID_TOLERANCE);
 
         leftBackDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         rightBackDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
@@ -108,18 +112,22 @@ public class DriveTrain {
         headingControl.setSetPoint(headingSetPoint);
         headingCorrection = -headingControl.calculate(heading);
 
-        if(autoEnabled && Math.abs(getXPosition() - currentXTarget) + Math.abs(getYPosition() - currentYTarget) > Constants.DRIVE_PID_ERROR){
-            double xTargetSpeed = xControl.calculate();
-            double yTargetSpeed = yControl.calculate();
-            double targetSpeed = Math.sqrt(yTargetSpeed * yTargetSpeed + xTargetSpeed * xTargetSpeed) / currentSpeed;
-            double xSpeed = xTargetSpeed * targetSpeed;
-            double ySpeed = yTargetSpeed * targetSpeed;
+        // If using auto DriveTo and not yet at the setpoint in both X and Y
+        if(autoEnabled && !(xControl.atSetPoint() || !yControl.atSetPoint())){
+            double xTargetSpeed = xControl.calculate(getXPosition());
+            double yTargetSpeed = yControl.calculate(getYPosition());
+            // Use Pythagorean to get a ratio to cap the speed to the setSpeed.
+            double targetSpeedRatio = currentSpeed / Math.sqrt(yTargetSpeed * yTargetSpeed + xTargetSpeed * xTargetSpeed);
+            // Clamp to -1 to 1
+            double xSpeed = clamp(xTargetSpeed * targetSpeedRatio,-1.0,1.0);
+            double ySpeed = clamp(yTargetSpeed * targetSpeedRatio,-1.0,1.0);
             autoDrive(ySpeed,xSpeed);
         }
         else {
             autoEnabled = false;
         }
     }
+
 // ========== Turn the robot  ================
     public  void TurnLeft(){
         headingSetPoint = headingSetPoint + 90;
@@ -149,8 +157,8 @@ public class DriveTrain {
     public void driveTo(double speed, double xDist, double yDist) {
         autoEnabled = true;
         currentSpeed = speed;
-        currentXTarget = xDist;
-        currentYTarget = yDist;
+        xControl.setSetPoint(xDist);
+        yControl.setSetPoint(yDist);
     }
 
     public void drive(double forwardSpeed,  double strafeSpeed) {
