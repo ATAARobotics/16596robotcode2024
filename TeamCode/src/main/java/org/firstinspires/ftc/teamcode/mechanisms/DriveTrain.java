@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.mechanisms;
 
-import static com.arcrobotics.ftclib.util.MathUtils.clamp;
-
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
@@ -181,6 +179,11 @@ public class DriveTrain {
         rightFrontDrive.set(rightWheel);
         rightBackDrive.set(rightWheel);
     }*/
+public double clamp(double value, double min, double max){
+    if(value>min && value <max){return(value);}
+    else  if (value<min){ return (min);}
+    else  return(max);
+        }
 
     public double getXPosition() {
         return xPea.getDistance();
