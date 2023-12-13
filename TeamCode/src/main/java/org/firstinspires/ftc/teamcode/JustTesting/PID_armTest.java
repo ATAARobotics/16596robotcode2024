@@ -75,14 +75,19 @@ public class PID_armTest extends OpMode {
     private Motor arm2 = null;
     //private Motor winch = null;
     private Motor ypod = null;// fake motor to use encoder for odometry module
-    private Servo finger, wrist, drone, hook;
+    private Servo LFinger, RFinger, wrist, hook,drone;
     private String message = " ";
     static final double STEP   = 0.05;     // amount to slew servo each CYCLE_MS cycle
     static final int    CYCLE_MS    =   20;     // period of each cycle
-    static final double MAX_POS     =  1.0;     // Maximum rotational position
-    static final double MIN_POS     =  0.0;     // Minimum rotational position
-    double  position = 1.0 ; // Start at open position
-    double position2 = 0.5; // Start at halfway position
+    static final double RMAX_POS     =  .6;     // Maximum rotational position finger
+    static final double RMIN_POS     =  0.0;     // Minimum rotational position
+    static final double LMAX_POS     =  .6;     // Maximum rotational position
+    static final double LMIN_POS     =  0.0;     // Minimum rotational position
+    static final double WMAX_POS     =  1.0;     // Maximum rotational position
+    static final double WMIN_POS     =  0.0;     // Minimum rotational position
+    double  positionL= 0.4;// Start at open position
+    double positionR =0.2;
+    double position2 = 0.65; // Start at halfway position
     // TODO clean up these before Comp2- how many presets are used?
     static final int ARM_PICKUP = -44;
     static final int ARM_DEPOSIT_MID = 113;
@@ -136,7 +141,8 @@ public class PID_armTest extends OpMode {
 
         // set up servos
         wrist = hardwareMap.get(Servo.class, "Wrist");
-        finger = hardwareMap.get(Servo.class, "Finger");
+        LFinger = hardwareMap.get(Servo.class, "LFinger");
+        RFinger = hardwareMap.get(Servo.class, "RFinger");
         drone = hardwareMap.get(Servo.class, "Drone");
         hook = hardwareMap.get(Servo.class, "Hook");
         findPixel =  hardwareMap.get(DistanceSensor .class,"seePixel");
@@ -218,17 +224,20 @@ public class PID_armTest extends OpMode {
         if (armInAuto) message = "arm in auto mode";
         else message = "arm in manual mode";
         // simple servo tests:
-        // move finger: test results: 1 is pickup, 0.85 is release
+        // move finger: test results: 0 is pickup, 0.85 is release
 
-        if (gamepad2.a && position < MAX_POS) position += STEP;
+       // if (gamepad2.a && positionL < LMAX_POS) positionL += STEP;
+       if (gamepad2.a && positionR < RMAX_POS) positionR += STEP;
         //if(operator.wasJustPressed(GamepadKeys.Button.A) && position<MAX_POS)position += STEP;
-        if(gamepad2.y && position >MIN_POS) position-= STEP;
+       // if(gamepad2.y && positionL >LMIN_POS) positionL-= STEP;
+        if(gamepad2.y && positionL >RMIN_POS) positionR-= STEP;
         //if(operator.wasJustPressed(GamepadKeys.Button.Y) && position>MIN_POS)position -= STEP;
-        if(operator.wasJustPressed(GamepadKeys.Button.X) && position2<MAX_POS)position2 += STEP;
-        if(operator.wasJustPressed(GamepadKeys.Button.B) && position2>MIN_POS)position2 -= STEP;
+        if(operator.wasJustPressed(GamepadKeys.Button.X) && position2<WMAX_POS)position2 += STEP;
+        if(operator.wasJustPressed(GamepadKeys.Button.B) && position2>WMIN_POS)position2 -= STEP;
 
         // Set the servo to the new position and pause;
-        finger.setPosition(position);
+        LFinger.setPosition(positionL);
+        RFinger.setPosition(positionR);
         wrist.setPosition(position2);
 //        telemetry.addData("finger target position:",position);
         telemetry.addData(" wrist target position:",position2);
@@ -245,7 +254,9 @@ public class PID_armTest extends OpMode {
         telemetry.addData("Y Distance:", "%5.2f", yDistance);
         telemetry.addData("Message", message);
         // Display the current value
-        telemetry.addData("Finger Position:", "%5.2f", position);
+        telemetry.addData("Left Finger actual:", "%5.2f", LFinger.getPosition());
+        telemetry.addData("Left Finger setPosition:", "%5.2f",positionL);
+        telemetry.addData("Right Finger Position:", "%5.2f", RFinger.getPosition());
         telemetry.addData("Wrist Position:", "%5.2f", position2);
         telemetry.addData("pixel distance: ","%5.2f",findPixel.getDistance(DistanceUnit.MM));
 
