@@ -40,7 +40,8 @@ public class Arm {
     double winchspeed = .25;
     boolean climbing = false;
     double currentWristPosition = 0.0;
-    public int fingerPosition;
+    public int fingerPositionLeft;
+    public int fingerPositionRight;
     private boolean armInAuto = true;
     public double armPosition = 0;
     private boolean fingerOpen = false;

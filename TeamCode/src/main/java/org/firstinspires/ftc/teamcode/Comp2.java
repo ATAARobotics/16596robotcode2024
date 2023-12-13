@@ -132,7 +132,7 @@ public class Comp2 extends OpMode {
         }
         if (arm.getArmInAuto()) message = "arm in auto mode";  // debugging message
         else message = "arm in manual mode";
-        if (arm.findPixel() && arm.fingerPosition > .2) {
+        if (arm.findPixel() && arm.fingerPositionLeft > .2) {
             if (!pixelFound) {
                 operator.gamepad.rumble(500);       // tell operator a pixel was found but only when finger is open, else it would rumble all time with pixel.
             }
