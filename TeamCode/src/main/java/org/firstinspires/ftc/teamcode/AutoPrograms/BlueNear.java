@@ -1,13 +1,15 @@
 package org.firstinspires.ftc.teamcode.AutoPrograms;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+
+import org.firstinspires.ftc.teamcode.mechanisms.Camera;
 import org.firstinspires.ftc.teamcode.mechanisms.Constants;
 @Autonomous(name = "BlueNear", group = "Auto")
 public class BlueNear extends AutoOpMode {
     //Step 1: Check which tape the team element's on.
-    int zone = cam.detectElement();
+    Camera.Position zone = cam.detectElement();
     {
         switch (zone) {
-            case 1:
+            case LEFT:
                 //Strafe left
                 driveTrain.resetOdomoetry();
                 while (opModeIsActive() && driveTrain.getXPosition() < -10) {
@@ -34,7 +36,7 @@ public class BlueNear extends AutoOpMode {
             }
             //Park
                 driveTrain.stop();
-            case 2:
+            case MIDDLE:
                 //Step 1: Drive forward
                 driveTrain.resetOdomoetry(); // reset encoders to avoid doing relative move calculation
                 while (opModeIsActive() && driveTrain.getYPosition() > -52) {
@@ -54,7 +56,7 @@ public class BlueNear extends AutoOpMode {
             }
             //Park
             driveTrain.stop();
-            case 3:
+            case RIGHT:
                 //Move forward
                 driveTrain.resetOdomoetry();
                 while (opModeIsActive() && driveTrain.getYPosition() < 10) {

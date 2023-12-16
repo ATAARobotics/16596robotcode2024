@@ -1,14 +1,16 @@
 package org.firstinspires.ftc.teamcode.AutoPrograms;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+
+import org.firstinspires.ftc.teamcode.mechanisms.Camera;
 import org.firstinspires.ftc.teamcode.mechanisms.Constants;
 @Autonomous(name = "Auto_RedFar",group = "")
 public class Auto_RedFar extends AutoOpMode {
     @Override
     public void runOpMode() {
 // Step 1: find the zone
-        int zone = cam.detectElement();
+        Camera.Position zone = cam.detectElement();
         switch (zone) {
-            case 1:
+            case LEFT:
                 driveTrain.resetOdomoetry(); // reset encoders to avoid doing relative move calculation
                 // strafe left to align with tape
                 while (opModeIsActive() && driveTrain.getXPosition() < 10) {
@@ -52,7 +54,7 @@ public class Auto_RedFar extends AutoOpMode {
                 //park in backstage
                 driveTrain.stop();
                 driveTrain.resetOdomoetry();
-            case 2:
+            case MIDDLE:
                 //Drive forward
                 driveTrain.resetOdomoetry(); // reset encoders to avoid doing relative move calculation
                 while (opModeIsActive() && driveTrain.getYPosition() > -52) {

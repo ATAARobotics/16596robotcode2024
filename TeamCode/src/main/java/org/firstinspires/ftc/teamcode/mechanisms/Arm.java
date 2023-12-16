@@ -48,7 +48,7 @@ public class Arm {
 
     public Arm(HardwareMap hwMap) {
         this.hwMap = hwMap;
-        seePixel = hwMap.get(DistanceSensor.class, "seePixel");
+//        seePixel = hwMap.get(DistanceSensor.class, "seePixel");
 
 // set up servos
         wrist = hwMap.get(Servo.class, "Wrist");
@@ -154,11 +154,11 @@ public class Arm {
         armSpeed = speed;
     }
 
-    public boolean findPixel() {
-        double pixelDistance = seePixel.getDistance(DistanceUnit.MM);
-        if (pixelDistance < PIXEL_THRESHOLD) return true;
-        else return false;
-    }
+//    public boolean findPixel() {
+//        double pixelDistance = seePixel.getDistance(DistanceUnit.MM);
+//        if (pixelDistance < PIXEL_THRESHOLD) return true;
+//        else return false;
+//    }
 
     public void setWristPosition(double manualWrist) {
         currentWristPosition = Math.min(Constants.WRIST_PICKUP,Math.max(Constants.WRIST_CLIMB_POS,currentWristPosition + manualWrist * Constants.WRIST_SPEED));

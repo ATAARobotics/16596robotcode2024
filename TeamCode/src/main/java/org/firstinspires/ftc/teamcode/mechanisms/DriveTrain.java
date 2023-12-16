@@ -12,6 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 public class DriveTrain {
 
+    private final Telemetry telemetry;
     // Driving Motors
     private Motor leftFrontDrive = null;
     private Motor rightFrontDrive = null;
@@ -46,8 +47,9 @@ public class DriveTrain {
     private double currentXTarget = 0;
     private double currentYTarget = 0;
 
-    public DriveTrain(HardwareMap hwMap)
+    public DriveTrain(HardwareMap hwMap, Telemetry telemetry)
     {
+        this.telemetry = telemetry;
         this.hwMap = hwMap;
 
         // Define and Initialize Motors (note: need to use reference to actual OpMode).
@@ -72,8 +74,8 @@ public class DriveTrain {
     }
     public void init() {
         headingControl = new PIDController(0.01, 0.004, 0.0);
-        xControl = new PIDController(0.01, 0.004, 0.0);
-        yControl = new PIDController(0.01, 0.004, 0.0);
+        xControl = new PIDController(0.05, 0.004, 0.0);
+        yControl = new PIDController(0.05, 0.004, 0.0);
 
         leftBackDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         rightBackDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
@@ -108,19 +110,35 @@ public class DriveTrain {
         headingControl.setSetPoint(headingSetPoint);
         headingCorrection = -headingControl.calculate(heading);
 
-        if(autoEnabled && Math.abs(getXPosition() - currentXTarget) + Math.abs(getYPosition() - currentYTarget) > Constants.DRIVE_PID_ERROR){
-            double xTargetSpeed = xControl.calculate();
-            double yTargetSpeed = yControl.calculate();
-            double targetSpeed = Math.sqrt(yTargetSpeed * yTargetSpeed + xTargetSpeed * xTargetSpeed) / currentSpeed;
+        if(autoEnabled && !atTarget()){
+            double xTargetSpeed = -xControl.calculate(getXPosition());
+            double yTargetSpeed = -yControl.calculate(getYPosition());
+            double targetSpeed = currentSpeed / Math.sqrt(yTargetSpeed * yTargetSpeed + xTargetSpeed * xTargetSpeed);
             double xSpeed = xTargetSpeed * targetSpeed;
             double ySpeed = yTargetSpeed * targetSpeed;
-            autoDrive(ySpeed,xSpeed);
+            telemetry.addData("AutoDriving xTarget: ", "%5.2f", currentXTarget);
+            telemetry.addData("AutoDriving yTarget: ", "%5.2f", currentYTarget);
+            telemetry.addData("AutoDriving xTargetSpeed: ", "%5.2f", xTargetSpeed);
+            telemetry.addData("AutoDriving yTargetSpeed: ", "%5.2f", yTargetSpeed);
+            telemetry.addData("AutoDriving xSpeed: ", "%5.2f", xSpeed);
+            telemetry.addData("AutoDriving ySpeed: ", "%5.2f", ySpeed);
+            driveBase.driveFieldCentric(
+                    xSpeed,
+                    ySpeed,
+                    headingCorrection,
+                    headingSetPoint);
         }
         else {
+            if(autoEnabled) stop();
             autoEnabled = false;
         }
     }
-// ========== Turn the robot  ================
+
+    public boolean atTarget() {
+        return Math.abs(getXPosition() - currentXTarget) + Math.abs(getYPosition() - currentYTarget) < Constants.DRIVE_PID_ERROR;
+    }
+
+    // ========== Turn the robot  ================
     public  void TurnLeft(){
         headingSetPoint = headingSetPoint + 90;
         if(headingSetPoint > 180) headingSetPoint -= 360;
@@ -139,11 +157,6 @@ public class DriveTrain {
     public void autoDrive(double forwardSpeed,  double strafeSpeed) {
         heading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
         this.loop();
-        driveBase.driveFieldCentric(
-                strafeSpeed,
-                forwardSpeed,
-                headingCorrection,
-                headingSetPoint);
     }
 
     public void driveTo(double speed, double xDist, double yDist) {
@@ -151,6 +164,8 @@ public class DriveTrain {
         currentSpeed = speed;
         currentXTarget = xDist;
         currentYTarget = yDist;
+        xControl.setSetPoint(currentXTarget);
+        yControl.setSetPoint(currentYTarget);
     }
 
     public void drive(double forwardSpeed,  double strafeSpeed) {
@@ -180,7 +195,7 @@ public class DriveTrain {
     }
     public void resetXencoder(){xPea.resetEncoder();}
     public void resetYencoder(){yPea.resetEncoder();}
-public void resetIMU(){imu.resetYaw();}
+    public void resetIMU(){imu.resetYaw();}
     public void stop() {
         driveBase.stop();
     }
@@ -189,6 +204,11 @@ public void resetIMU(){imu.resetYaw();}
         telemetry.addData("heading Target:", headingSetPoint);
         telemetry.addData("X Distance inches:", "%5.2f", getXPosition());
         telemetry.addData("Y Distance inches:", "%5.2f", getYPosition());
+        if(autoEnabled) {
+            telemetry.addData("Auto Enabled", autoEnabled);
+            telemetry.addData("Auto target X:", "%5.2f", currentXTarget);
+            telemetry.addData("Auto target Y:", "%5.2f", currentYTarget);
+        }
     }
 
     public void resetOdomoetry() {

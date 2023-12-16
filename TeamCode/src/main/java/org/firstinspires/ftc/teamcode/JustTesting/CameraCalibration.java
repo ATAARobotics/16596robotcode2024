@@ -57,8 +57,8 @@ import java.util.Locale;
  * In OnBot Java, use "Add File" to add this OpMode from the list of Samples.
  */
 
-//@TeleOp(name = "CameraCalibration", group = "Utility")
-@Disabled
+@TeleOp(name = "CameraCalibration", group = "Utility")
+//@Disabled
 public class CameraCalibration extends LinearOpMode
 {
     /*
@@ -82,7 +82,7 @@ public class CameraCalibration extends LinearOpMode
         if (USING_WEBCAM)
         {
             portal = new VisionPortal.Builder()
-                    .setCamera(hardwareMap.get(WebcamName.class, "Webcam1"))
+                    .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
                     .setCameraResolution(new Size(RESOLUTION_WIDTH, RESOLUTION_HEIGHT))
                     .build();
         }

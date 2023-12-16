@@ -17,24 +17,39 @@ public class AutoOpMode extends LinearOpMode {
 
     protected boolean turning = false;
     protected Camera cam;
+    protected Camera.Position gameElementPosition = Camera.Position.RIGHT;
 
     public void runOpMode() {
         // Initialize the drive system variables.
         telemetry.addData("Status", "Initializing");
-        driveTrain = new DriveTrain(hardwareMap);
+        telemetry.update();
+        driveTrain = new DriveTrain(hardwareMap, telemetry);
         arm = new Arm(hardwareMap);
+        cam = new Camera(hardwareMap, telemetry);
+
         driveTrain.init();
         arm.init();
         cam.init();
+        gameElementPosition = cam.detectElement();
         telemetry.addData("Status", "Initialized");
+        telemetry.addData("Element", gameElementPosition);
+
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
-        waitForStart();
+        while(!isStarted()) {
+            gameElementPosition = cam.detectElement();
+            telemetry.addData("Status", "Initialized");
+            telemetry.addData("Element", gameElementPosition);
+//            cam.printTelemetry();
+            telemetry.update();
+
+        }
+//        waitForStart();
         driveTrain.start();
+        driveTrain.resetIMU();
         arm.start();
         cam.start();
-        driveTrain.resetIMU();
 
     }
 }

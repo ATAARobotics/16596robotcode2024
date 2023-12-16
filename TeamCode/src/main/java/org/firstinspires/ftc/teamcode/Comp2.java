@@ -61,7 +61,7 @@ public class Comp2 extends OpMode {
     @Override
     public void init() {
         telemetry.addData("Status", "Initializing");
-        driveTrain = new DriveTrain(hardwareMap);
+        driveTrain = new DriveTrain(hardwareMap, telemetry);
         arm = new Arm(hardwareMap);
         drone = new Airplane(hardwareMap);
 
@@ -132,12 +132,12 @@ public class Comp2 extends OpMode {
         }
         if (arm.getArmInAuto()) message = "arm in auto mode";  // debugging message
         else message = "arm in manual mode";
-        if (arm.findPixel() && arm.fingerPosition > .2) {
-            if (!pixelFound) {
-                operator.gamepad.rumble(500);       // tell operator a pixel was found but only when finger is open, else it would rumble all time with pixel.
-            }
-            pixelFound = true;
-        } else pixelFound = false;
+//        if (arm.findPixel() && arm.fingerPosition > .2) {
+//            if (!pixelFound) {
+//                operator.gamepad.rumble(500);       // tell operator a pixel was found but only when finger is open, else it would rumble all time with pixel.
+//            }
+//            pixelFound = true;
+//        } else pixelFound = false;
         if (!arm.getArmInAuto()) {
 
             arm.setWristPosition(operator.getRightY());
