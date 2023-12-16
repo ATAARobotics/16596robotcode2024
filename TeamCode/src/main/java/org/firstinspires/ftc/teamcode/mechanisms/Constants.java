@@ -5,6 +5,7 @@ public class Constants {
    public static final double SPEED_RATIO = 0.5;  // Use this to slow down robot
   public static final double TURN_RATIO = 0.25; // use this to slow turn rate
     public static final double WRIST_SPEED = 1.0/40.0;
+    public static final double DRIVE_PID_ERROR = 0.78;
     public static double ARM_DRIVE_RATIO = 0.4; // use this to slow down arm
 
     // Define Drive constants.  Make them public so they CAN be used by the calling OpMode
