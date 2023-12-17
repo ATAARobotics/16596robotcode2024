@@ -13,10 +13,10 @@ public class Constants {
     public static double HEADING_ERROR = 10; // Degrees
     // Define Drive constants.  Make them public so they CAN be used by the calling OpMode
 
-    public static final double forward = 0; // north
-    public  static final double back = 180; // south
-    public  static final double right = -90; // east
-    public static  final double left = 90; //west
+    public static final double forward = 180; // north
+    public  static final double back = 0; // south
+    public  static final double right = 90; // east
+    public static  final double left = -90; //west
     public static final double  LF_CLOSED       =  0.15 ;// finger servo closed position
     public static final double  LF_OPEN    =  .5 ; // open position
     public static final double  RF_CLOSED       =  0.15 ;

@@ -3,13 +3,12 @@ package org.firstinspires.ftc.teamcode.AutoPrograms;
 //import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
 import org.firstinspires.ftc.teamcode.mechanisms.Camera;
 import org.firstinspires.ftc.teamcode.mechanisms.Constants;
 
-@Autonomous(name = "BlueFar", group = "Auto")
-public class BlueFar extends AutoOpMode {
+@Autonomous(name = "RedFar", group = "Auto")
+public class RedFar extends AutoOpMode {
 
     private int step = 0;
     Camera.Position zone = Camera.Position.UNKNOWN;
@@ -171,7 +170,7 @@ public class BlueFar extends AutoOpMode {
                         break;
                     case 10: // move to the middle
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(0.5, 25.0, 0.0);
+                        driveTrain.driveTo(0.5, -25.0, 0.0);
                         step++;
                         break;
                     default:
@@ -187,7 +186,7 @@ public class BlueFar extends AutoOpMode {
                 }
                 break;
             case 22: // rotate to drive backwards
-                driveTrain.setDirection(Constants.right);
+                driveTrain.setDirection(Constants.left);
                 step++;
                 break;
             case 23:
@@ -213,7 +212,7 @@ public class BlueFar extends AutoOpMode {
                 break;
             case 28: // move to the backboard
                 driveTrain.resetOdometry();
-                driveTrain.driveTo(0.5, -25, 0);
+                driveTrain.driveTo(0.5, 25.0, 0.0);
                 step++;
                 break;
             case 29:
@@ -236,7 +235,7 @@ public class BlueFar extends AutoOpMode {
                 break;
             case 33: // move to park
                 driveTrain.resetOdometry();
-                driveTrain.driveTo(0.5, 10.0, -2.0);
+                driveTrain.driveTo(0.5, -10.0, -2.0);
                 step++;
                 break;
             case 34:

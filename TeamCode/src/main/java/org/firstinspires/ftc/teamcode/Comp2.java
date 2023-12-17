@@ -104,13 +104,13 @@ public class Comp2 extends OpMode {
 
 
         if (driver.getRightX() < -0.5) {
-            driveTrain.setDirection(Constants.right); //west
+            driveTrain.setDirection(Constants.left); //west
         } else if (driver.getRightX() > 0.5) {
-            driveTrain.setDirection(Constants.left); // east
+            driveTrain.setDirection(Constants.right); // east
         } else if (driver.getRightY() < -0.5) {
-            driveTrain.setDirection(Constants.back); //south
+            driveTrain.setDirection(Constants.forward); //south
         } else if (driver.getRightY() > 0.5) {
-            driveTrain.setDirection(Constants.forward); // north
+            driveTrain.setDirection(Constants.back); // north
         }
         arm.setArmSpeed(operator.getLeftY());// is this correct sign??....
 
