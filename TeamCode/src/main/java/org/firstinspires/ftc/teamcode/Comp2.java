@@ -62,7 +62,7 @@ public class Comp2 extends OpMode {
     public void init() {
         telemetry.addData("Status", "Initializing");
         driveTrain = new DriveTrain(hardwareMap, telemetry);
-        arm = new Arm(hardwareMap);
+        arm = new Arm(hardwareMap,runtime);
         drone = new Airplane(hardwareMap);
 
         driveTrain.init();
@@ -97,20 +97,20 @@ public class Comp2 extends OpMode {
 
 
         //======= get human inputs for drive and arm =============
-        double strafeSpeed = driver.getLeftX() * Constants.SPEED_RATIO;
-        double forwardSpeed = driver.getLeftY() * Constants.SPEED_RATIO;
+        double strafeSpeed = -driver.getLeftX() * Constants.SPEED_RATIO;
+        double forwardSpeed = -driver.getLeftY() * Constants.SPEED_RATIO;
         double turnSpeed = driver.getRightX() * Constants.TURN_RATIO;
         //double public manualWrist = operator.getRightY();
 
 
         if (driver.getRightX() < -0.5) {
-            driveTrain.setDirection(Constants.left); //west
+            driveTrain.setDirection(Constants.right); //west
         } else if (driver.getRightX() > 0.5) {
-            driveTrain.setDirection(Constants.right); // east
+            driveTrain.setDirection(Constants.left); // east
         } else if (driver.getRightY() < -0.5) {
-            driveTrain.setDirection(Constants.forward); //south
+            driveTrain.setDirection(Constants.back); //south
         } else if (driver.getRightY() > 0.5) {
-            driveTrain.setDirection(Constants.back); // north
+            driveTrain.setDirection(Constants.forward); // north
         }
         arm.setArmSpeed(operator.getLeftY());// is this correct sign??....
 

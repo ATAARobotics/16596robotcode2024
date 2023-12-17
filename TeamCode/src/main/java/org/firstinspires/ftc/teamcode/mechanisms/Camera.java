@@ -16,7 +16,8 @@ public class Camera {
     public enum Position{
         LEFT,
         MIDDLE,
-        RIGHT
+        RIGHT,
+        UNKNOWN
     };
     ReverseTeamElementPipeline pipeline;
     OpenCvWebcam cam;

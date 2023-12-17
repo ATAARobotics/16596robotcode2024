@@ -46,6 +46,8 @@ public class DriveTrain {
     private double currentSpeed = 0;
     private double currentXTarget = 0;
     private double currentYTarget = 0;
+    double xSpeed = 0;
+    double ySpeed = 0;
 
     public DriveTrain(HardwareMap hwMap, Telemetry telemetry)
     {
@@ -73,7 +75,7 @@ public class DriveTrain {
         driveBase = new MecanumDrive(leftFrontDrive,rightFrontDrive,leftBackDrive,rightBackDrive);
     }
     public void init() {
-        headingControl = new PIDController(0.01, 0.004, 0.0);
+        headingControl = new PIDController(0.01, 0.04, 0.0);
         xControl = new PIDController(0.05, 0.004, 0.0);
         yControl = new PIDController(0.05, 0.004, 0.0);
 
@@ -91,10 +93,10 @@ public class DriveTrain {
         //imu.resetYaw();
     }
     public void loop(){
-        headingControl.setSetPoint(headingSetPoint);
+        heading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
 
         // Because it's a double, can't check for exactly 180, so we check if it's almost 180 in either direction.
-        if (Math.abs(headingControl.getSetPoint()) > 178.0) {
+        if (Math.abs(headingSetPoint - 180.0) < Constants.HEADING_ERROR) {
 
             // "south" is special because it's around the 180/-180 toggle-point
             // Change setpoint between 180/-180 depending on which is closer.
@@ -114,24 +116,25 @@ public class DriveTrain {
             double xTargetSpeed = -xControl.calculate(getXPosition());
             double yTargetSpeed = -yControl.calculate(getYPosition());
             double targetSpeed = currentSpeed / Math.sqrt(yTargetSpeed * yTargetSpeed + xTargetSpeed * xTargetSpeed);
-            double xSpeed = xTargetSpeed * targetSpeed;
-            double ySpeed = yTargetSpeed * targetSpeed;
+            xSpeed = xTargetSpeed * targetSpeed;
+            ySpeed = yTargetSpeed * targetSpeed;
             telemetry.addData("AutoDriving xTarget: ", "%5.2f", currentXTarget);
             telemetry.addData("AutoDriving yTarget: ", "%5.2f", currentYTarget);
             telemetry.addData("AutoDriving xTargetSpeed: ", "%5.2f", xTargetSpeed);
             telemetry.addData("AutoDriving yTargetSpeed: ", "%5.2f", yTargetSpeed);
             telemetry.addData("AutoDriving xSpeed: ", "%5.2f", xSpeed);
             telemetry.addData("AutoDriving ySpeed: ", "%5.2f", ySpeed);
-            driveBase.driveFieldCentric(
-                    xSpeed,
-                    ySpeed,
-                    headingCorrection,
-                    headingSetPoint);
         }
         else {
             if(autoEnabled) stop();
             autoEnabled = false;
         }
+
+        driveBase.driveFieldCentric(
+                xSpeed,
+                ySpeed,
+                headingCorrection,
+                heading);
     }
 
     public boolean atTarget() {
@@ -154,11 +157,9 @@ public class DriveTrain {
         headingSetPoint = newHeading;
     }
 
-    public void autoDrive(double forwardSpeed,  double strafeSpeed) {
-        heading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
-        this.loop();
+    public boolean onHeading() {
+        return Math.abs(heading - headingSetPoint) < Constants.HEADING_ERROR;
     }
-
     public void driveTo(double speed, double xDist, double yDist) {
         autoEnabled = true;
         currentSpeed = speed;
@@ -171,21 +172,9 @@ public class DriveTrain {
     public void drive(double forwardSpeed,  double strafeSpeed) {
         // tell ftclib its inputs  strafeSpeed,forwardSpeed,turn,heading
 
-        heading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
-        driveBase.driveFieldCentric(
-                strafeSpeed,
-                forwardSpeed,
-                headingCorrection,
-                headingSetPoint);
+        xSpeed = strafeSpeed;
+        ySpeed = forwardSpeed;
     }
-
-   /* public void setDrivePower(double leftWheel, double rightWheel) {
-        // Output the values to the motor drives.
-        leftFrontDrive.set(leftWheel);
-        leftBackDrive.set(leftWheel);
-        rightFrontDrive.set(rightWheel);
-        rightBackDrive.set(rightWheel);
-    }*/
 
     public double getXPosition() {
         return xPea.getDistance();
@@ -197,11 +186,15 @@ public class DriveTrain {
     public void resetYencoder(){yPea.resetEncoder();}
     public void resetIMU(){imu.resetYaw();}
     public void stop() {
+        xSpeed = 0.0;
+        ySpeed = 0.0;
         driveBase.stop();
     }
     public void printTelemetry(Telemetry telemetry) {
-        telemetry.addData("heading:", "%5.2f", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+        telemetry.addData("actual heading:", "%5.2f", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+        telemetry.addData("saved heading:", "%5.2f", heading);
         telemetry.addData("heading Target:", headingSetPoint);
+        telemetry.addData("heading correction:", headingCorrection);
         telemetry.addData("X Distance inches:", "%5.2f", getXPosition());
         telemetry.addData("Y Distance inches:", "%5.2f", getYPosition());
         if(autoEnabled) {
@@ -211,7 +204,7 @@ public class DriveTrain {
         }
     }
 
-    public void resetOdomoetry() {
+    public void resetOdometry() {
         resetXencoder();
         resetYencoder();
     }

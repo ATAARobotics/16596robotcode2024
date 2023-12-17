@@ -6,11 +6,12 @@ import com.arcrobotics.ftclib.hardware.motors.MotorGroup;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class Arm {
+    private final ElapsedTime runtime;
     HardwareMap hwMap;
     private static final double HOOK_ENABLED = 0.0;
     private static final double HOOK_DISABLED = 1.0;
@@ -45,10 +46,12 @@ public class Arm {
     private boolean armInAuto = true;
     public double armPosition = 0;
     private boolean fingerOpen = false;
+    private double wristDelay;
 
 
-    public Arm(HardwareMap hwMap) {
+    public Arm(HardwareMap hwMap, ElapsedTime runtime) {
         this.hwMap = hwMap;
+        this.runtime = runtime;
 //        seePixel = hwMap.get(DistanceSensor.class, "seePixel");
 
 // set up servos
@@ -106,11 +109,11 @@ public class Arm {
                 armOut = armPID.calculate(arm1.getCurrentPosition());
                 armMessage = "using up gains";
             }
-            if (armPosition < 0 && armOut > 0)
+            if (armPosition < Constants.ARM_DEPOSIT_MID && armOut > 0)
                 armOut = armOut * Constants.ARM_LIFT_MULTIPLIER;// if arm is low, needs boost
             armMotors.set(armOut);                          //Move arm with PID
         }
-        wrist.setPosition(currentWristPosition);
+        if(wristDelay < runtime.milliseconds()) wrist.setPosition(currentWristPosition);
     }
 
     public void setArmPosition(int armSetPosition) {        // sets target for arm PID
@@ -223,4 +226,38 @@ public class Arm {
         telemetry.addData("message2:", armMessage);
     }
 
+    public boolean isInPosition() {
+        return Math.abs(armPosition - armTarget) < Constants.ARM_ERROR;
+    }
+
+    public void fingerDepositPixelAuto(boolean b) {
+        if(b) {
+            LFinger.setPosition(Constants.LF_OPEN);
+
+        }
+        else {
+            RFinger.setPosition(Constants.RF_OPEN);
+        }
+    }
+
+    public void fingerDepositPixel() {
+
+        if(!fingerOpen(true)) {
+            LFinger.setPosition(Constants.LF_OPEN);
+            RFinger.setPosition(Constants.RF_OPEN);
+        }
+        else {
+            LFinger.setPosition(Constants.LF_CLOSED);
+            RFinger.setPosition(Constants.RF_CLOSED);
+        }
+    }
+
+    public boolean fingerOpen(boolean b) {
+        if(b) {
+            return Math.abs(LFinger.getPosition() - Constants.LF_OPEN) < Constants.FINGER_ERROR;
+        }
+        else {
+            return Math.abs(RFinger.getPosition() - Constants.RF_OPEN) < Constants.FINGER_ERROR;
+        }
+    }
 }

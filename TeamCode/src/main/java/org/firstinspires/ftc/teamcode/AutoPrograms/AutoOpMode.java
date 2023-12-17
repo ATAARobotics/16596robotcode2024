@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.AutoPrograms;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.mechanisms.Arm;
@@ -9,47 +11,50 @@ import org.firstinspires.ftc.teamcode.mechanisms.Camera;
 import org.firstinspires.ftc.teamcode.mechanisms.DriveTrain;
 
 @Autonomous(name = "Do_Nothing",group = "")
-public class AutoOpMode extends LinearOpMode {
+public class AutoOpMode extends OpMode {
     protected final ElapsedTime runtime = new ElapsedTime();
 
     protected DriveTrain driveTrain;
     protected Arm arm;
-
+    protected Boolean started = false;
     protected boolean turning = false;
     protected Camera cam;
     protected Camera.Position gameElementPosition = Camera.Position.RIGHT;
 
-    public void runOpMode() {
-        // Initialize the drive system variables.
-        telemetry.addData("Status", "Initializing");
-        telemetry.update();
+    @Override
+    public void init() {
         driveTrain = new DriveTrain(hardwareMap, telemetry);
-        arm = new Arm(hardwareMap);
+        arm = new Arm(hardwareMap, runtime);
         cam = new Camera(hardwareMap, telemetry);
 
         driveTrain.init();
         arm.init();
         cam.init();
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
+    }
+
+    @Override
+    public void init_loop() {
         gameElementPosition = cam.detectElement();
         telemetry.addData("Status", "Initialized");
         telemetry.addData("Element", gameElementPosition);
-
-        telemetry.update();
-
-        // Wait for the game to start (driver presses PLAY)
-        while(!isStarted()) {
-            gameElementPosition = cam.detectElement();
-            telemetry.addData("Status", "Initialized");
-            telemetry.addData("Element", gameElementPosition);
 //            cam.printTelemetry();
-            telemetry.update();
+        telemetry.update();
+    }
 
-        }
-//        waitForStart();
+    @Override
+    public void loop() {
+        driveTrain.loop();
+        arm.loop();
+    }
+
+    @Override
+    public void start() {
         driveTrain.start();
         driveTrain.resetIMU();
         arm.start();
         cam.start();
-
+        started = true;
     }
 }
