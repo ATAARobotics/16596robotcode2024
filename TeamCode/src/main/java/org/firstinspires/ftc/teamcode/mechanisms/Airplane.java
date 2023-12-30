@@ -15,7 +15,7 @@ public class Airplane {
     }
 
     public void launch() {
-        drone.setPosition(0.0); // Launch drone!
+        drone.setPosition(Constants.DRONE_LAUNCH); // Launch drone!
     }
 
     public void init() {

@@ -13,6 +13,12 @@ import org.openftc.easyopencv.OpenCvWebcam;
 public class Camera {
     private final HardwareMap hardwareMap;
     private final Telemetry telemetry;
+    private boolean isRed;
+
+    public void setRed(boolean red) {
+        isRed = red;
+    }
+
     public enum Position{
         LEFT,
         MIDDLE,
@@ -25,9 +31,7 @@ public class Camera {
     public Camera(HardwareMap hardwareMap, Telemetry telemetry) {
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
-        pipeline = new ReverseTeamElementPipeline(false);
         cam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"));
-        cam.setPipeline(pipeline);
         cam.setMillisecondsPermissionTimeout(5000);
 
         cam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
@@ -42,6 +46,8 @@ public class Camera {
         });
     }
     public void init() {
+        pipeline = new ReverseTeamElementPipeline(isRed);
+        cam.setPipeline(pipeline);
     }
 
     public void start() {

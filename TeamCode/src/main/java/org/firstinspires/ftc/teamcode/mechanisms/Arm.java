@@ -230,10 +230,9 @@ public class Arm {
         return Math.abs(armPosition - armTarget) < Constants.ARM_ERROR;
     }
 
-    public void fingerDepositPixelAuto(boolean b) {
-        if(b) {
+    public void fingerDepositPixelAuto(boolean isLeft) {
+        if(isLeft) {
             LFinger.setPosition(Constants.LF_OPEN);
-
         }
         else {
             RFinger.setPosition(Constants.RF_OPEN);
@@ -252,8 +251,8 @@ public class Arm {
         }
     }
 
-    public boolean fingerOpen(boolean b) {
-        if(b) {
+    public boolean fingerOpen(boolean isLeft) {
+        if(isLeft) {
             return Math.abs(LFinger.getPosition() - Constants.LF_OPEN) < Constants.FINGER_ERROR;
         }
         else {

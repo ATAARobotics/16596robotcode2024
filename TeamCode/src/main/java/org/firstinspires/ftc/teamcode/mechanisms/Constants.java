@@ -6,9 +6,10 @@ public class Constants {
   public static final double TURN_RATIO = 0.25; // use this to slow turn rate
     public static final double WRIST_SPEED = 1.0/40.0;
     public static final double DRIVE_PID_ERROR = 0.78; // inches
-    public static final double WRIST_LAUNCH_DELAY = 500; // Miliseconds
+    public static final double WRIST_LAUNCH_DELAY = 500; // Milliseconds
     public static final double ARM_ERROR = 10; // Encoder ticks
-    public static final double FINGER_ERROR = 0.05 ; // Servo setpoint
+    public static final double FINGER_ERROR = 0.05 ; // Servo set point
+    public static final double DRONE_LAUNCH = 1.0; //drone launch point
     public static double ARM_DRIVE_RATIO = 0.4; // use this to slow down arm
     public static double HEADING_ERROR = 10; // Degrees
     // Define Drive constants.  Make them public so they CAN be used by the calling OpMode
@@ -17,11 +18,11 @@ public class Constants {
     public  static final double back = 0; // south
     public  static final double right = 90; // east
     public static  final double left = -90; //west
-    public static final double  LF_CLOSED       =  0.15 ;// finger servo closed position
-    public static final double  LF_OPEN    =  .5 ; // open position
-    public static final double  RF_CLOSED       =  0.15 ;
+    public static final double  LF_CLOSED       =  0.7 ;// finger servo closed position
+    public static final double  LF_OPEN    =  0.3 ; // open position
+    public static final double  RF_CLOSED       =  0.2 ;
     // finger servo closed position
-    public static final double  RF_OPEN    =  .5 ; // open position
+    public static final double  RF_OPEN    =  0.6 ; // open position
     public static final double W_MAX_ANGLE       =  1 ; // wrist servo
     public static final double  W_MIN_ANGLE     =  0 ;
     public static final double D_MAX_ANGLE       =  1 ;    // drone servo

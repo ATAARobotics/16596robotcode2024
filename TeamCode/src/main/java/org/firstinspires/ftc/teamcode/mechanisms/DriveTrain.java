@@ -75,9 +75,9 @@ public class DriveTrain {
         driveBase = new MecanumDrive(leftFrontDrive,rightFrontDrive,leftBackDrive,rightBackDrive);
     }
     public void init() {
-        headingControl = new PIDController(0.01, 0.04, 0.0);
-        xControl = new PIDController(0.05, 0.004, 0.0);
-        yControl = new PIDController(0.05, 0.004, 0.0);
+        headingControl = new PIDController(0.01, 0.004, 0.0);
+        xControl = new PIDController(0.1, 0.04, 0.0);
+        yControl = new PIDController(0.1, 0.04, 0.0);
 
         leftBackDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         rightBackDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
@@ -96,7 +96,7 @@ public class DriveTrain {
         heading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
 
         // Because it's a double, can't check for exactly 180, so we check if it's almost 180 in either direction.
-        if (Math.abs(headingSetPoint - 180.0) < Constants.HEADING_ERROR) {
+        if (Math.abs(Math.abs(headingSetPoint) - 180.0) < Constants.HEADING_ERROR) {
 
             // "south" is special because it's around the 180/-180 toggle-point
             // Change setpoint between 180/-180 depending on which is closer.
@@ -134,7 +134,8 @@ public class DriveTrain {
                 xSpeed,
                 ySpeed,
                 headingCorrection,
-                heading);
+                heading,
+                false);
     }
 
     public boolean atTarget() {
@@ -189,6 +190,7 @@ public class DriveTrain {
         xSpeed = 0.0;
         ySpeed = 0.0;
         driveBase.stop();
+        autoEnabled = false;
     }
     public void printTelemetry(Telemetry telemetry) {
         telemetry.addData("actual heading:", "%5.2f", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));

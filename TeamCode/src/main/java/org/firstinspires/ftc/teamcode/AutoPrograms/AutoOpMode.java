@@ -19,6 +19,7 @@ public class AutoOpMode extends OpMode {
     protected Boolean started = false;
     protected boolean turning = false;
     protected Camera cam;
+    protected boolean isRed = false;
     protected Camera.Position gameElementPosition = Camera.Position.RIGHT;
 
     @Override
@@ -26,6 +27,7 @@ public class AutoOpMode extends OpMode {
         driveTrain = new DriveTrain(hardwareMap, telemetry);
         arm = new Arm(hardwareMap, runtime);
         cam = new Camera(hardwareMap, telemetry);
+        cam.setRed(isRed);
 
         driveTrain.init();
         arm.init();
@@ -39,7 +41,6 @@ public class AutoOpMode extends OpMode {
         gameElementPosition = cam.detectElement();
         telemetry.addData("Status", "Initialized");
         telemetry.addData("Element", gameElementPosition);
-//            cam.printTelemetry();
         telemetry.update();
     }
 

@@ -58,9 +58,27 @@ public class BlueNear extends AutoOpMode {
                         arm.setArmPosition(0);
                         if(arm.isInPosition()) step++;
                         break;
-                    case 8: // move away from the bars so we can rotate
+                    case 8: // move around the placed pixel
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(0.5, 10, 10.0);
+                        driveTrain.driveTo(0.5, 0, 12.0);
+                        step++;
+                        break;
+                    case 9:
+                        if(driveTrain.atTarget()) {
+                            step++;
+                        }
+                    case 10: // Continue moving around the pixel
+                        driveTrain.resetOdometry();
+                        driveTrain.driveTo(0.5, 0, 15);
+                        step++;
+                        break;
+                    case 11:
+                        if(driveTrain.atTarget()) {
+                            step++;
+                        }
+                    case 12: // Move to the backboard
+                        driveTrain.resetOdometry();
+                        driveTrain.driveTo(0.5, -12, 0);
                         step++;
                         break;
 
@@ -104,9 +122,9 @@ public class BlueNear extends AutoOpMode {
                         arm.setArmPosition(0);
                         if(arm.isInPosition()) step++;
                         break;
-                    case 8: // move away from the bars so we can rotate
+                    case 8: // move towards the backboard
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(0.5, 10, 10.0);
+                        driveTrain.driveTo(0.5, 0, 15.0);
                         step++;
                         break;
                     default:
@@ -126,7 +144,7 @@ public class BlueNear extends AutoOpMode {
                             step++;
                         }
                         break;
-                    case 2: // rotate to left tape
+                    case 2: // rotate to right tape
                         driveTrain.setDirection(Constants.right);
                         step++;
                         break;
@@ -149,9 +167,9 @@ public class BlueNear extends AutoOpMode {
                         arm.setArmPosition(0);
                         if(arm.isInPosition()) step++;
                         break;
-                    case 8: // move away from the bars so we can rotate
+                    case 8: // move towards the backboard
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(0.5, 10, 10.0);
+                        driveTrain.driveTo(0.5, 0, -15.0);
                         step++;
                         break;
                     case 9:
@@ -161,7 +179,7 @@ public class BlueNear extends AutoOpMode {
                         break;
                     case 10: // move to the middle
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(0.5, 25.0, 0.0);
+                        driveTrain.driveTo(0.5, 0.0, 25.0);
                         step++;
                         break;
                     default:
@@ -185,7 +203,17 @@ public class BlueNear extends AutoOpMode {
                 break;
             case 28: // move to the backboard
                 driveTrain.resetOdometry();
-                driveTrain.driveTo(0.5, 15, 15);
+                switch(zone) {
+                    case LEFT:
+                        driveTrain.driveTo(0.5, 0, 10);
+                        break;
+                    case MIDDLE:
+                        driveTrain.driveTo(0.5, 6, 10);
+                        break;
+                    case RIGHT:
+                        driveTrain.driveTo(0.5, 12, 10);
+                        break;
+                }
                 step++;
                 break;
             case 29:
@@ -208,10 +236,19 @@ public class BlueNear extends AutoOpMode {
                 break;
             case 33: // move to park
                 driveTrain.resetOdometry();
-                driveTrain.driveTo(0.5, 10.0, -2.0);
+                switch(zone) {
+                    case LEFT:
+                        driveTrain.driveTo(0.5, -10, 6);
+                        break;
+                    case MIDDLE:
+                        driveTrain.driveTo(0.5, -16, 6);
+                        break;
+                    case RIGHT:
+                        driveTrain.driveTo(0.5, -22, 6);
+                        break;
+                }
                 step++;
-                break;
-            case 34:
+                break;            case 34:
                 if (driveTrain.atTarget()) {
                     driveTrain.stop();
                     step++;
@@ -223,3 +260,4 @@ public class BlueNear extends AutoOpMode {
         telemetry.update();
     }
 }
+// 32
