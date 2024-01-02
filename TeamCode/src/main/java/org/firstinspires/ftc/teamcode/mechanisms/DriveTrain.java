@@ -26,6 +26,8 @@ public class DriveTrain {
     private PIDController headingControl = null;
     private PIDController xControl = null;
     private PIDController yControl = null;
+    private double xPos = 0.0;
+    private double yPos = 0.0;
 
     // Define IMU
     private IMU imu;// BHO055 imu on this hub
@@ -164,8 +166,27 @@ public class DriveTrain {
     public void driveTo(double speed, double xDist, double yDist) {
         autoEnabled = true;
         currentSpeed = speed;
-        currentXTarget = xDist;
-        currentYTarget = yDist;
+        // If heading set point is +90 swap x/y odometry
+        if(Math.abs(headingSetPoint - 90.0) < Constants.HEADING_ERROR) {
+            currentXTarget = yDist;
+            currentYTarget = xDist;
+        }
+        // If heading set point is 0
+        else if(Math.abs(headingSetPoint) < Constants.HEADING_ERROR) {
+            currentXTarget = xDist;
+            currentYTarget = yDist;
+        }
+        // If heading set point is -90 swap and reverse x/y odometry
+        else if(Math.abs(headingSetPoint - 90.0) < Constants.HEADING_ERROR) {
+            currentXTarget = -yDist;
+            currentYTarget = -xDist;
+        }
+        // If heading set point is 180 reverse x and y odometry
+        else {
+            currentXTarget = -xDist;
+            currentYTarget = -yDist;
+        }
+
         xControl.setSetPoint(currentXTarget);
         yControl.setSetPoint(currentYTarget);
     }
