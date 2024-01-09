@@ -25,7 +25,7 @@ public class TestAuto extends LinearOpMode {
 
         // Initialize the drive system variables.
         telemetry.addData("Status", "Initializing");
-        driveTrain = new TestDriveTrain(hardwareMap);
+        driveTrain = new TestDriveTrain(hardwareMap, telemetry);
 //        arm = new Arm(hardwareMap);
         driveTrain.init();
 //        arm.init();
@@ -46,7 +46,7 @@ public class TestAuto extends LinearOpMode {
             // ftc-dashboard telemetry
             TelemetryPacket pack = new TelemetryPacket();
 
-            pack.put("heading target", driveTrain.headingDirection);
+            pack.put("heading target", driveTrain.headingSetPoint);
 //            pack.put("YDistance", driveTrain.getYPosition());
 //            pack.put("XDistance", driveTrain.getXPosition());
             pack.put("Current Heading", driveTrain.heading);
