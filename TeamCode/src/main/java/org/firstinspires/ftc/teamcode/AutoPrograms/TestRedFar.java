@@ -4,11 +4,12 @@ package org.firstinspires.ftc.teamcode.AutoPrograms;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.teamcode.JustTesting.TestAutoOpMode;
 import org.firstinspires.ftc.teamcode.mechanisms.Camera;
 import org.firstinspires.ftc.teamcode.mechanisms.Constants;
 
 @Autonomous(name = "TestRedFar", group = "Auto")
-public class TestRedFar extends AutoOpMode {
+public class TestRedFar extends TestAutoOpMode {
 
     private int step = 0;
     Camera.Position zone = Camera.Position.UNKNOWN;
@@ -123,8 +124,8 @@ public class TestRedFar extends AutoOpMode {
                         step++;
                         break;
                     case 3: // Move Arm into pickup position
-                        arm.setArmPosition(1);
-                        if(arm.isInPosition()) step++;
+                       // arm.setArmPosition(1);
+                        //if(arm.isInPosition()) step++;
                         break;
                     case 4: // Deposit ONE pixel
                         //arm.fingerDepositPixelAuto(true);
