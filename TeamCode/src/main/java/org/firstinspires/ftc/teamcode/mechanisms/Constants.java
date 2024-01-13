@@ -29,7 +29,7 @@ public class Constants {
     public static final double  D_MIN_ANGLE     =  0;
 
 // ===========  for arm movements ======================
-    public static final int ARM_PICKUP = 0;
+    public static final int ARM_PICKUP = -30;
     public static final int ARM_DEPOSIT_MID = 52;
     public  static final int ARM_DEPOSIT_LONG = 173;
     public  static final int ARM_CLIMB = 159;

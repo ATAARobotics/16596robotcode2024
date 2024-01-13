@@ -65,10 +65,11 @@ public class ReverseTeamElementPipeline extends OpenCvPipeline {
         //Imgproc.dilate(processed, processed, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(3, 3)));
         //Imgproc.dilate(processed, processed, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(3, 3)));
         //Imgproc.dilate(processed, processed, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(3, 3)));
-
+// the webcam is expected to be 640x640
+        //width and height of the box to check for the team element
         int width = 213;
         int height = 160;
-
+//top left coordinate for the boxes
         int x0 = 60;
         int y0 = 5;
         int x1 = 400;
