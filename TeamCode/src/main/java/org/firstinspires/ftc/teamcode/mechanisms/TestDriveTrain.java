@@ -194,6 +194,10 @@ public class TestDriveTrain {
 
     public double getXPosition() {
         double xPos = 0.0;
+        if (xPos == 0.0) {
+            //Do stuff
+        }
+
         if(Math.abs(headingSetPoint - Constants.back) < Constants.HEADING_ERROR) xPos = xPea.getDistance();
         else if(Math.abs(headingSetPoint - Constants.left) < Constants.HEADING_ERROR) xPos = -yPea.getDistance();
         else if(Math.abs(headingSetPoint - Constants.forward) < Constants.HEADING_ERROR) xPos = -xPea.getDistance();
