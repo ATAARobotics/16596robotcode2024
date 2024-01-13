@@ -33,7 +33,7 @@ public class Constants {
     public static final int ARM_DEPOSIT_MID = 52;
     public  static final int ARM_DEPOSIT_LONG = 173;
     public  static final int ARM_CLIMB = 159;
-    public  static final double WRIST_PICKUP = 1.0;
+    public  static final double WRIST_PICKUP = .5;
     public static final double WRIST_DEPOSIT_MID = 1.0;
     public  static final double WRIST_DEPOSIT_LONG = 1.0;
     public static final double WRIST_CLIMB_POS = 0.0;
