@@ -44,7 +44,7 @@ public class ServoTest extends LinearOpMode {
     static final double MIN_POS     =  0.0;     // Minimum rotational position
 
     // Define class members
-    Servo   finger, wrist, drone ;
+    Servo  Rfinger, Lfinger, wrist, drone ;
     double  position = 0.85; // Start at open position
     double position2 = (MAX_POS - MIN_POS) / 2; // Start at halfway position
     //boolean rampUp = true;
@@ -59,7 +59,8 @@ public class ServoTest extends LinearOpMode {
         // Connect to servos
         // Change the text in quotes to match any servo name on your robot.
         wrist = hardwareMap.get(Servo.class, "Wrist");
-        finger = hardwareMap.get(Servo.class, "Finger");
+        Lfinger = hardwareMap.get(Servo.class, "Lfinger");
+        Rfinger = hardwareMap.get(Servo.class, "Rfinger");
         drone = hardwareMap.get(Servo.class, "Drone");
         findPixel =  hardwareMap.get(DistanceSensor .class,"seePixel");
         // Wait for the start button
@@ -90,7 +91,8 @@ public class ServoTest extends LinearOpMode {
             telemetry.update();
 
             // Set the servo to the new position and pause;
-            finger.setPosition(position);
+            Rfinger.setPosition(position);
+            Lfinger.setPosition(position);
             wrist.setPosition(position2);
             sleep(CYCLE_MS);
             //idle();

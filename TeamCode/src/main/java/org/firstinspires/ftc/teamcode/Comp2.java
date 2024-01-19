@@ -141,6 +141,7 @@ public class Comp2 extends OpMode {
         if (!arm.getArmInAuto()) {
 
             arm.setWristPosition(operator.getRightY());
+            telemetry.addData("rightY", "%5.2f", operator.getRightY());
         }
 
 
