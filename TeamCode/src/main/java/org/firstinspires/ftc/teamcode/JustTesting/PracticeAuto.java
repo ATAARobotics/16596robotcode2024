@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.mechanisms.Constants;
 public class PracticeAuto extends TestAutoOpMode {
 
     private int step = 8;
-    Camera.Position zone = Camera.Position.UNKNOWN;
+    //Camera.Position zone = Camera.Position.UNKNOWN;
 
     @Override
     public void init() {
