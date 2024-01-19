@@ -165,7 +165,7 @@ public class Arm {
 //    }
 
     public void setWristPosition(double manualWrist) {
-        currentWristPosition = Math.min(Constants.WRIST_PICKUP,Math.max(Constants.WRIST_CLIMB_POS,currentWristPosition + manualWrist * Constants.WRIST_SPEED));
+        currentWristPosition = Math.min(Constants.WRIST_CLIMB_POS,Math.max(Constants.WRIST_PICKUP,currentWristPosition + manualWrist * Constants.WRIST_SPEED));
     }
 
     // these did use ternary operator: boolean (expression) ? actionIfTrue : actionIfFalse
