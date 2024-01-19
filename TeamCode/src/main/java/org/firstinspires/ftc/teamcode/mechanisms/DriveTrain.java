@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.mechanisms;
 
+import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
@@ -10,7 +11,7 @@ import com.qualcomm.robotcore.hardware.IMU;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
-public class DriveTrain {
+public class DriveTrain extends SubsystemBase {
 
     private final Telemetry telemetry;
     // Driving Motors
@@ -94,7 +95,8 @@ public class DriveTrain {
         yPea.resetEncoder();
         //imu.resetYaw();
     }
-    public void loop(){
+    @Override
+    public void periodic(){
         heading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
 
         // Because it's a double, can't check for exactly 180, so we check if it's almost 180 in either direction.
