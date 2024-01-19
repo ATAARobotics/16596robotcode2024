@@ -11,7 +11,7 @@ public class Constants {
     public static final double FINGER_ERROR = 0.05 ; // Servo set point
     public static final double DRONE_LAUNCH = 1.0; //drone launch point
     public static double ARM_DRIVE_RATIO = 0.4; // use this to slow down arm
-    public static double HEADING_ERROR = 10; // Degrees
+    public static double HEADING_ERROR = 30; // Degrees... testing changed from 10to 30
     // Define Drive constants.  Make them public so they CAN be used by the calling OpMode
 
     public static final double forward = 180; // north
