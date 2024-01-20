@@ -247,12 +247,14 @@ if (armSpeed >0 && gamepad1.left_trigger>0) armSpeed = .8;// override limit usin
 //        if (armSpeed > 0) winch.set(-winchspeed); // Winch is CCW when arm moves up
 //        if (armSpeed < 0) winch.set(winchspeed); // Confirm rotation
 //        if (armSpeed ==0) winch.set(0); // stop winch when arm stops
+
         armMotors.set(armDriveRatio * armSpeed);  // calculate final arm speed to send
 
         armPosition = arm1.getCurrentPosition();
         // temporary code to move finger
 /*
         if (operator.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
+
             finger.setPosition(.85);
             telemetry.addData("release pixel","");
             telemetry.update();
