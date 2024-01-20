@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.mechanisms.Constants;
 @Autonomous(name = "PracticeAuto", group = "Auto")
 public class PracticeAuto extends TestAutoOpMode {
 
-    private int step = 8;
+    private int step = 0;
     //Camera.Position zone = Camera.Position.UNKNOWN;
 
     @Override
