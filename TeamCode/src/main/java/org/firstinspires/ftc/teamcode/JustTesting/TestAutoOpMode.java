@@ -18,25 +18,25 @@ public class TestAutoOpMode extends OpMode {
     protected boolean turning = false;
     protected Camera cam;
     protected boolean isRed = false;
-    protected Camera.Position gameElementPosition = Camera.Position.RIGHT;
+   // protected Camera.Position gameElementPosition = Camera.Position.RIGHT;
 
     @Override
     public void init() {
         driveTrain = new TestDriveTrain(hardwareMap, telemetry);
-        cam = new Camera(hardwareMap, telemetry);
-        cam.setRed(isRed);
+      //  cam = new Camera(hardwareMap, telemetry);
+      //  cam.setRed(isRed);
 
         driveTrain.init();
-        cam.init();
+      //  cam.init();
         telemetry.addData("Status", "Initialized");
         telemetry.update();
     }
 
     @Override
     public void init_loop() {
-        gameElementPosition = cam.detectElement();
+      //  gameElementPosition = cam.detectElement();
         telemetry.addData("Status", "Initialized");
-        telemetry.addData("Element", gameElementPosition);
+      //  telemetry.addData("Element", gameElementPosition);
         telemetry.update();
     }
 
@@ -49,7 +49,7 @@ public class TestAutoOpMode extends OpMode {
     public void start() {
         driveTrain.start();
         driveTrain.resetIMU();
-        cam.start();
+       // cam.start();
         started = true;
     }
 }
