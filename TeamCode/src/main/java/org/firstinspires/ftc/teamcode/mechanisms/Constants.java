@@ -10,7 +10,7 @@ public class Constants {
     public static final double ARM_ERROR = 10; // Encoder ticks
     public static final double FINGER_ERROR = 0.05 ; // Servo set point
     public static final double DRONE_LAUNCH = 1.0; //drone launch point
-    public static double ARM_DRIVE_RATIO = 0.4; // use this to slow down arm
+    public static double ARM_DRIVE_RATIO = 0.8; // use this to slow down arm
     public static double HEADING_ERROR = 30; // Degrees... testing changed from 10to 30
     // Define Drive constants.  Make them public so they CAN be used by the calling OpMode
 
@@ -30,7 +30,7 @@ public class Constants {
 
 // ===========  for arm movements ======================
     public static final int ARM_PICKUP = -30;
-    public static final int ARM_DEPOSIT_MID = -13;// was +52
+    public static final int ARM_DEPOSIT_MID = 7;// was +52
     public  static final int ARM_DEPOSIT_LONG = 173;
     public  static final int ARM_CLIMB = 159;
     public  static final double WRIST_PICKUP = .5;

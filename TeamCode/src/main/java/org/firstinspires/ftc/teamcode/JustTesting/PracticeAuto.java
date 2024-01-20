@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.mechanisms.Constants;
 
 @Autonomous(name = "PracticeAuto", group = "Auto")
 public class PracticeAuto extends TestAutoOpMode {
+public double speed = .5;
 
     private int step = 0;
     //Camera.Position zone = Camera.Position.UNKNOWN;
@@ -18,6 +19,7 @@ public class PracticeAuto extends TestAutoOpMode {
     public void init() {
         isRed = true;
         super.init();
+
     }
     @Override
     public void loop() {
@@ -29,7 +31,7 @@ public class PracticeAuto extends TestAutoOpMode {
         switch (step) {
             case 0: // Move Forward
                 driveTrain.resetOdometry();
-                driveTrain.driveTo(0.5, 0, 10);
+                driveTrain.driveTo(speed, 0, 10);
                 step++;
                 break;
             case 1:
@@ -40,7 +42,7 @@ public class PracticeAuto extends TestAutoOpMode {
                 break;
             case 2: // Move Left
                 driveTrain.resetOdometry();
-                driveTrain.driveTo(0.5, -10, 0);
+                driveTrain.driveTo(speed, -10, 0);
                 step++;
                 break;
             case 3:
@@ -51,7 +53,7 @@ public class PracticeAuto extends TestAutoOpMode {
                 break;
             case 4: // Move Backwards
                 driveTrain.resetOdometry();
-                driveTrain.driveTo(0.5, 0, -10);
+                driveTrain.driveTo(speed, 0, -10);
                 step++;
                 break;
             case 5:
@@ -62,7 +64,7 @@ public class PracticeAuto extends TestAutoOpMode {
                 break;
             case 6: // Move Right
                 driveTrain.resetOdometry();
-                driveTrain.driveTo(0.5, 10, 0);
+                driveTrain.driveTo(speed, 10, 0);
                 step++;
                 break;
             case 7:
@@ -83,10 +85,10 @@ public class PracticeAuto extends TestAutoOpMode {
                 break;
             case 10: // Move Forward
                 driveTrain.resetOdometry();
-                driveTrain.driveTo(0.5, 0, 10);
+                driveTrain.driveTo(speed, 0, 10);
                 step++;
                 break;
-            case 11:
+           case 11:
                 if (driveTrain.atTarget()) {
                     step++;
                     driveTrain.stop();
@@ -94,7 +96,7 @@ public class PracticeAuto extends TestAutoOpMode {
                 break;
             case 12: // Move Left
                 driveTrain.resetOdometry();
-                driveTrain.driveTo(0.5, -10, 0);
+                driveTrain.driveTo(speed, -10, 0);
                 step++;
                 break;
             case 13:
@@ -105,7 +107,7 @@ public class PracticeAuto extends TestAutoOpMode {
                 break;
             case 14: // Move Backwards
                 driveTrain.resetOdometry();
-                driveTrain.driveTo(0.5, 0, -10);
+                driveTrain.driveTo(speed, 0, -10);
                 step++;
                 break;
             case 15:
@@ -116,7 +118,7 @@ public class PracticeAuto extends TestAutoOpMode {
                 break;
             case 16: // Move Right
                 driveTrain.resetOdometry();
-                driveTrain.driveTo(0.5, 10, 0);
+                driveTrain.driveTo(speed, 10, 0);
                 step++;
                 break;
             case 17:
@@ -137,7 +139,7 @@ public class PracticeAuto extends TestAutoOpMode {
                 break;
             case 20: // Move Forward
                 driveTrain.resetOdometry();
-                driveTrain.driveTo(0.5, 0, 10);
+                driveTrain.driveTo(speed, 0, 10);
                 step++;
                 break;
             case 21:
@@ -148,7 +150,7 @@ public class PracticeAuto extends TestAutoOpMode {
                 break;
             case 22: // Move Left
                 driveTrain.resetOdometry();
-                driveTrain.driveTo(0.5, -10, 0);
+                driveTrain.driveTo(speed, -10, 0);
                 step++;
                 break;
             case 23:
@@ -159,7 +161,7 @@ public class PracticeAuto extends TestAutoOpMode {
                 break;
             case 24: // Move Backwards
                 driveTrain.resetOdometry();
-                driveTrain.driveTo(0.5, 0, -10);
+                driveTrain.driveTo(speed, 0, -10);
                 step++;
                 break;
             case 25:
@@ -170,7 +172,7 @@ public class PracticeAuto extends TestAutoOpMode {
                 break;
             case 26: // Move Right
                 driveTrain.resetOdometry();
-                driveTrain.driveTo(0.5, 10, 0);
+                driveTrain.driveTo(speed, 10, 0);
                 step++;
                 break;
             case 27:
@@ -191,7 +193,7 @@ public class PracticeAuto extends TestAutoOpMode {
                 break;
             case 30: // Move Forward
                 driveTrain.resetOdometry();
-                driveTrain.driveTo(0.5, 0, 10);
+                driveTrain.driveTo(speed, 0, 10);
                 step++;
                 break;
             case 31:
@@ -202,7 +204,7 @@ public class PracticeAuto extends TestAutoOpMode {
                 break;
             case 32: // Move Left
                 driveTrain.resetOdometry();
-                driveTrain.driveTo(0.5, -10, 0);
+                driveTrain.driveTo(speed, -10, 0);
                 step++;
                 break;
             case 33:
@@ -213,7 +215,7 @@ public class PracticeAuto extends TestAutoOpMode {
                 break;
             case 34: // Move Backwards
                 driveTrain.resetOdometry();
-                driveTrain.driveTo(0.5, 0, -10);
+                driveTrain.driveTo(speed, 0, -10);
                 step++;
                 break;
             case 35:
@@ -224,7 +226,7 @@ public class PracticeAuto extends TestAutoOpMode {
                 break;
             case 36: // Move Right
                 driveTrain.resetOdometry();
-                driveTrain.driveTo(0.5, 10, 0);
+                driveTrain.driveTo(speed, 10, 0);
                 step++;
                 break;
             case 37:
@@ -241,8 +243,10 @@ public class PracticeAuto extends TestAutoOpMode {
                 if (driveTrain.onHeading()) step++;
                 break;
             default:
-                step = 99;
+                //step = 99;
+                driveTrain.stop();
                 break;
         }
+        telemetry.update();
     }
 }

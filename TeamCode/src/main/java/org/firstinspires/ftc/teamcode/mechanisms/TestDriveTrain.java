@@ -78,8 +78,8 @@ public class TestDriveTrain {
     }
     public void init() {
         headingControl = new PIDController(0.01, 0.004, 0.0);
-        xControl = new PIDController(0.1, 0.04, 0.0);
-        yControl = new PIDController(0.1, 0.04, 0.0);
+        xControl = new PIDController(0.7, 0.01, 0.0);
+        yControl = new PIDController(0.7, 0.01, 0.0);
 
         leftBackDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         rightBackDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
@@ -120,17 +120,17 @@ public class TestDriveTrain {
             double targetSpeed = currentSpeed / Math.sqrt(yTargetSpeed * yTargetSpeed + xTargetSpeed * xTargetSpeed);
             xSpeed = xTargetSpeed * targetSpeed;
             ySpeed = yTargetSpeed * targetSpeed;
-            double temp = xSpeed;
-            if (Math.abs(headingSetPoint - Constants.left) < Constants.HEADING_ERROR) {
-                xSpeed = ySpeed;
-                ySpeed = -temp;
-            } else if (Math.abs(headingSetPoint - Constants.forward) < Constants.HEADING_ERROR) {
-                xSpeed = -xSpeed;
-                ySpeed = -ySpeed;
-            } else if (Math.abs(headingSetPoint - Constants.right) < Constants.HEADING_ERROR) {
-                xSpeed = -ySpeed;
-                ySpeed = temp;
-            }
+//            double temp = xSpeed;
+//            if (Math.abs(headingSetPoint - Constants.left) < Constants.HEADING_ERROR) {
+//                xSpeed = ySpeed;
+//                ySpeed = -temp;
+//            } else if (Math.abs(headingSetPoint - Constants.forward) < Constants.HEADING_ERROR) {
+//                xSpeed = -xSpeed;
+//                ySpeed = -ySpeed;
+//            } else if (Math.abs(headingSetPoint - Constants.right) < Constants.HEADING_ERROR) {
+//                xSpeed = -ySpeed;
+//                ySpeed = temp;
+//            }
 
             telemetry.addData("AutoDriving xTarget: ", "%5.2f", currentXTarget);
             telemetry.addData("AutoDriving yTarget: ", "%5.2f", currentYTarget);
