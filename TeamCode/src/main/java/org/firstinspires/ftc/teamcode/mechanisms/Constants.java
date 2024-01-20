@@ -30,12 +30,12 @@ public class Constants {
 
 // ===========  for arm movements ======================
     public static final int ARM_PICKUP = -30;
-    public static final int ARM_DEPOSIT_MID = 52;
+    public static final int ARM_DEPOSIT_MID = -13;// was +52
     public  static final int ARM_DEPOSIT_LONG = 173;
     public  static final int ARM_CLIMB = 159;
     public  static final double WRIST_PICKUP = .5;
     public static final double WRIST_DEPOSIT_MID = 1.0;
-    public  static final double WRIST_DEPOSIT_LONG = 1.0;
+    public  static final double WRIST_DEPOSIT_LONG = .7;// was 1
     public static final double WRIST_CLIMB_POS = 0.0;
     public static final int ARM_MAX = 175;
     public static final int ARM_MIN = -50;
