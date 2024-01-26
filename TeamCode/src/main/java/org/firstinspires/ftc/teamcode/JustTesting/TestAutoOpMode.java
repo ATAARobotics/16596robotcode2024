@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.mechanisms.Arm;
+import org.firstinspires.ftc.teamcode.mechanisms.CAITelemetry;
 import org.firstinspires.ftc.teamcode.mechanisms.Camera;
 import org.firstinspires.ftc.teamcode.mechanisms.DriveTrain;
 import org.firstinspires.ftc.teamcode.mechanisms.TestDriveTrain;
@@ -22,6 +23,7 @@ public class TestAutoOpMode extends OpMode {
     protected boolean isRed = false;
     protected Camera.Position gameElementPosition = Camera.Position.RIGHT;
 
+    protected CAITelemetry caiTelemetry;
     @Override
     public void init() {
         driveTrain = new TestDriveTrain(hardwareMap, telemetry);
@@ -31,7 +33,8 @@ public class TestAutoOpMode extends OpMode {
         driveTrain.init();
         cam.init();
         FtcDashboard dashboard = FtcDashboard.getInstance();
-        telemetry = dashboard.getTelemetry();
+        caiTelemetry = new CAITelemetry(telemetry,dashboard.getTelemetry());
+
         telemetry.addData("Status", "Initialized");
         telemetry.update();
     }
