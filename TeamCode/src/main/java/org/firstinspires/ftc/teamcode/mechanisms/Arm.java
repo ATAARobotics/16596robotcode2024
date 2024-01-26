@@ -32,7 +32,7 @@ public class Arm {
     double armOut;
     public double armTarget;
     public PIDController armPID;
-    public double KpUp = 0.005;
+    public double KpUp = 0.001;
     public double KiUp = 0.0004;
     public double KdUp = 0.0;
     public double KpDown = 0.002;
@@ -89,7 +89,7 @@ public class Arm {
     }
 
     public void loop() {
-        armPosition = arm1.getCurrentPosition();
+        armPosition = arm2.getCurrentPosition();// Jan25-moved to arm2,testing for bad encoder on arm 1
         armTarget = armPID.getSetPoint();
         if ((armSpeed < 0 && armPosition < Constants.ARM_MIN) || (armSpeed > 0 && armPosition > Constants.ARM_MAX))
             armSpeed = 0;       //avoid trying to lower arm when on chassis and limit extension

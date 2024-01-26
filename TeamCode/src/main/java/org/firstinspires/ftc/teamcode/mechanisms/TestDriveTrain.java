@@ -81,7 +81,7 @@ public class TestDriveTrain {
         xControl = new PIDController(0.7, 0.01, 0.0);
         yControl = new PIDController(0.7, 0.01, 0.0);
 
-        leftBackDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        leftBackDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);// redundant as default is brake mode
         rightBackDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         rightFrontDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         leftFrontDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
@@ -132,12 +132,12 @@ public class TestDriveTrain {
 //                ySpeed = temp;
 //            }
 
-            telemetry.addData("AutoDriving xTarget: ", "%5.2f", currentXTarget);
-            telemetry.addData("AutoDriving yTarget: ", "%5.2f", currentYTarget);
-            telemetry.addData("AutoDriving xTargetSpeed: ", "%5.2f", xTargetSpeed);
+           // telemetry.addData("AutoDriving xTarget: ", "%5.2f", currentXTarget);
+          //  telemetry.addData("AutoDriving yTarget: ", "%5.2f", currentYTarget);
+          //  telemetry.addData("AutoDriving xTargetSpeed: ", "%5.2f", xTargetSpeed);
             telemetry.addData("AutoDriving yTargetSpeed: ", "%5.2f", yTargetSpeed);
-            telemetry.addData("AutoDriving xSpeed: ", "%5.2f", xSpeed);
-            telemetry.addData("AutoDriving ySpeed: ", "%5.2f", ySpeed);
+         //   telemetry.addData("AutoDriving xSpeed: ", "%5.2f", xSpeed);
+         //   telemetry.addData("AutoDriving ySpeed: ", "%5.2f", ySpeed);
         }
         else {
             if(autoEnabled) stop();
@@ -153,7 +153,7 @@ public class TestDriveTrain {
     }
 
     public boolean atTarget() {
-        return Math.abs(getXPosition() - currentXTarget) + Math.abs(getYPosition() - currentYTarget) < Constants.DRIVE_PID_ERROR;
+        return Math.sqrt(Math.pow(getXPosition() - currentXTarget,2) + Math.pow(getYPosition() - currentYTarget,2)) < Constants.DRIVE_PID_ERROR;
     }
 
     // ========== Turn the robot  ================

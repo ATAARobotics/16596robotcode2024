@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.AutoPrograms.AutoOpMode;
 import org.firstinspires.ftc.teamcode.mechanisms.Camera;
 import org.firstinspires.ftc.teamcode.mechanisms.Constants;
+import org.firstinspires.ftc.teamcode.mechanisms.TestDriveTrain;
 
 @Autonomous(name = "PracticeAuto", group = "Auto")
 public class PracticeAuto extends TestAutoOpMode {
@@ -25,7 +26,8 @@ public double speed = .5;
     public void loop() {
         super.loop();
         telemetry.addData("Running step: ", step);
-        driveTrain.printTelemetry(telemetry);
+        //telemetry.addData("x position",driveTrain.getXPosition());// temp test
+       driveTrain.printTelemetry(telemetry);
 
 
         switch (step) {
@@ -243,7 +245,7 @@ public double speed = .5;
                 if (driveTrain.onHeading()) step++;
                 break;
             default:
-                //step = 99;
+                step = 40;
                 driveTrain.stop();
                 break;
         }
