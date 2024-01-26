@@ -39,6 +39,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.mechanisms.Airplane;
 import org.firstinspires.ftc.teamcode.mechanisms.Arm;
+import org.firstinspires.ftc.teamcode.mechanisms.CAITelemetry;
 import org.firstinspires.ftc.teamcode.mechanisms.Constants;
 import org.firstinspires.ftc.teamcode.mechanisms.DriveTrain;
 import org.firstinspires.ftc.teamcode.mechanisms.TestDriveTrain;
@@ -57,6 +58,7 @@ public class PracticeTeleop extends OpMode {
 
     @Override
     public void init() {
+        telemetry = new CAITelemetry(telemetry);
         telemetry.addData("Status", "Initializing");
         driveTrain = new TestDriveTrain(hardwareMap, telemetry);
 

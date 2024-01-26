@@ -39,6 +39,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.mechanisms.Airplane;
 import org.firstinspires.ftc.teamcode.mechanisms.Arm;
+import org.firstinspires.ftc.teamcode.mechanisms.CAITelemetry;
 import org.firstinspires.ftc.teamcode.mechanisms.Constants;
 import org.firstinspires.ftc.teamcode.mechanisms.DriveTrain;
 
@@ -60,6 +61,7 @@ public class Comp2 extends OpMode {
 
     @Override
     public void init() {
+        telemetry = new CAITelemetry(telemetry);
         telemetry.addData("Status", "Initializing");
         driveTrain = new DriveTrain(hardwareMap, telemetry);
         arm = new Arm(hardwareMap,runtime);
@@ -68,7 +70,6 @@ public class Comp2 extends OpMode {
         driveTrain.init();
         arm.init();
         drone.init();
-
         telemetry.addData("Status", "Initialized");
         telemetry.update();
     }

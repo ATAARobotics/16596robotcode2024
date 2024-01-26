@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.mechanisms.Arm;
+import org.firstinspires.ftc.teamcode.mechanisms.CAITelemetry;
 import org.firstinspires.ftc.teamcode.mechanisms.Camera;
 import org.firstinspires.ftc.teamcode.mechanisms.DriveTrain;
 
@@ -32,6 +33,8 @@ public class AutoOpMode extends OpMode {
         driveTrain.init();
         arm.init();
         cam.init();
+
+        telemetry = new CAITelemetry(telemetry);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
     }

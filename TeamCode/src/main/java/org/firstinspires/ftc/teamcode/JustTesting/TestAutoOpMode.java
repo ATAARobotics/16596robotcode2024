@@ -23,7 +23,6 @@ public class TestAutoOpMode extends OpMode {
     protected boolean isRed = false;
     protected Camera.Position gameElementPosition = Camera.Position.RIGHT;
 
-    protected CAITelemetry caiTelemetry;
     @Override
     public void init() {
         driveTrain = new TestDriveTrain(hardwareMap, telemetry);
@@ -32,8 +31,7 @@ public class TestAutoOpMode extends OpMode {
 
         driveTrain.init();
         cam.init();
-        FtcDashboard dashboard = FtcDashboard.getInstance();
-        caiTelemetry = new CAITelemetry(telemetry,dashboard.getTelemetry());
+        telemetry = new CAITelemetry(telemetry);
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
