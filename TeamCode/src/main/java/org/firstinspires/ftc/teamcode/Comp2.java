@@ -43,28 +43,23 @@ import org.firstinspires.ftc.teamcode.mechanisms.CAITelemetry;
 import org.firstinspires.ftc.teamcode.mechanisms.Constants;
 import org.firstinspires.ftc.teamcode.mechanisms.DriveTrain;
 
-@TeleOp (name = "Comp2")
+@TeleOp(name = "Comp2")
 public class Comp2 extends OpMode {
 
     private final ElapsedTime runtime = new ElapsedTime();
-    public double wristMan;
     private DriveTrain driveTrain;
     private Arm arm;
     private Airplane drone;
     public GamepadEx driver = null;
     public GamepadEx operator = null;
-    private String message = " ";
     boolean climbing = false;
-    boolean turning = false;
-    private boolean looptest = false; // temp for debugging
-    private boolean pixelFound = false;
 
     @Override
     public void init() {
         telemetry = new CAITelemetry(telemetry);
         telemetry.addData("Status", "Initializing");
-        driveTrain = new DriveTrain(hardwareMap, telemetry);
-        arm = new Arm(hardwareMap,runtime);
+        driveTrain = new DriveTrain(hardwareMap);
+        arm = new Arm(hardwareMap, runtime);
         drone = new Airplane(hardwareMap);
 
         driveTrain.init();
@@ -72,10 +67,6 @@ public class Comp2 extends OpMode {
         drone.init();
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-    }
-
-    @Override
-    public void init_loop() {
     }
 
     @Override
@@ -100,8 +91,6 @@ public class Comp2 extends OpMode {
         //======= get human inputs for drive and arm =============
         double strafeSpeed = -driver.getLeftX() * Constants.SPEED_RATIO;
         double forwardSpeed = -driver.getLeftY() * Constants.SPEED_RATIO;
-        double turnSpeed = driver.getRightX() * Constants.TURN_RATIO;
-        //double public manualWrist = operator.getRightY();
 
 
         if (driver.getRightX() < -0.5) {
@@ -131,6 +120,7 @@ public class Comp2 extends OpMode {
         if (operator.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
             arm.toggleArmInAuto();    // toggle arm auto mode
         }
+        String message;
         if (arm.getArmInAuto()) message = "arm in auto mode";  // debugging message
         else message = "arm in manual mode";
 //        if (arm.findPixel() && arm.fingerPosition > .2) {
@@ -146,54 +136,52 @@ public class Comp2 extends OpMode {
         }
 
 
-            // move the robot!!
-            driveTrain.drive(forwardSpeed, strafeSpeed); // turning and heading control happen in driveTrain
+        // move the robot!!
+        driveTrain.drive(forwardSpeed, strafeSpeed); // turning and heading control happen in driveTrain
 
 
-            // ================ Launch Drone ===============================
-            if (gamepad2.right_trigger > 0.1) {
-                drone.launch();
-                message = "drone launched";
-            }
-            // =============== go climbing! =============================
-            if (gamepad2.left_trigger > 0.1 && gamepad2.right_trigger > 0.1) {
-                arm.setHook(true);
-                climbing = true;
-                message = "climbing!";
-            }
+        // ================ Launch Drone ===============================
+        if (gamepad2.right_trigger > 0.1) {
+            drone.launch();
+            message = "drone launched";
+        }
+        // =============== go climbing! =============================
+        if (gamepad2.left_trigger > 0.1 && gamepad2.right_trigger > 0.1) {
+            arm.setHook(true);
+            climbing = true;
+            message = "climbing!";
+        }
 
-            if (climbing && gamepad2.right_bumper) {
-                arm.Climb(true);
-            } else arm.Climb(false);
+        arm.Climb(climbing && gamepad2.right_bumper);
 
-            // Show the elapsed game time and arm position.
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            arm.printTelemetry(telemetry);
-            driveTrain.printTelemetry(telemetry);
+        // Show the elapsed game time and arm position.
+        telemetry.addData("Status", "Run Time: " + runtime);
+        arm.printTelemetry(telemetry);
+        driveTrain.printTelemetry(telemetry);
             /*telemetry.addData("===== motor data ====", "");
             telemetry.addData("strafe:", "%5.2f", strafeSpeed);
             telemetry.addData("forward:", "%5.2f", forwardSpeed);
             telemetry.addData("turn:", "%5.2f", turnSpeed);*/
-            telemetry.addData("Message1", message);
+        telemetry.addData("Message1", message);
 
-            // Push telemetry to the Driver Station.
-            telemetry.update();
+        // Push telemetry to the Driver Station.
+        telemetry.update();
 
-            // use this only for testing, not competition!
-            // ftc-dashboard telemetry
-            TelemetryPacket pack = new TelemetryPacket();
+        // use this only for testing, not competition!
+        // ftc-dashboard telemetry
+        TelemetryPacket pack = new TelemetryPacket();
 
-            pack.put("heading target", driveTrain.headingSetPoint);
-            pack.put("xDistance", driveTrain.getXPosition());
-            //pack.put("yDistance", winch.getDistance());
-            pack.put("Current Heading", driveTrain.heading);
-            pack.put("arm position",arm.getArmPosition());
-            pack.put("FeedForward",arm.setArmFeedForward());
+        pack.put("heading target", driveTrain.headingSetPoint);
+        pack.put("xDistance", driveTrain.getXPosition());
+        //pack.put("yDistance", winch.getDistance());
+        pack.put("Current Heading", driveTrain.heading);
+        pack.put("arm position", arm.getArmPosition());
+        pack.put("FeedForward", arm.setArmFeedForward());
 
-            pack.put("message", message);
+        pack.put("message", message);
 
-            FtcDashboard.getInstance().sendTelemetryPacket(pack);
-        }
+        FtcDashboard.getInstance().sendTelemetryPacket(pack);
     }
+}
 
 

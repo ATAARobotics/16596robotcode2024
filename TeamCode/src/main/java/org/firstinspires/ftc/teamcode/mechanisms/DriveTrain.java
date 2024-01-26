@@ -12,26 +12,22 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 public class DriveTrain {
 
-    private final Telemetry telemetry;
     // Driving Motors
-    private Motor leftFrontDrive = null;
-    private Motor rightFrontDrive = null;
-    private Motor leftBackDrive = null;
-    private Motor rightBackDrive = null;
-    MecanumDrive driveBase = null;
+    private final Motor leftFrontDrive;
+    private final Motor rightFrontDrive;
+    private final Motor leftBackDrive;
+    private final Motor rightBackDrive;
+    MecanumDrive driveBase;
 
     // Odometry Motors and variables
-    private Motor xPea = null;
-    private Motor yPea = null;
+    private final Motor xPea;
+    private final Motor yPea;
     private PIDController headingControl = null;
     private PIDController xControl = null;
     private PIDController yControl = null;
-    private double xPos = 0.0;
-    private double yPos = 0.0;
 
     // Define IMU
-    private IMU imu;// BHO055 imu on this hub
-    private RevHubOrientationOnRobot orientationOnRobot;
+    private final IMU imu;// BHO055 imu on this hub
 
     // Auto alignment directions
     public double forward = 0; // north
@@ -51,9 +47,8 @@ public class DriveTrain {
     double xSpeed = 0;
     double ySpeed = 0;
 
-    public DriveTrain(HardwareMap hwMap, Telemetry telemetry)
+    public DriveTrain(HardwareMap hwMap)
     {
-        this.telemetry = telemetry;
         this.hwMap = hwMap;
 
         // Define and Initialize Motors (note: need to use reference to actual OpMode).
@@ -64,13 +59,14 @@ public class DriveTrain {
         rightBackDrive = new Motor(hwMap, "right_back_drive"); // 0
 
         xPea = rightFrontDrive; // 2
+        //noinspection SuspiciousNameCombination
         yPea = leftFrontDrive; // 3
 
         // need to confirm orientation of the HUB so that IMU directions are correct
         imu = hwMap.get(IMU.class, "imu");// need to use IMU in expansion hub, not control hub
         RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
         RevHubOrientationOnRobot.UsbFacingDirection usbDirection = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
-        orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
+        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
 
         imu.initialize(new IMU.Parameters(orientationOnRobot));
 
@@ -101,7 +97,7 @@ public class DriveTrain {
         if (Math.abs(Math.abs(headingSetPoint) - 180.0) < Constants.HEADING_ERROR) {
 
             // "south" is special because it's around the 180/-180 toggle-point
-            // Change setpoint between 180/-180 depending on which is closer.
+            // Change set-point between 180/-180 depending on which is closer.
             if (heading < 0.0) {
                 headingSetPoint = -180;
             }
@@ -120,12 +116,6 @@ public class DriveTrain {
             double targetSpeed = currentSpeed / Math.sqrt(yTargetSpeed * yTargetSpeed + xTargetSpeed * xTargetSpeed);
             xSpeed = xTargetSpeed * targetSpeed;
             ySpeed = yTargetSpeed * targetSpeed;
-            // telemetry.addData("AutoDriving xTarget: ", "%5.2f", currentXTarget);
-            //  telemetry.addData("AutoDriving yTarget: ", "%5.2f", currentYTarget);
-            //  telemetry.addData("AutoDriving xTargetSpeed: ", "%5.2f", xTargetSpeed);
-//            telemetry.addData("AutoDriving yTargetSpeed: ", "%5.2f", yTargetSpeed);
-            //   telemetry.addData("AutoDriving xSpeed: ", "%5.2f", xSpeed);
-            //   telemetry.addData("AutoDriving ySpeed: ", "%5.2f", ySpeed);
         }
 //        else {
 //            if(autoEnabled) stop();
@@ -187,10 +177,10 @@ public class DriveTrain {
         else if(Math.abs(headingSetPoint - Constants.right) < Constants.HEADING_ERROR) yPos = xPea.getDistance();
         return yPos;
     }
-    public void resetXencoder() {
+    public void resetXEncoder() {
         xPea.resetEncoder();
     }
-    public void resetYencoder() {
+    public void resetYEncoder() {
         yPea.resetEncoder();
     }
     public void resetIMU() {
@@ -219,7 +209,7 @@ public class DriveTrain {
     }
 
     public void resetOdometry() {
-        resetXencoder();
-        resetYencoder();
+        resetXEncoder();
+        resetYEncoder();
     }
 }
