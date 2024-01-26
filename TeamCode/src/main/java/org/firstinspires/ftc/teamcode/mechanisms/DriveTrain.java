@@ -58,13 +58,13 @@ public class DriveTrain {
 
         // Define and Initialize Motors (note: need to use reference to actual OpMode).
 
-        leftFrontDrive = new Motor(hwMap, "left_front_drive");
-        rightFrontDrive = new Motor(hwMap, "right_front_drive");
-        leftBackDrive = new Motor(hwMap, "left_back_drive");
-        rightBackDrive = new Motor(hwMap, "right_back_drive");
+        leftFrontDrive = new Motor(hwMap, "left_front_drive"); // 3
+        rightFrontDrive = new Motor(hwMap, "right_front_drive"); // 2
+        leftBackDrive = new Motor(hwMap, "left_back_drive"); // 1
+        rightBackDrive = new Motor(hwMap, "right_back_drive"); // 0
 
-        xPea = new Motor(hwMap, "winch");
-        yPea = new Motor(hwMap, "y_encoder");
+        xPea = rightFrontDrive; // 2
+        yPea = leftFrontDrive; // 3
 
         // need to confirm orientation of the HUB so that IMU directions are correct
         imu = hwMap.get(IMU.class, "imu");// need to use IMU in expansion hub, not control hub
@@ -78,10 +78,10 @@ public class DriveTrain {
     }
     public void init() {
         headingControl = new PIDController(0.01, 0.004, 0.0);
-        xControl = new PIDController(0.1, 0.04, 0.0);
-        yControl = new PIDController(0.1, 0.04, 0.0);
+        xControl = new PIDController(0.7, 0.01, 0.0);
+        yControl = new PIDController(0.7, 0.01, 0.0);
 
-        leftBackDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        leftBackDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);// redundant as default is brake mode
         rightBackDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         rightFrontDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         leftFrontDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
@@ -114,23 +114,23 @@ public class DriveTrain {
         headingControl.setSetPoint(headingSetPoint);
         headingCorrection = -headingControl.calculate(heading);
 
-        if(autoEnabled && !atTarget()){
+        if(autoEnabled && !atTarget()) {
             double xTargetSpeed = -xControl.calculate(getXPosition());
             double yTargetSpeed = -yControl.calculate(getYPosition());
             double targetSpeed = currentSpeed / Math.sqrt(yTargetSpeed * yTargetSpeed + xTargetSpeed * xTargetSpeed);
             xSpeed = xTargetSpeed * targetSpeed;
             ySpeed = yTargetSpeed * targetSpeed;
-            telemetry.addData("AutoDriving xTarget: ", "%5.2f", currentXTarget);
-            telemetry.addData("AutoDriving yTarget: ", "%5.2f", currentYTarget);
-            telemetry.addData("AutoDriving xTargetSpeed: ", "%5.2f", xTargetSpeed);
-            telemetry.addData("AutoDriving yTargetSpeed: ", "%5.2f", yTargetSpeed);
-            telemetry.addData("AutoDriving xSpeed: ", "%5.2f", xSpeed);
-            telemetry.addData("AutoDriving ySpeed: ", "%5.2f", ySpeed);
+            // telemetry.addData("AutoDriving xTarget: ", "%5.2f", currentXTarget);
+            //  telemetry.addData("AutoDriving yTarget: ", "%5.2f", currentYTarget);
+            //  telemetry.addData("AutoDriving xTargetSpeed: ", "%5.2f", xTargetSpeed);
+//            telemetry.addData("AutoDriving yTargetSpeed: ", "%5.2f", yTargetSpeed);
+            //   telemetry.addData("AutoDriving xSpeed: ", "%5.2f", xSpeed);
+            //   telemetry.addData("AutoDriving ySpeed: ", "%5.2f", ySpeed);
         }
-        else {
-            if(autoEnabled) stop();
-            autoEnabled = false;
-        }
+//        else {
+//            if(autoEnabled) stop();
+//            autoEnabled = false;
+//       }
 
         driveBase.driveFieldCentric(
                 xSpeed,
@@ -140,22 +140,13 @@ public class DriveTrain {
                 false);
     }
 
-    public boolean atTarget() {
-        return Math.abs(getXPosition() - currentXTarget) + Math.abs(getYPosition() - currentYTarget) < Constants.DRIVE_PID_ERROR;
+    public boolean atTarget() { // Pythagorean theorem to get the distance from target as a number.
+        double xError = getXPosition() - currentXTarget;
+        double yError = getYPosition() - currentYTarget;
+        return Math.sqrt(xError * xError + yError * yError) < Constants.DRIVE_PID_ERROR;
     }
 
-    // ========== Turn the robot  ================
-    public  void TurnLeft(){
-        headingSetPoint = headingSetPoint + 90;
-        if(headingSetPoint > 180) headingSetPoint -= 360;
-    }
-    public  void TurnRight(){
-        headingSetPoint = headingSetPoint -90;
-        if(headingSetPoint < -180) headingSetPoint += 360;
-    }
-//============== Move in new Direction ==========
-
-
+    //============== Move in new Direction ==========
     public void setDirection(double newHeading) {
         headingSetPoint = newHeading;
     }
@@ -166,26 +157,8 @@ public class DriveTrain {
     public void driveTo(double speed, double xDist, double yDist) {
         autoEnabled = true;
         currentSpeed = speed;
-        // If heading set point is +90 swap x/y odometry
-        if(Math.abs(headingSetPoint - 90.0) < Constants.HEADING_ERROR) {
-            currentXTarget = yDist;
-            currentYTarget = xDist;
-        }
-        // If heading set point is 0
-        else if(Math.abs(headingSetPoint) < Constants.HEADING_ERROR) {
-            currentXTarget = xDist;
-            currentYTarget = yDist;
-        }
-        // If heading set point is -90 swap and reverse x/y odometry
-        else if(Math.abs(headingSetPoint - 90.0) < Constants.HEADING_ERROR) {
-            currentXTarget = -yDist;
-            currentYTarget = -xDist;
-        }
-        // If heading set point is 180 reverse x and y odometry
-        else {
-            currentXTarget = -xDist;
-            currentYTarget = -yDist;
-        }
+        currentXTarget = xDist;
+        currentYTarget = yDist;
 
         xControl.setSetPoint(currentXTarget);
         yControl.setSetPoint(currentYTarget);
@@ -193,20 +166,36 @@ public class DriveTrain {
 
     public void drive(double forwardSpeed,  double strafeSpeed) {
         // tell ftclib its inputs  strafeSpeed,forwardSpeed,turn,heading
-
+        // turn and heading are managed in loop with the heading control PID
         xSpeed = strafeSpeed;
         ySpeed = forwardSpeed;
     }
 
-    public double getXPosition() {
-        return xPea.getDistance();
+    public double getXPosition() { // Convert xPod into actual direction based on current heading
+        double xPos = 0.0;
+        if(Math.abs(headingSetPoint - Constants.back) < Constants.HEADING_ERROR) xPos = xPea.getDistance();
+        else if(Math.abs(headingSetPoint - Constants.left) < Constants.HEADING_ERROR) xPos = -yPea.getDistance();
+        else if(Math.abs(headingSetPoint - Constants.forward) < Constants.HEADING_ERROR) xPos = -xPea.getDistance();
+        else if(Math.abs(headingSetPoint - Constants.right) < Constants.HEADING_ERROR) xPos = yPea.getDistance();
+        return xPos;
     }
-    public double getYPosition() {
-        return yPea.getDistance();
+    public double getYPosition() { // Convert yPod into actual direction based on current heading
+        double yPos = 0.0;
+        if(Math.abs(headingSetPoint - Constants.back) < Constants.HEADING_ERROR) yPos = -yPea.getDistance();
+        else if(Math.abs(headingSetPoint - Constants.left) < Constants.HEADING_ERROR) yPos = -xPea.getDistance();
+        else if(Math.abs(headingSetPoint - Constants.forward) < Constants.HEADING_ERROR) yPos = yPea.getDistance();
+        else if(Math.abs(headingSetPoint - Constants.right) < Constants.HEADING_ERROR) yPos = xPea.getDistance();
+        return yPos;
     }
-    public void resetXencoder(){xPea.resetEncoder();}
-    public void resetYencoder(){yPea.resetEncoder();}
-    public void resetIMU(){imu.resetYaw();}
+    public void resetXencoder() {
+        xPea.resetEncoder();
+    }
+    public void resetYencoder() {
+        yPea.resetEncoder();
+    }
+    public void resetIMU() {
+        imu.resetYaw();
+    }
     public void stop() {
         xSpeed = 0.0;
         ySpeed = 0.0;
@@ -220,10 +209,12 @@ public class DriveTrain {
         telemetry.addData("heading correction:", headingCorrection);
         telemetry.addData("X Distance inches:", "%5.2f", getXPosition());
         telemetry.addData("Y Distance inches:", "%5.2f", getYPosition());
+        telemetry.addData("Auto DriveTo Enabled", autoEnabled);
         if(autoEnabled) {
-            telemetry.addData("Auto Enabled", autoEnabled);
             telemetry.addData("Auto target X:", "%5.2f", currentXTarget);
             telemetry.addData("Auto target Y:", "%5.2f", currentYTarget);
+            telemetry.addData("heading OnTarget:", onHeading());
+            telemetry.addData("lateral OnTarget:", atTarget());
         }
     }
 

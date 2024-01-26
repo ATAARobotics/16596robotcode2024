@@ -120,29 +120,17 @@ public class TestDriveTrain {
             double targetSpeed = currentSpeed / Math.sqrt(yTargetSpeed * yTargetSpeed + xTargetSpeed * xTargetSpeed);
             xSpeed = xTargetSpeed * targetSpeed;
             ySpeed = yTargetSpeed * targetSpeed;
-//            double temp = xSpeed;
-//            if (Math.abs(headingSetPoint - Constants.left) < Constants.HEADING_ERROR) {
-//                xSpeed = ySpeed;
-//                ySpeed = -temp;
-//            } else if (Math.abs(headingSetPoint - Constants.forward) < Constants.HEADING_ERROR) {
-//                xSpeed = -xSpeed;
-//                ySpeed = -ySpeed;
-//            } else if (Math.abs(headingSetPoint - Constants.right) < Constants.HEADING_ERROR) {
-//                xSpeed = -ySpeed;
-//                ySpeed = temp;
-//            }
-
            // telemetry.addData("AutoDriving xTarget: ", "%5.2f", currentXTarget);
           //  telemetry.addData("AutoDriving yTarget: ", "%5.2f", currentYTarget);
           //  telemetry.addData("AutoDriving xTargetSpeed: ", "%5.2f", xTargetSpeed);
-            telemetry.addData("AutoDriving yTargetSpeed: ", "%5.2f", yTargetSpeed);
+//            telemetry.addData("AutoDriving yTargetSpeed: ", "%5.2f", yTargetSpeed);
          //   telemetry.addData("AutoDriving xSpeed: ", "%5.2f", xSpeed);
          //   telemetry.addData("AutoDriving ySpeed: ", "%5.2f", ySpeed);
         }
-        else {
-            if(autoEnabled) stop();
-            autoEnabled = false;
-        }
+//        else {
+//            if(autoEnabled) stop();
+//            autoEnabled = false;
+//       }
 
         driveBase.driveFieldCentric(
                 xSpeed,
@@ -152,22 +140,13 @@ public class TestDriveTrain {
                 false);
     }
 
-    public boolean atTarget() {
-        return Math.sqrt(Math.pow(getXPosition() - currentXTarget,2) + Math.pow(getYPosition() - currentYTarget,2)) < Constants.DRIVE_PID_ERROR;
+    public boolean atTarget() { // Pythagorean theorem to get the distance from target as a number.
+        double xError = getXPosition() - currentXTarget;
+        double yError = getYPosition() - currentYTarget;
+        return Math.sqrt(xError * xError + yError * yError) < Constants.DRIVE_PID_ERROR;
     }
 
-    // ========== Turn the robot  ================
-    public  void TurnLeft(){
-        headingSetPoint = headingSetPoint + 90;
-        if(headingSetPoint > 180) headingSetPoint -= 360;
-    }
-    public  void TurnRight(){
-        headingSetPoint = headingSetPoint -90;
-        if(headingSetPoint < -180) headingSetPoint += 360;
-    }
 //============== Move in new Direction ==========
-
-
     public void setDirection(double newHeading) {
         headingSetPoint = newHeading;
     }
@@ -187,24 +166,20 @@ public class TestDriveTrain {
 
     public void drive(double forwardSpeed,  double strafeSpeed) {
         // tell ftclib its inputs  strafeSpeed,forwardSpeed,turn,heading
-
+        // turn and heading are managed in loop with the heading control PID
         xSpeed = strafeSpeed;
         ySpeed = forwardSpeed;
     }
 
-    public double getXPosition() {
+    public double getXPosition() { // Convert xPod into actual direction based on current heading
         double xPos = 0.0;
-        if (xPos == 0.0) {
-            //Do stuff
-        }
-
         if(Math.abs(headingSetPoint - Constants.back) < Constants.HEADING_ERROR) xPos = xPea.getDistance();
         else if(Math.abs(headingSetPoint - Constants.left) < Constants.HEADING_ERROR) xPos = -yPea.getDistance();
         else if(Math.abs(headingSetPoint - Constants.forward) < Constants.HEADING_ERROR) xPos = -xPea.getDistance();
         else if(Math.abs(headingSetPoint - Constants.right) < Constants.HEADING_ERROR) xPos = yPea.getDistance();
         return xPos;
     }
-    public double getYPosition() {
+    public double getYPosition() { // Convert yPod into actual direction based on current heading
         double yPos = 0.0;
         if(Math.abs(headingSetPoint - Constants.back) < Constants.HEADING_ERROR) yPos = -yPea.getDistance();
         else if(Math.abs(headingSetPoint - Constants.left) < Constants.HEADING_ERROR) yPos = -xPea.getDistance();
@@ -212,9 +187,15 @@ public class TestDriveTrain {
         else if(Math.abs(headingSetPoint - Constants.right) < Constants.HEADING_ERROR) yPos = xPea.getDistance();
         return yPos;
     }
-    public void resetXencoder(){xPea.resetEncoder();}
-    public void resetYencoder(){yPea.resetEncoder();}
-    public void resetIMU(){imu.resetYaw();}
+    public void resetXencoder() {
+        xPea.resetEncoder();
+    }
+    public void resetYencoder() {
+        yPea.resetEncoder();
+    }
+    public void resetIMU() {
+        imu.resetYaw();
+    }
     public void stop() {
         xSpeed = 0.0;
         ySpeed = 0.0;
@@ -228,13 +209,13 @@ public class TestDriveTrain {
         telemetry.addData("heading correction:", headingCorrection);
         telemetry.addData("X Distance inches:", "%5.2f", getXPosition());
         telemetry.addData("Y Distance inches:", "%5.2f", getYPosition());
-//        if(autoEnabled) {
-            telemetry.addData("Auto Enabled", autoEnabled);
+        telemetry.addData("Auto DriveTo Enabled", autoEnabled);
+        if(autoEnabled) {
             telemetry.addData("Auto target X:", "%5.2f", currentXTarget);
             telemetry.addData("Auto target Y:", "%5.2f", currentYTarget);
             telemetry.addData("heading OnTarget:", onHeading());
             telemetry.addData("lateral OnTarget:", atTarget());
-//        }
+        }
     }
 
     public void resetOdometry() {
