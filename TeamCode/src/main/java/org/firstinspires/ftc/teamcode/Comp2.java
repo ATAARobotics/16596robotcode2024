@@ -113,22 +113,14 @@ public class Comp2 extends OpMode {
             arm.setFinger();// finger defaults closed;this is to open it
         if (operator.wasJustPressed(GamepadKeys.Button.Y))
             arm.setArmPosition(3);// set arm and wrist for long deposit
-       /*if(operator.getButton(GamepadKeys.Button.DPAD_LEFT)) {
-           arm.toggleArmInAuto();
-           telemetry.addData("saw dpad pressed!", "");
-       }*/
+
         if (operator.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
             arm.toggleArmInAuto();    // toggle arm auto mode
         }
         String message;
         if (arm.getArmInAuto()) message = "arm in auto mode";  // debugging message
         else message = "arm in manual mode";
-//        if (arm.findPixel() && arm.fingerPosition > .2) {
-//            if (!pixelFound) {
-//                operator.gamepad.rumble(500);       // tell operator a pixel was found but only when finger is open, else it would rumble all time with pixel.
-//            }
-//            pixelFound = true;
-//        } else pixelFound = false;
+//
         if (!arm.getArmInAuto()) {
 
             arm.setWristPosition(operator.getRightY());
