@@ -58,9 +58,9 @@ public class DriveTrain {
         leftBackDrive = new Motor(hwMap, "left_back_drive"); // 1
         rightBackDrive = new Motor(hwMap, "right_back_drive"); // 0
 
-        xPea = rightFrontDrive; // 2
+        xPea = new Motor(hwMap, "winch");; // 2
         //noinspection SuspiciousNameCombination
-        yPea = leftFrontDrive; // 3
+        yPea = new Motor(hwMap, "y_encoder");; // 3
 
         // need to confirm orientation of the HUB so that IMU directions are correct
         imu = hwMap.get(IMU.class, "imu");// need to use IMU in expansion hub, not control hub
