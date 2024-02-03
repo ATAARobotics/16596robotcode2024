@@ -19,10 +19,21 @@ public class Test_autoDriveTo extends TestAutoOpMode {
         switch (step) {
             case 0: // Move Forward
                 driveTrain.resetOdometry();
-                driveTrain.driveTo(1, 30, 30);
+                driveTrain.driveTo(0.2, 00, -96);
                 step++;
                 break;
             case 1:
+                if (driveTrain.atTarget()) {
+                    step++;
+                    driveTrain.stop();
+                }
+                break;
+            case 2: // Move Backwards
+//                driveTrain.resetOdometry();
+//                driveTrain.driveTo(1, 0, -30);
+                step++;
+                break;
+            case 3:
                 if (driveTrain.atTarget()) {
                     step++;
                     driveTrain.stop();

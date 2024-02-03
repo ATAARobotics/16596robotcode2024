@@ -77,9 +77,10 @@ public class TestDriveTrain {
         driveBase = new MecanumDrive(leftFrontDrive,rightFrontDrive,leftBackDrive,rightBackDrive);
     }
     public void init() {
-        headingControl = new PIDController(0.01, 0.0004, 0.00);
-        xControl = new PIDController(0.07, 0.2, 0.0);
-        yControl = new PIDController(0.07, 0.2, 0.00);
+        headingControl = new PIDController(0.03, 0.2, 0.0005 );
+        headingControl.setTolerance(1);
+        xControl = new PIDController(0.07, 0.2, 0.01);
+        yControl = new PIDController(0.07, 0.2, 0.01);
 
         leftBackDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);// redundant as default is brake mode
         rightBackDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
@@ -87,12 +88,12 @@ public class TestDriveTrain {
         leftFrontDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         xPea.setDistancePerPulse(Constants.TICKS_TO_INCHES); // this will make getDistance in inches, not ticks
         yPea.setDistancePerPulse(Constants.TICKS_TO_INCHES);
+        imu.resetYaw();
     }
 
     public void start() {
         xPea.resetEncoder();
         yPea.resetEncoder();
-        //imu.resetYaw();
     }
     public void loop(){
         heading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
@@ -113,24 +114,13 @@ public class TestDriveTrain {
         // PID controller
         headingControl.setSetPoint(headingSetPoint);
         headingCorrection = -headingControl.calculate(heading);
-
         if(autoEnabled && !atTarget()) {
             double xTargetSpeed = -xControl.calculate(getXPosition());
             double yTargetSpeed = -yControl.calculate(getYPosition());
-            double targetSpeed = currentSpeed * Math.sqrt(yTargetSpeed * yTargetSpeed + xTargetSpeed * xTargetSpeed);
-            xSpeed = xTargetSpeed * targetSpeed;
+            double targetSpeed = currentSpeed;// * Math.sqrt(yTargetSpeed * yTargetSpeed + xTargetSpeed * xTargetSpeed);
+            xSpeed = 0.0;//xTargetSpeed * targetSpeed;
             ySpeed = yTargetSpeed * targetSpeed;
-           // telemetry.addData("AutoDriving xTarget: ", "%5.2f", currentXTarget);
-          //  telemetry.addData("AutoDriving yTarget: ", "%5.2f", currentYTarget);
-          //  telemetry.addData("AutoDriving xTargetSpeed: ", "%5.2f", xTargetSpeed);
-//            telemetry.addData("AutoDriving yTargetSpeed: ", "%5.2f", yTargetSpeed);
-         //   telemetry.addData("AutoDriving xSpeed: ", "%5.2f", xSpeed);
-         //   telemetry.addData("AutoDriving ySpeed: ", "%5.2f", ySpeed);
         }
-//        else {
-//            if(autoEnabled) stop();
-//            autoEnabled = false;
-//       }
 
         driveBase.driveFieldCentric(
                 xSpeed,
