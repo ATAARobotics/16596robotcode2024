@@ -58,9 +58,9 @@ public class DriveTrain {
         leftBackDrive = new Motor(hwMap, "left_back_drive"); // 1
         rightBackDrive = new Motor(hwMap, "right_back_drive"); // 0
 
-        xPea = rightFrontDrive; // 2
+        xPea = new Motor(hwMap, "winch");; // 2
         //noinspection SuspiciousNameCombination
-        yPea = leftFrontDrive; // 3
+        yPea = new Motor(hwMap, "y_encoder");; // 3
 
         // need to confirm orientation of the HUB so that IMU directions are correct
         imu = hwMap.get(IMU.class, "imu");// need to use IMU in expansion hub, not control hub
@@ -73,8 +73,8 @@ public class DriveTrain {
         driveBase = new MecanumDrive(leftFrontDrive,rightFrontDrive,leftBackDrive,rightBackDrive);
     }
     public void init() {
-        headingControl = new PIDController(0.03, 0.2, 0.0005 );
-        headingControl.setTolerance(1);
+        headingControl = new PIDController(0.01, 0.002, 0.0005 );
+        headingControl.setTolerance(10);// was 1 ..cbw
         xControl = new PIDController(0.07, 0.2, 0.01);
         yControl = new PIDController(0.07, 0.2, 0.01);
 
@@ -107,7 +107,7 @@ public class DriveTrain {
             }
         }
 
-        // PID controller
+        // PID controller for heading
         headingControl.setSetPoint(headingSetPoint);
         headingCorrection = -headingControl.calculate(heading);
 
