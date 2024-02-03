@@ -46,7 +46,6 @@ public class Arm {
     private boolean armInAuto = true;
     public double armPosition = 0;
     private boolean fingerOpen = false;
-    private double wristDelay;
 
 
     public Arm(HardwareMap hwMap, ElapsedTime runtime) {
@@ -113,7 +112,7 @@ public class Arm {
                 armOut = armOut * Constants.ARM_LIFT_MULTIPLIER;// if arm is low, needs boost
             armMotors.set(armOut);                          //Move arm with PID
         }
-        if(wristDelay < runtime.milliseconds()) wrist.setPosition(currentWristPosition);
+        if(Constants.WRIST_LAUNCH_DELAY < runtime.milliseconds()) wrist.setPosition(currentWristPosition);
     }
 
     public void setArmPosition(int armSetPosition) {        // sets target for arm PID
@@ -165,9 +164,9 @@ public class Arm {
 //    }
 
     public void setWristPosition(double manualWrist) {
-       // currentWristPosition = Math.min(Constants.WRIST_CLIMB_POS,Math.max(Constants.WRIST_PICKUP,currentWristPosition + manualWrist * Constants.WRIST_SPEED));
+        currentWristPosition = Math.min(Constants.WRIST_CLIMB_POS,Math.max(Constants.WRIST_PICKUP,currentWristPosition + manualWrist * Constants.WRIST_SPEED));
    // commented out for testing on jan27
-        currentWristPosition = manualWrist;
+    //    currentWristPosition = manualWrist;
     }
 
     // these did use ternary operator: boolean (expression) ? actionIfTrue : actionIfFalse
@@ -221,6 +220,7 @@ public class Arm {
         telemetry.addData("Finger Position:", "%5.2f", LFinger.getPosition());
         telemetry.addData("Finger Position:", "%5.2f", RFinger.getPosition());
         telemetry.addData("Wrist Position:", "%5.2f", wrist.getPosition());
+        telemetry.addData("target writs position:",currentWristPosition);
         telemetry.addData("feedforward factor:", setArmFeedForward());
         telemetry.addData("motor power:", armOut);
         telemetry.addData("arm angle:", armAngle);

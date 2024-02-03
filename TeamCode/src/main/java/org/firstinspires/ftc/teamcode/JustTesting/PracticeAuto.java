@@ -66,7 +66,7 @@ public double speed = .5;
                 break;
             case 6: // Move Right
                 driveTrain.resetOdometry();
-                driveTrain.driveTo(speed, 10, 0);
+                driveTrain.driveTo(0.5, 10, 0);
                 step++;
                 break;
             case 7:

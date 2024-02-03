@@ -77,9 +77,9 @@ public class TestDriveTrain {
         driveBase = new MecanumDrive(leftFrontDrive,rightFrontDrive,leftBackDrive,rightBackDrive);
     }
     public void init() {
-        headingControl = new PIDController(0.01, 0.004, 0.0);
-        xControl = new PIDController(0.7, 0.01, 0.0);
-        yControl = new PIDController(0.7, 0.01, 0.0);
+        headingControl = new PIDController(0.01, 0.0004, 0.00);
+        xControl = new PIDController(0.07, 0.2, 0.0);
+        yControl = new PIDController(0.07, 0.2, 0.00);
 
         leftBackDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);// redundant as default is brake mode
         rightBackDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
@@ -117,7 +117,7 @@ public class TestDriveTrain {
         if(autoEnabled && !atTarget()) {
             double xTargetSpeed = -xControl.calculate(getXPosition());
             double yTargetSpeed = -yControl.calculate(getYPosition());
-            double targetSpeed = currentSpeed / Math.sqrt(yTargetSpeed * yTargetSpeed + xTargetSpeed * xTargetSpeed);
+            double targetSpeed = currentSpeed * Math.sqrt(yTargetSpeed * yTargetSpeed + xTargetSpeed * xTargetSpeed);
             xSpeed = xTargetSpeed * targetSpeed;
             ySpeed = yTargetSpeed * targetSpeed;
            // telemetry.addData("AutoDriving xTarget: ", "%5.2f", currentXTarget);
