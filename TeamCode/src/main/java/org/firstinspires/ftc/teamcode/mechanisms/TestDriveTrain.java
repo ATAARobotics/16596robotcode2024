@@ -177,10 +177,10 @@ public class TestDriveTrain {
         else if(Math.abs(headingSetPoint - Constants.right) < Constants.HEADING_ERROR) yPos = xPea.getDistance();
         return yPos;
     }
-    public void resetXencoder() {
+    public void resetXEncoder() {
         xPea.resetEncoder();
     }
-    public void resetYencoder() {
+    public void resetYEncoder() {
         yPea.resetEncoder();
     }
     public void resetIMU() {
@@ -209,7 +209,7 @@ public class TestDriveTrain {
     }
 
     public void resetOdometry() {
-        resetXencoder();
-        resetYencoder();
+        resetXEncoder();
+        resetYEncoder();
     }
 }

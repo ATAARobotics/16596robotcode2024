@@ -3,15 +3,12 @@ package org.firstinspires.ftc.teamcode.AutoPrograms;
 //import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
 import org.firstinspires.ftc.teamcode.mechanisms.Camera;
 import org.firstinspires.ftc.teamcode.mechanisms.Constants;
 
-@Autonomous(name = "BlueFar", group = "Auto")
-@Disabled
-public class BlueFar extends AutoOpMode {
+@Autonomous(name = "BlueFarY", group = "Auto")
+public class BlueFarYOnly extends AutoOpMode {
 
     private int step = 0;
     Camera.Position zone = Camera.Position.UNKNOWN;
@@ -65,20 +62,19 @@ public class BlueFar extends AutoOpMode {
                         arm.setArmPosition(2);
                         if(arm.isInPosition()) step++;
                         break;
-                    case 8: // move backwards away from the bars
-                        driveTrain.resetOdometry();
-                        driveTrain.driveTo(0.5, 0, 5.0);
+                    case 8: //turn left
+                        driveTrain.setDirection(Constants.back);
                         step++;
                         break;
                     case 9:
-                        if(driveTrain.atTarget()) {
+                        if(driveTrain.onHeading()) {
                             driveTrain.stop();
                             step++;
                         }
                         break;
                     case 10: // move to the middle
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(0.5, 25.0, 0.0);
+                        driveTrain.driveTo(0.5, 0, 25.0);
                         step++;
                         break;
                     default:
@@ -90,21 +86,11 @@ public class BlueFar extends AutoOpMode {
                 switch(step) {
                     case 0: // Move to tape with team element on it
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(0.5, 0, 20);
+                        driveTrain.driveTo(0.5, 0, 51.5);
                         step++;
                         break;
                     case 1:
                         if(driveTrain.atTarget()) {
-                            step++;
-                        }
-                        break;
-                    case 2: // rotate to middle tape
-                        driveTrain.setDirection(Constants.forward);
-                        step++;
-                        break;
-                    case 3:
-                        if(driveTrain.onHeading()) {
-                            driveTrain.stop();
                             step++;
                         }
                         break;
@@ -126,29 +112,7 @@ public class BlueFar extends AutoOpMode {
                         break;
                     case 8: // Move around the placed pixel
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(0.5, 0, 12);
-                        step++;
-                        break;
-                    case 9:
-                        if(driveTrain.atTarget()) {
-                            driveTrain.stop();
-                            step++;
-                        }
-                        break;
-                    case 10: // move to the middle
-                        driveTrain.resetOdometry();
-                        driveTrain.driveTo(0.5, 0, 25.0);
-                        step++;
-                        break;
-                    case 11:
-                        if(driveTrain.atTarget()) {
-                            driveTrain.stop();
-                            step++;
-                        }
-                        break;
-                    case 12: // move to the middle
-                        driveTrain.resetOdometry();
-                        driveTrain.driveTo(0.5, 0, 12.0);
+                        driveTrain.driveTo(0.5, 0, 1.5);
                         step++;
                         break;
                     default:
@@ -169,7 +133,7 @@ public class BlueFar extends AutoOpMode {
                             step++;
                         }
                         break;
-                    case 2: // rotate to left tape
+                    case 2: // rotate to right tape
                         driveTrain.setDirection(Constants.right);
                         step++;
                         break;
@@ -195,20 +159,19 @@ public class BlueFar extends AutoOpMode {
                         arm.setArmPosition(2);
                         if(arm.isInPosition()) step++;
                         break;
-                    case 8: // move backwards away from the bars
-                        driveTrain.resetOdometry();
-                        driveTrain.driveTo(0.5, 0, 5.0);
+                    case 8: //turn left
+                        driveTrain.setDirection(Constants.back);
                         step++;
                         break;
                     case 9:
-                        if(driveTrain.atTarget()) {
+                        if(driveTrain.onHeading()) {
                             driveTrain.stop();
                             step++;
                         }
                         break;
                     case 10: // move to the middle
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(0.5, 25.0, 0.0);
+                        driveTrain.driveTo(0.5, 0, 25.0);
                         step++;
                         break;
                     default:
@@ -235,7 +198,7 @@ public class BlueFar extends AutoOpMode {
                 break;
             case 24: // move towards the back of the field
                 driveTrain.resetOdometry();
-                driveTrain.driveTo(0.5, 0, 84.0);
+                driveTrain.driveTo(0.5, 0, 78.0);
                 step++;
                 break;
             case 25:
@@ -244,8 +207,8 @@ public class BlueFar extends AutoOpMode {
                     step++;
                 }
                 break;
-            case 26: // rotate to scoring alignment
-                driveTrain.setDirection(Constants.right);
+            case 26: // rotate to back
+                driveTrain.setDirection(Constants.back);
                 step++;
                 break;
             case 27:
@@ -275,19 +238,62 @@ public class BlueFar extends AutoOpMode {
                     step++;
                 }
                 break;
-            case 30: // Move Arm into scoring position
+
+            case 30: // rotate to scoring alignment
+                driveTrain.setDirection(Constants.right);
+                step++;
+                break;
+            case 31:
+                if (driveTrain.onHeading()) {
+                    driveTrain.stop();
+                    step++;
+                }
+                break;
+            case 32: // move to backboard
+                driveTrain.resetOdometry();
+                driveTrain.driveTo(0.5, 0, 6.0);
+                step++;
+                break;
+            case 33:
+                if (driveTrain.atTarget()) {
+                    driveTrain.stop();
+                    step++;
+                }
+                break;
+            case 34: // Move Arm into scoring position
                 arm.setArmPosition(3);
                 if (arm.isInPosition()) step++;
                 break;
-            case 31: // Deposit ONE pixel
+            case 35: // Deposit ONE pixel
                 arm.fingerDepositPixelAuto(true);
                 if (arm.fingerOpen(true)) step++;
                 break;
-            case 32: // lift arm into drive position
+            case 36: // lift arm into drive position
                 arm.setArmPosition(1);
                 if (arm.isInPosition()) step++;
                 break;
-            case 33: // move to park
+            case 37: // move to backboard
+                driveTrain.resetOdometry();
+                driveTrain.driveTo(0.5, 0, -6.0);
+                step++;
+                break;
+            case 38:
+                if (driveTrain.atTarget()) {
+                    driveTrain.stop();
+                    step++;
+                }
+                break;
+            case 39: // rotate to parking pos
+                driveTrain.setDirection(Constants.back);
+                step++;
+                break;
+            case 40:
+                if (driveTrain.onHeading()) {
+                    driveTrain.stop();
+                    step++;
+                }
+                break;
+            case 41: // move to park
                 driveTrain.resetOdometry();
                 step++;
                 switch(zone) {
@@ -301,7 +307,28 @@ public class BlueFar extends AutoOpMode {
                         driveTrain.driveTo(0.5, 0, 40);
                         break;
                 }
-            case 34:
+            case 42:
+                if (driveTrain.atTarget()) {
+                    driveTrain.stop();
+                    step++;
+                }
+                break;
+            case 43: // rotate to park
+                driveTrain.setDirection(Constants.right);
+                step++;
+                break;
+            case 44:
+                if (driveTrain.onHeading()) {
+                    driveTrain.stop();
+                    step++;
+                }
+                break;
+            case 45: // move to park
+                driveTrain.resetOdometry();
+                driveTrain.driveTo(0.5, 0, 6.0);
+                step++;
+                break;
+            case 46:
                 if (driveTrain.atTarget()) {
                     driveTrain.stop();
                     step++;

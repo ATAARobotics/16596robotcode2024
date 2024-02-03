@@ -73,9 +73,10 @@ public class DriveTrain {
         driveBase = new MecanumDrive(leftFrontDrive,rightFrontDrive,leftBackDrive,rightBackDrive);
     }
     public void init() {
-        headingControl = new PIDController(0.01, 0.004, 0.0);
-        xControl = new PIDController(0.7, 0.01, 0.0);
-        yControl = new PIDController(0.7, 0.01, 0.0);
+        headingControl = new PIDController(0.03, 0.2, 0.0005 );
+        headingControl.setTolerance(1);
+        xControl = new PIDController(0.07, 0.2, 0.01);
+        yControl = new PIDController(0.07, 0.2, 0.01);
 
         leftBackDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);// redundant as default is brake mode
         rightBackDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
@@ -113,14 +114,10 @@ public class DriveTrain {
         if(autoEnabled && !atTarget()) {
             double xTargetSpeed = -xControl.calculate(getXPosition());
             double yTargetSpeed = -yControl.calculate(getYPosition());
-            double targetSpeed = currentSpeed / Math.sqrt(yTargetSpeed * yTargetSpeed + xTargetSpeed * xTargetSpeed);
+            double targetSpeed = currentSpeed;// Math.sqrt(yTargetSpeed * yTargetSpeed + xTargetSpeed * xTargetSpeed);
             xSpeed = xTargetSpeed * targetSpeed;
             ySpeed = yTargetSpeed * targetSpeed;
         }
-//        else {
-//            if(autoEnabled) stop();
-//            autoEnabled = false;
-//       }
 
         driveBase.driveFieldCentric(
                 xSpeed,
