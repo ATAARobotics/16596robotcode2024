@@ -77,9 +77,9 @@ public class TestDriveTrain {
         driveBase = new MecanumDrive(leftFrontDrive,rightFrontDrive,leftBackDrive,rightBackDrive);
     }
     public void init() {
-        headingControl = new PIDController(0.02, 0.04, 0.00);
-        xControl = new PIDController(0.04, 0.2, 0.0);
-        yControl = new PIDController(0.04, 0.2, 0.00);
+        headingControl = new PIDController(0.01, 0.0004, 0.00);
+        xControl = new PIDController(0.07, 0.2, 0.0);
+        yControl = new PIDController(0.07, 0.2, 0.00);
 
         leftBackDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);// redundant as default is brake mode
         rightBackDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);

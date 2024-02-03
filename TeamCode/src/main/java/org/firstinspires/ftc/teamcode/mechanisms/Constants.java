@@ -33,7 +33,7 @@ public class Constants {
 // ===========  for arm movements ======================
     public static final int ARM_PICKUP = -30;
     public static final int ARM_DEPOSIT_MID = 52;// was +52
-    public  static final int ARM_DEPOSIT_LONG = 165;
+    public  static final int ARM_DEPOSIT_LONG = 170;
     public  static final int ARM_CLIMB = 159;
     public  static final double WRIST_PICKUP = .5;
     public static final double WRIST_DEPOSIT_MID = 1.0;
