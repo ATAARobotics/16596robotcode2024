@@ -1,14 +1,11 @@
 package org.firstinspires.ftc.teamcode.AutoPrograms;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.JustTesting.TestAutoOpMode;
-import org.firstinspires.ftc.teamcode.mechanisms.TestDriveTrain;
 
-@Autonomous(name = "TestAutoDriveTo",group = "")
-@Disabled
-public class Test_autoDriveTo extends TestAutoOpMode {
+@Autonomous(name = "AutoDriveTo",group = "")
+public class autoDriveTo extends AutoOpMode {
     int step = 0;
     public void loop() {
         super.loop();

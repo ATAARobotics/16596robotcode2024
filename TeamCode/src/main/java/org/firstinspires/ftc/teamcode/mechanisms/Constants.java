@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.mechanisms;
 
 public class Constants {
+    public static final boolean DASHBOARD_ENABLED = true;
+    public static final boolean TELEMETRY_ENABLED = true;
+
     public static final double TICKS_TO_INCHES = Math.PI * 48 / (25.4 * 2000);                      // for use in Odometry
    public static final double SPEED_RATIO = 0.7;  // Use this to slow down robot
   public static final double TURN_RATIO = 0.25; // use this to slow turn rate
@@ -10,8 +13,6 @@ public class Constants {
     public static final double ARM_ERROR = 10; // Encoder ticks
     public static final double FINGER_ERROR = 0.05 ; // Servo set point
     public static final double DRONE_LAUNCH = 1.0; //drone launch point
-    public static final boolean DASHBOARD_ENABLED = true;
-    public static final boolean TELEMETRY_ENABLED = true;
     public static double ARM_DRIVE_RATIO = 0.5; // use this to slow down arm
     public static double HEADING_ERROR = 10; // Degrees... testing changed from 10to 30
     // Define Drive constants.  Make them public so they CAN be used by the calling OpMode

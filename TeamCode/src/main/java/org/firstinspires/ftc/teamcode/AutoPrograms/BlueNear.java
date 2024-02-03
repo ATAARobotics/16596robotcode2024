@@ -3,11 +3,13 @@ package org.firstinspires.ftc.teamcode.AutoPrograms;
 //import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.mechanisms.Camera;
 import org.firstinspires.ftc.teamcode.mechanisms.Constants;
 
 @Autonomous(name = "BlueNear", group = "Auto")
+@Disabled
 public class BlueNear extends AutoOpMode {
 
     private int step = 0;

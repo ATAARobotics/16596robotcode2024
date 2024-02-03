@@ -33,7 +33,6 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -44,9 +43,8 @@ import org.firstinspires.ftc.teamcode.mechanisms.CAITelemetry;
 import org.firstinspires.ftc.teamcode.mechanisms.Constants;
 import org.firstinspires.ftc.teamcode.mechanisms.DriveTrain;
 
-@TeleOp(name = "Comp2")
-@Disabled
-public class Comp2 extends OpMode {
+@TeleOp(name = "Comp3")
+public class Comp3 extends OpMode {
 
     private final ElapsedTime runtime = new ElapsedTime();
     private DriveTrain driveTrain;
@@ -60,6 +58,7 @@ public class Comp2 extends OpMode {
     public void init() {
         telemetry = new CAITelemetry(telemetry);
         telemetry.addData("Status", "Initializing");
+        telemetry.update();
         driveTrain = new DriveTrain(hardwareMap);
         arm = new Arm(hardwareMap, runtime);
         drone = new Airplane(hardwareMap);
@@ -152,29 +151,9 @@ public class Comp2 extends OpMode {
         telemetry.addData("Status", "Run Time: " + runtime);
         arm.printTelemetry(telemetry);
         driveTrain.printTelemetry(telemetry);
-            /*telemetry.addData("===== motor data ====", "");
-            telemetry.addData("strafe:", "%5.2f", strafeSpeed);
-            telemetry.addData("forward:", "%5.2f", forwardSpeed);
-            telemetry.addData("turn:", "%5.2f", turnSpeed);*/
-        telemetry.addData("Message1", message);
 
         // Push telemetry to the Driver Station.
         telemetry.update();
-
-        // use this only for testing, not competition!
-        // ftc-dashboard telemetry
-        TelemetryPacket pack = new TelemetryPacket();
-
-        pack.put("heading target", driveTrain.headingSetPoint);
-        pack.put("xDistance", driveTrain.getXPosition());
-        //pack.put("yDistance", winch.getDistance());
-        pack.put("Current Heading", driveTrain.heading);
-        pack.put("arm position", arm.getArmPosition());
-        pack.put("FeedForward", arm.setArmFeedForward());
-
-        pack.put("message", message);
-
-        FtcDashboard.getInstance().sendTelemetryPacket(pack);
     }
 }
 

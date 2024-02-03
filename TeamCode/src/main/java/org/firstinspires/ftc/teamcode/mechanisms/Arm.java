@@ -84,7 +84,6 @@ public class Arm {
         arm1.resetEncoder();// use this for arm position & PID
         arm2.resetEncoder();// use this for arm position & PID
         winch.resetEncoder();// this motor's encoder is used for Xpod
-
     }
 
     public void loop() {
