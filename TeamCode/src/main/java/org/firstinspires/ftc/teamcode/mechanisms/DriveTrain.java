@@ -83,12 +83,12 @@ public class DriveTrain {
         leftFrontDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         xPea.setDistancePerPulse(Constants.TICKS_TO_INCHES); // this will make getDistance in inches, not ticks
         yPea.setDistancePerPulse(Constants.TICKS_TO_INCHES);
+        imu.resetYaw();
     }
 
     public void start() {
         xPea.resetEncoder();
         yPea.resetEncoder();
-        //imu.resetYaw();
     }
     public void loop(){
         heading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
