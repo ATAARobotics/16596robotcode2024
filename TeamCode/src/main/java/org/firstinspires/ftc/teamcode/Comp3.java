@@ -121,6 +121,7 @@ public class Comp3 extends OpMode {
         String message;
         if (arm.getArmInAuto()) message = "arm in auto mode";  // debugging message
         else message = "arm in manual mode";
+        telemetry.addData("arm mode",message);
 //
         if (!arm.getArmInAuto()) {
 
@@ -150,7 +151,7 @@ public class Comp3 extends OpMode {
         // Show the elapsed game time and arm position.
         telemetry.addData("Status", "Run Time: " + runtime);
         arm.printTelemetry(telemetry);
-        driveTrain.printTelemetry(telemetry);
+       // driveTrain.printTelemetry(telemetry);
 
         // Push telemetry to the Driver Station.
         telemetry.update();

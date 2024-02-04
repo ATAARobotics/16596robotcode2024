@@ -114,7 +114,7 @@ public class Comp2 extends OpMode {
         if (operator.wasJustPressed(GamepadKeys.Button.X))
             arm.setFinger();// finger defaults closed;this is to open it
         if (operator.wasJustPressed(GamepadKeys.Button.Y))
-            arm.setArmPosition(3);// set arm and wrist for long deposit
+            arm.setArmPosition(1);// set arm and wrist for long deposit
 
         if (operator.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
             arm.toggleArmInAuto();    // toggle arm auto mode

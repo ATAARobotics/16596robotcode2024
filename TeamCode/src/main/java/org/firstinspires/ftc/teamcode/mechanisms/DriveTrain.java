@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.Comp3;
 
 public class DriveTrain {
 
@@ -58,9 +59,9 @@ public class DriveTrain {
         leftBackDrive = new Motor(hwMap, "left_back_drive"); // 1
         rightBackDrive = new Motor(hwMap, "right_back_drive"); // 0
 
-        xPea = new Motor(hwMap, "winch");; // 2
+        xPea = new Motor(hwMap, "winch"); // 2
         //noinspection SuspiciousNameCombination
-        yPea = new Motor(hwMap, "y_encoder");; // 3
+        yPea = new Motor(hwMap, "y_encoder"); // 3
 
         // need to confirm orientation of the HUB so that IMU directions are correct
         imu = hwMap.get(IMU.class, "imu");// need to use IMU in expansion hub, not control hub
@@ -197,6 +198,7 @@ public class DriveTrain {
         telemetry.addData("X Distance inches:", "%5.2f", getXPosition());
         telemetry.addData("Y Distance inches:", "%5.2f", getYPosition());
         telemetry.addData("Auto DriveTo Enabled", autoEnabled);
+
         if(autoEnabled) {
             telemetry.addData("Auto target X:", "%5.2f", currentXTarget);
             telemetry.addData("Auto target Y:", "%5.2f", currentYTarget);

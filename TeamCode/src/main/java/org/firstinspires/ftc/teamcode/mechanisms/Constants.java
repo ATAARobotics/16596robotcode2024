@@ -21,11 +21,11 @@ public class Constants {
     public  static final double back = 0; // south
     public  static final double right = 90; // east
     public static  final double left = -90; //west
-    public static final double  LF_CLOSED       =  0.7 ;// finger servo closed position
-    public static final double  LF_OPEN    =  0.3 ; // open position
-    public static final double  RF_CLOSED       =  0.2 ;
+    public static final double  LF_CLOSED       =  0.3 ;// finger servo closed position
+    public static final double  LF_OPEN    =  0.7 ; // open position
+    public static final double  RF_CLOSED       =  0.6 ;
     // finger servo closed position
-    public static final double  RF_OPEN    =  0.6 ; // open position
+    public static final double  RF_OPEN    =  0.2 ; // open position
     public static final double W_MAX_ANGLE       =  1 ; // wrist servo
     public static final double  W_MIN_ANGLE     =  0 ;
     public static final double D_MAX_ANGLE       =  1 ;    // drone servo
@@ -33,8 +33,8 @@ public class Constants {
 
 // ===========  for arm movements ======================
     public static final int ARM_PICKUP = -30;
-    public static final int ARM_DEPOSIT_MID = 52;// was +52
-    public  static final int ARM_DEPOSIT_LONG = 170;
+    public static final int ARM_DEPOSIT_MID = 18;// was +52, new ask by driveteam
+    public  static final int ARM_DEPOSIT_LONG = 170;// was 170 feb2, now
     public  static final int ARM_CLIMB = 159;
     public  static final double WRIST_PICKUP = .5;
     public static final double WRIST_DEPOSIT_MID = 1.0;
@@ -42,9 +42,10 @@ public class Constants {
     public static final double WRIST_CLIMB_POS = 0.0;
     public static final int ARM_MAX = 200;
     public static final int ARM_MIN = -30;
-    public static final double ARM_LIFT_MULTIPLIER = 5.0;
+    public static final double ARM_LIFT_MULTIPLIER = 3.0;//was 5, testing on Feb3
     public static final double FEED_FWD_FACTOR = 0.6; // USED to slow arm in down direction
-
+public static final double ARM_VERTICAL = 115;
+public static final double ARM_RADIANS_PER_TICK = Math.PI/244.0;
     public static final double ARM_TICKS_PER_90DEG = 113;   // CONFIRM #TICKS PER 90.
     public static final double DRIVE_PID_TOLERANCE = 1;//testing changed from .5 to 1
 }

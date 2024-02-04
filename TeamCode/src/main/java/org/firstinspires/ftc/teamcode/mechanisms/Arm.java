@@ -13,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Arm {
     private final ElapsedTime runtime;
     HardwareMap hwMap;
+    double armAngle;
     private static final double HOOK_ENABLED = 0.0;
     private static final double HOOK_DISABLED = 1.0;
     private static final double PIXEL_THRESHOLD = 40.0;
@@ -28,16 +29,18 @@ public class Arm {
 
     double position2 = (0.35);// start wrist at pickup?
     double armSpeed;
-    double armAngle;
+
     double armOut;
     public double armTarget;
     public PIDController armPID;
-    public double KpUp = 0.001;
-    public double KiUp = 0.0004;
+    public double KpUp = 0.006;//
+    // was 5, working but too agressive
+    public double KiUp = 0.0;
     public double KdUp = 0.0;
     public double KpDown = 0.002;
     public double KiDown = 0.0004;
     public double KdDown = 0.0;
+    public double Kff = 0.25;
     double winchspeed = .25;
     boolean climbing = false;
     double currentWristPosition = 0.0;
@@ -98,17 +101,22 @@ public class Arm {
             armMotors.set(Constants.ARM_DRIVE_RATIO * armSpeed);  // Move arm manually
         } else {
             //armOut = armPID.calculate(arm1.getCurrentPosition()) - setArmFeedForward();// calculate final arm speed to send; confirm if - setArmFeedForward works.
-            if (armPosition > armTarget) { // target is to move down, use down PID
-                armPID.setPID(KpDown, KiDown, KdDown);
-                armOut = armPID.calculate(arm1.getCurrentPosition());
-                armMessage = "using down gains";
-            } else {            // Otherwise use 'up' PID gains
+//            if (armPosition > armTarget) { // target is to move down, use down PID
+//                armPID.setPID(KpDown, KiDown, KdDown);
+//                armOut = armPID.calculate(arm1.getCurrentPosition());
+//                armMessage = "using down gains";
+//            } else {            // Otherwise use 'up' PID gains
                 armPID.setPID(KpUp, KiUp, KdUp);
-                armOut = armPID.calculate(arm1.getCurrentPosition());
+                armAngle = (arm1.getCurrentPosition()-Constants.ARM_MIN)*Constants.ARM_RADIANS_PER_TICK;
+
+               armOut = armPID.calculate(arm1.getCurrentPosition())+ Math.cos(armAngle)*Kff;
+            //armOut = Math.cos(armAngle)*Kff;
+
+
                 armMessage = "using up gains";
-            }
-            if (armPosition < Constants.ARM_DEPOSIT_MID && armOut > 0)
-                armOut = armOut * Constants.ARM_LIFT_MULTIPLIER;// if arm is low, needs boost
+//            }
+//            if (armPosition < Constants.ARM_DEPOSIT_MID && armOut > 0)
+//                armOut = armOut * Constants.ARM_LIFT_MULTIPLIER;// if arm is low, needs boos
             armMotors.set(armOut);                          //Move arm with PID
         }
         if(Constants.WRIST_LAUNCH_DELAY < runtime.milliseconds()) wrist.setPosition(currentWristPosition);
@@ -225,6 +233,7 @@ public class Arm {
         telemetry.addData("arm angle:", armAngle);
         telemetry.addData("arm speed:", armSpeed);
         telemetry.addData("message2:", armMessage);
+
     }
 
     public boolean isInPosition() {
