@@ -53,7 +53,7 @@ public class Comp3 extends OpMode {
     public GamepadEx driver = null;
     public GamepadEx operator = null;
     boolean climbing = false;
-
+double wristIncr;
     @Override
     public void init() {
         telemetry = new CAITelemetry(telemetry);
@@ -125,7 +125,10 @@ public class Comp3 extends OpMode {
 //
         if (!arm.getArmInAuto()) {
 
-            arm.setWristPosition(operator.getRightY());
+          if (operator.getRightY() > 0.2) wristIncr =  Constants.STEP;
+          else if(operator.getRightY() <0.2) wristIncr = -Constants.STEP;
+
+          arm.setWristPosition( wristIncr);// change current wrist position by  +/- STEP
             telemetry.addData("rightY", "%5.2f", operator.getRightY());
         }
 

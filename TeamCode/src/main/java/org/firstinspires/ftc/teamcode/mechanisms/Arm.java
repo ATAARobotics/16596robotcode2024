@@ -33,7 +33,7 @@ public class Arm {
     double armOut;
     public double armTarget;
     public PIDController armPID;
-    public double KpUp = 0.006;//
+    public double KpUp = 0.006;//gain change after implementing FeedForward
     // was 5, working but too agressive
     public double KiUp = 0.0;
     public double KdUp = 0.0;
@@ -170,10 +170,11 @@ public class Arm {
 //        else return false;
 //    }
 
-    public void setWristPosition(double manualWrist) {
-        currentWristPosition = Math.min(Constants.WRIST_CLIMB_POS,Math.max(Constants.WRIST_PICKUP,currentWristPosition + manualWrist * Constants.WRIST_SPEED));
-   // commented out for testing on jan27
-    //    currentWristPosition = manualWrist;
+    public void setWristPosition(double incr) {
+     //   currentWristPosition = Math.min(Constants.WRIST_CLIMB_POS,Math.max(Constants.WRIST_PICKUP,currentWristPosition + manualWrist * Constants.WRIST_SPEED));
+   // commented out for testing on feb8
+
+        currentWristPosition = incr + wrist.getPosition();
     }
 
     // these did use ternary operator: boolean (expression) ? actionIfTrue : actionIfFalse
