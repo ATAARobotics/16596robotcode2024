@@ -74,7 +74,7 @@ public class DriveTrain {
         driveBase = new MecanumDrive(leftFrontDrive,rightFrontDrive,leftBackDrive,rightBackDrive);
     }
     public void init() {
-        headingControl = new PIDController(0.01, 0.002, 0.0005 );
+        headingControl = new PIDController(0.005, 0.002, 0.0005 );
         headingControl.setTolerance(10);// was 1 ..cbw
         xControl = new PIDController(0.07, 0.2, 0.01);
         yControl = new PIDController(0.07, 0.2, 0.01);

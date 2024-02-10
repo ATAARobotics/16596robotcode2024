@@ -144,8 +144,10 @@ double wristIncr;
         }
         // =============== go climbing! =============================
         if (gamepad2.left_trigger > 0.1 && gamepad2.right_trigger > 0.1) {
-            arm.setHook(true);
+            arm.setHook(true);// also moves wrist
             climbing = true;
+            arm.setArmPosition(5);
+
             message = "climbing!";
         }
 

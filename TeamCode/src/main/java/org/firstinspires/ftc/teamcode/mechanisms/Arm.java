@@ -142,6 +142,8 @@ public class Arm {
                 break;
             case 4:// keep last position as target when going to auto from manual
                 armPID.setSetPoint(armPosition);
+            case 5:// climb position
+                armPID.setSetPoint(Constants.ARM_CLIMB);
         }
         //armMotors.setRunMode(Motor.RunMode.PositionControl);
     }
