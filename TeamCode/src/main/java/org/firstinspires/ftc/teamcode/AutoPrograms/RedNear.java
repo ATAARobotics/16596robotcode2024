@@ -9,7 +9,6 @@ import org.firstinspires.ftc.teamcode.mechanisms.Camera;
 import org.firstinspires.ftc.teamcode.mechanisms.Constants;
 
 @Autonomous(name = "RedNear", group = "Auto")
-@Disabled
 public class RedNear extends AutoOpMode {
 
     private int step = 0;
@@ -34,7 +33,7 @@ public class RedNear extends AutoOpMode {
                 switch(step) {
                     case 0: // Move to tape with team element on it
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(0.5, 0, 28);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, 28);
                         step++;
                         break;
                     case 1:
@@ -74,7 +73,7 @@ public class RedNear extends AutoOpMode {
                         break;
                     case 10: // move around the placed pixel
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(0.5, 0, -12.0);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, -12.0);
                         step++;
                         break;
                     case 11:
@@ -90,7 +89,7 @@ public class RedNear extends AutoOpMode {
                         break;
                     case 14: // Continue moving around the pixel
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(0.5, 0, 15);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, 15);
                         step++;
                         break;
                     case 15:
@@ -106,7 +105,7 @@ public class RedNear extends AutoOpMode {
                         break;
                     case 18: // Move to the backboard
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(0.5, 0, 12 );
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, 12 );
                         step++;
                         break;
                     default:
@@ -118,7 +117,7 @@ public class RedNear extends AutoOpMode {
                 switch(step) {
                     case 0: // Move to tape with team element on it
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(0.5, 0, 51);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, 51);
                         step++;
                         break;
                     case 1:
@@ -151,7 +150,7 @@ public class RedNear extends AutoOpMode {
                         break;
                     case 8: // move towards the backboard
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(0.5, 0, 15.0);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, 15.0);
                         step++;
                         break;
                     default:
@@ -163,7 +162,7 @@ public class RedNear extends AutoOpMode {
                 switch(step) {
                     case 0: // Move to tape with team element on it
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(0.5, 0, 28);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, 28);
                         step++;
                         break;
                     case 1:
@@ -197,7 +196,7 @@ public class RedNear extends AutoOpMode {
                     case 8: // move towards the backboard
                         driveTrain.resetOdometry();
                         driveTrain.setDirection(Constants.left);
-                        driveTrain.driveTo(0.5, 0, -15.0);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, -15.0);
                         step++;
                         break;
                     case 9:
@@ -208,7 +207,7 @@ public class RedNear extends AutoOpMode {
                     case 10: // move to the middle
                         driveTrain.resetOdometry();
                         driveTrain.setDirection(Constants.left);
-                        driveTrain.driveTo(0.5, 0, -25.0);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, -25.0);
                         step++;
                         break;
                     default:
@@ -235,17 +234,17 @@ public class RedNear extends AutoOpMode {
                 switch(zone) {
                     case LEFT:
                         driveTrain.setDirection(Constants.right);
-                        driveTrain.driveTo(0.5, 0, 10);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, 10);
                         break;
                     case MIDDLE:
                         driveTrain.setDirection(Constants.left);
-                        driveTrain.driveTo(0.5, 0, 10);
-                        driveTrain.driveTo(0.5, 0, -6);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, 10);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, -6);
                         break;
                     case RIGHT:
                         driveTrain.setDirection(Constants.left);
-                        driveTrain.driveTo(0.5, 0, 10);
-                        driveTrain.driveTo(0.5, 0, -12);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, 10);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, -12);
                         break;
                 }
                 step++;
@@ -273,17 +272,17 @@ public class RedNear extends AutoOpMode {
                 switch(zone) {
                     case LEFT:
                         driveTrain.setDirection(Constants.right);
-                        driveTrain.driveTo(0.5, 0, 6);
-                        driveTrain.driveTo(0.5, 0, 10);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, 6);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, 10);
                         break;
                     case MIDDLE:
                         driveTrain.setDirection(Constants.right);
-                        driveTrain.driveTo(0.5, 0, 6);
-                        driveTrain.driveTo(0.5, 0, 16);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, 6);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, 16);
                         break;
                     case RIGHT:
                         driveTrain.setDirection(Constants.right);
-                        driveTrain.driveTo(0.5, 22, 6);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 22, 6);
                         break;
                 }
                 step++;
@@ -299,4 +298,3 @@ public class RedNear extends AutoOpMode {
         telemetry.update();
     }
 }
-// 32

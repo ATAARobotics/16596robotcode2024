@@ -154,7 +154,7 @@ double wristIncr;
         // Show the elapsed game time and arm position.
         telemetry.addData("Status", "Run Time: " + runtime);
         arm.printTelemetry(telemetry);
-       // driveTrain.printTelemetry(telemetry);
+        driveTrain.printTelemetry(telemetry);
 
         // Push telemetry to the Driver Station.
         telemetry.update();

@@ -34,6 +34,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
  */
 //@TeleOp(name = "ServoTest", group = "")
+@TeleOp (name = "ServoTest")
 @Disabled
 public class ServoTest extends LinearOpMode {
  DistanceSensor findPixel ;
@@ -45,7 +46,7 @@ public class ServoTest extends LinearOpMode {
 
     // Define class members
     Servo  Rfinger, Lfinger, wrist, drone ;
-    double  position = 0.85; // Start at open position
+    double  position = 0.5; // Start at open position
     double position2 = (MAX_POS - MIN_POS) / 2; // Start at halfway position
     //boolean rampUp = true;
 
@@ -59,10 +60,10 @@ public class ServoTest extends LinearOpMode {
         // Connect to servos
         // Change the text in quotes to match any servo name on your robot.
         wrist = hardwareMap.get(Servo.class, "Wrist");
-        Lfinger = hardwareMap.get(Servo.class, "Lfinger");
-        Rfinger = hardwareMap.get(Servo.class, "Rfinger");
-        drone = hardwareMap.get(Servo.class, "Drone");
-        findPixel =  hardwareMap.get(DistanceSensor .class,"seePixel");
+        //Lfinger = hardwareMap.get(Servo.class, "Lfinger");
+        //Rfinger = hardwareMap.get(Servo.class, "Rfinger");
+        //drone = hardwareMap.get(Servo.class, "Drone");
+        //findPixel =  hardwareMap.get(DistanceSensor .class,"seePixel");
         // Wait for the start button
         telemetry.addData(">", "Press Start to scan Servo." );
         telemetry.update();
@@ -75,26 +76,26 @@ public class ServoTest extends LinearOpMode {
            // simple servo tests:
             // move finger: test results: 1 is pickup, 0.85 is release
 
-            if (gamepad2.a && position < MAX_POS) position += STEP;
-            if(operator.wasJustPressed(GamepadKeys.Button.A) && position<MAX_POS)position += STEP;
-            if(operator.wasJustPressed(GamepadKeys.Button.Y) && position>MIN_POS)position -= STEP;
+            //if (gamepad2.a && position < MAX_POS) position += STEP;
+            if(operator.wasJustReleased(GamepadKeys.Button.A) && position<MAX_POS)position = position + STEP;
+            if(operator.wasJustReleased(GamepadKeys.Button.Y) && position>MIN_POS)position = position - STEP;
             if(operator.wasJustPressed(GamepadKeys.Button.X) && position2<MAX_POS)position2 += STEP;
             if(operator.wasJustPressed(GamepadKeys.Button.B) && position2>MIN_POS)position2 -= STEP;
 
 
 
             // Display the current value
-            telemetry.addData("Finger Position:", "%5.2f", position);
-            telemetry.addData("Wrist Position:", "%5.2f", position2);
-            telemetry.addData("pixel distance mm: ","%5.2f",findPixel.getDistance(DistanceUnit.MM));
+            telemetry.addData("target Position:", "%5.2f", operator.getLeftY());
+            telemetry.addData("Wrist Position:", "%5.2f", wrist.getPosition());
+            //telemetry.addData("pixel distance mm: ","%5.2f",findPixel.getDistance(DistanceUnit.MM));
             telemetry.addData(">", "Press Stop to end test." );
             telemetry.update();
 
             // Set the servo to the new position and pause;
-            Rfinger.setPosition(position);
-            Lfinger.setPosition(position);
-            wrist.setPosition(position2);
-            sleep(CYCLE_MS);
+            //Rfinger.setPosition(position);
+            //Lfinger.setPosition(position);
+            wrist.setPosition(operator.getLeftY());
+            //sleep(CYCLE_MS);
             //idle();
         }
 

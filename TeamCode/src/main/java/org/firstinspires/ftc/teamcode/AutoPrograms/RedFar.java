@@ -9,8 +9,9 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.mechanisms.Camera;
 import org.firstinspires.ftc.teamcode.mechanisms.Constants;
 
+import java.util.Timer;
+
 @Autonomous(name = "RedFar", group = "Auto")
-@Disabled
 public class RedFar extends AutoOpMode {
 
     private int step = 0;
@@ -35,16 +36,19 @@ public class RedFar extends AutoOpMode {
                 switch(step) {
                     case 0: // Move to tape with team element on it
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(0.5, 0, 28);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, 28);
                         step++;
+                        runtime.reset();
                         break;
                     case 1:
                         if(driveTrain.atTarget()) {
+                            runtime.reset();
                             step++;
                         }
                         break;
                     case 2: // rotate to left tape
                         driveTrain.setDirection(Constants.left);
+                        runtime.reset();
                         step++;
                         break;
                     case 3:
@@ -52,7 +56,8 @@ public class RedFar extends AutoOpMode {
                         break;
                     case 4: // Move to tape with team element on it
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(0.5, 6, 0);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 6, 0);
+                        runtime.reset();
                         step++;
                         break;
                     case 5:
@@ -78,7 +83,7 @@ public class RedFar extends AutoOpMode {
                         break;
                     case 10: // Move to tape with team element on it
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(0.5, 0, 5);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, 5);
                         step++;
                         break;
                     case 11:
@@ -95,7 +100,7 @@ public class RedFar extends AutoOpMode {
                         break;
                     case 14: // move to the middle
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(0.5, .0, 25.0);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, .0, 25.0);
                         step++;
                         break;
                     default:
@@ -107,7 +112,7 @@ public class RedFar extends AutoOpMode {
                 switch(step) {
                     case 0: // Move to tape with team element on it
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(0.5, 0, 51);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, 51);
                         step++;
                         break;
                     case 1:
@@ -134,7 +139,7 @@ public class RedFar extends AutoOpMode {
                         break;
                     case 6: // move to the middle
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(0.5, 0, 25.0);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, 25.0);
                         step++;
                         break;
                     case 7:
@@ -152,7 +157,7 @@ public class RedFar extends AutoOpMode {
                 switch(step) {
                     case 0: // Move to tape with team element on it
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(0.5, 0, 28);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, 28);
                         step++;
                         break;
                     case 1:
@@ -193,7 +198,7 @@ public class RedFar extends AutoOpMode {
 
                     case 10: // move to the middle
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(0.5, .0, 25.0);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, .0, 25.0);
                         step++;
                         break;
                     default:
@@ -221,7 +226,7 @@ public class RedFar extends AutoOpMode {
                 break;
             case 24: // move towards the back of the field
                 driveTrain.resetOdometry();
-                driveTrain.driveTo(0.5, 0, 84.0);
+                driveTrain.driveTo(Constants.DRIVE_SPEED, 0, 84.0);
                 step++;
                 break;
             case 25:
@@ -244,13 +249,13 @@ public class RedFar extends AutoOpMode {
                 driveTrain.resetOdometry();
                 switch(zone) {
                     case LEFT:
-                        driveTrain.driveTo(0.5, 0, 22);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, 22);
                         break;
                     case MIDDLE:
-                        driveTrain.driveTo(0.5, 0, 28);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, 28);
                         break;
                     case RIGHT:
-                        driveTrain.driveTo(0.5, 0, 34);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, 34);
                         break;
                 }
                 step++;
@@ -273,7 +278,7 @@ public class RedFar extends AutoOpMode {
                 break;
             case 32: // move to the backboard
                 driveTrain.resetOdometry();
-                driveTrain.driveTo(0.3, 0, -6);
+                driveTrain.driveTo(Constants.DRIVE_SPEED, 0, -6);
                 step++;
                 break;
             case 33:
@@ -296,7 +301,7 @@ public class RedFar extends AutoOpMode {
                 break;
             case 37: // move to the backboard
                 driveTrain.resetOdometry();
-                driveTrain.driveTo(0.3, 0, 6);
+                driveTrain.driveTo(Constants.DRIVE_SPEED, 0, 6);
                 step++;
                 break;
             case 38:
@@ -321,13 +326,13 @@ public class RedFar extends AutoOpMode {
                 step++;
                 switch(zone) {
                     case LEFT:
-                        driveTrain.driveTo(0.5, 0, -28);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, -28);
                         break;
                     case MIDDLE:
-                        driveTrain.driveTo(0.5, 0, -34);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, -34);
                         break;
                     case RIGHT:
-                        driveTrain.driveTo(0.5, 0, -40);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, -40);
                         break;
                 }
             case 42:
@@ -348,7 +353,7 @@ public class RedFar extends AutoOpMode {
                 break;
             case 45: // move to the backboard
                 driveTrain.resetOdometry();
-                driveTrain.driveTo(0.3, 0, 6);
+                driveTrain.driveTo(Constants.DRIVE_SPEED, 0, 6);
                 step++;
                 break;
             case 46:

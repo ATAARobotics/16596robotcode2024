@@ -33,14 +33,14 @@ public class Arm {
     double armOut;
     public double armTarget;
     public PIDController armPID;
-    public double KpUp = 0.006;//gain change after implementing FeedForward
+    public double KpUp = 0.007;//gain change after implementing FeedForward
     // was 5, working but too agressive
-    public double KiUp = 0.0;
+    public double KiUp = 0.0005;
     public double KdUp = 0.0;
     public double KpDown = 0.002;
     public double KiDown = 0.0004;
     public double KdDown = 0.0;
-    public double Kff = 0.25;
+    public double Kff = 0.2;
     double winchspeed = .25;
     boolean climbing = false;
     double currentWristPosition = 0.0;
@@ -228,8 +228,8 @@ public class Arm {
         telemetry.addData("Finger Position:", "%5.2f", LFinger.getPosition());
         telemetry.addData("Finger Position:", "%5.2f", RFinger.getPosition());
         telemetry.addData("Wrist Position:", "%5.2f", wrist.getPosition());
-        telemetry.addData("target writs position:",currentWristPosition);
-        telemetry.addData("feedforward factor:", setArmFeedForward());
+        telemetry.addData("target wrist position:",currentWristPosition);
+//        telemetry.addData("feedforward factor:", setArmFeedForward());
         telemetry.addData("motor power:", armOut);
         telemetry.addData("arm angle:", armAngle);
         telemetry.addData("arm speed:", armSpeed);

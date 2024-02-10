@@ -10,7 +10,6 @@ import org.firstinspires.ftc.teamcode.mechanisms.Camera;
 import org.firstinspires.ftc.teamcode.mechanisms.Constants;
 
 @Autonomous(name = "BlueFar", group = "Auto")
-@Disabled
 public class BlueFar extends AutoOpMode {
 
     private int step = 0;
@@ -30,7 +29,7 @@ public class BlueFar extends AutoOpMode {
                 switch(step) {
                     case 0: // Move to tape with team element on it
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(0.5, 0, 28);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, 28);
                         step++;
                         break;
                     case 1:
@@ -67,7 +66,7 @@ public class BlueFar extends AutoOpMode {
                         break;
                     case 8: // move backwards away from the bars
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(0.5, 0, 5.0);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, 5.0);
                         step++;
                         break;
                     case 9:
@@ -78,7 +77,7 @@ public class BlueFar extends AutoOpMode {
                         break;
                     case 10: // move to the middle
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(0.5, 25.0, 0.0);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 25.0, 0.0);
                         step++;
                         break;
                     default:
@@ -90,7 +89,7 @@ public class BlueFar extends AutoOpMode {
                 switch(step) {
                     case 0: // Move to tape with team element on it
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(0.5, 0, 20);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, 20);
                         step++;
                         break;
                     case 1:
@@ -126,7 +125,7 @@ public class BlueFar extends AutoOpMode {
                         break;
                     case 8: // Move around the placed pixel
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(0.5, 0, 12);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, 12);
                         step++;
                         break;
                     case 9:
@@ -137,7 +136,7 @@ public class BlueFar extends AutoOpMode {
                         break;
                     case 10: // move to the middle
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(0.5, 0, 25.0);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, 25.0);
                         step++;
                         break;
                     case 11:
@@ -148,7 +147,7 @@ public class BlueFar extends AutoOpMode {
                         break;
                     case 12: // move to the middle
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(0.5, 0, 12.0);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, 12.0);
                         step++;
                         break;
                     default:
@@ -160,7 +159,7 @@ public class BlueFar extends AutoOpMode {
                 switch(step) {
                     case 0: // Move to tape with team element on it
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(0.5, 0, 28);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, 28);
                         step++;
                         break;
                     case 1:
@@ -197,7 +196,7 @@ public class BlueFar extends AutoOpMode {
                         break;
                     case 8: // move backwards away from the bars
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(0.5, 0, 5.0);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, 5.0);
                         step++;
                         break;
                     case 9:
@@ -208,7 +207,7 @@ public class BlueFar extends AutoOpMode {
                         break;
                     case 10: // move to the middle
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(0.5, 25.0, 0.0);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 25.0, 0.0);
                         step++;
                         break;
                     default:
@@ -235,7 +234,7 @@ public class BlueFar extends AutoOpMode {
                 break;
             case 24: // move towards the back of the field
                 driveTrain.resetOdometry();
-                driveTrain.driveTo(0.5, 0, 84.0);
+                driveTrain.driveTo(Constants.DRIVE_SPEED, 0, 84.0);
                 step++;
                 break;
             case 25:
@@ -258,13 +257,13 @@ public class BlueFar extends AutoOpMode {
                 driveTrain.resetOdometry();
                 switch(zone) {
                     case LEFT:
-                        driveTrain.driveTo(0.5, 0, -22);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, -22);
                         break;
                     case MIDDLE:
-                        driveTrain.driveTo(0.5, 0, -28);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, -28);
                         break;
                     case RIGHT:
-                        driveTrain.driveTo(0.5, 0, -34);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, -34);
                         break;
                 }
                 step++;
@@ -292,13 +291,13 @@ public class BlueFar extends AutoOpMode {
                 step++;
                 switch(zone) {
                     case LEFT:
-                        driveTrain.driveTo(0.5, 0, 28);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, 28);
                         break;
                     case MIDDLE:
-                        driveTrain.driveTo(0.5, 0, 34);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, 34);
                         break;
                     case RIGHT:
-                        driveTrain.driveTo(0.5, 0, 40);
+                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, 40);
                         break;
                 }
             case 34:
