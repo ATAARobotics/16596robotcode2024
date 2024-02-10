@@ -9,13 +9,14 @@ public class Constants {
   public static final double TURN_RATIO = 0.25; // use this to slow turn rate
     public static final double WRIST_SPEED = 1.0/40.0;
     public static final double DRIVE_PID_ERROR = 1.5; // inches
-    public static final double WRIST_LAUNCH_DELAY = 500; // Milliseconds
+    public static final double WRIST_LAUNCH_DELAY = 4000; // Milliseconds
     public static final double ARM_ERROR = 10; // Encoder ticks
     public static final double FINGER_ERROR = 0.05 ; // Servo set point
     public static final double DRONE_LAUNCH = 1.0; //drone launch point
-    public static final double DRIVE_SPEED = 0.4;
+    public static final double AUTO_DRIVE_SPEED = 0.3;
+    public static final double AUTO_STEP_DELAY = 2.0;
     public static double ARM_DRIVE_RATIO = 0.5; // use this to slow down arm
-    public static double HEADING_ERROR = 10; // Degrees... testing changed from 10to 30
+    public static double HEADING_ERROR = 3; // Degrees... testing changed from 10to 30
     // ========== Define Drive constants.  Make them public so they CAN be used by the calling OpMode
 
     public static final double forward = 180; // north
@@ -36,7 +37,7 @@ public class Constants {
 
 // ===========  for arm movements ======================
     public static final int ARM_PICKUP = -50;
-    public static final int ARM_DEPOSIT_MID = 18;// was +52, new ask by drive team
+    public static final int ARM_DEPOSIT_MID = 30;// was +52, new ask by drive team
     public  static final int ARM_DEPOSIT_LONG = 170;// was 170 feb2, now
     public  static final int ARM_CLIMB = 159;
     public  static final double WRIST_PICKUP = 0;//wrist servo overshoots so don't do 1.0 or higher

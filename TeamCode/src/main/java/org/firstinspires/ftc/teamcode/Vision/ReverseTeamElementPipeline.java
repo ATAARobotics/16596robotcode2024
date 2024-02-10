@@ -71,9 +71,9 @@ public class ReverseTeamElementPipeline extends OpenCvPipeline {
         int height = 160;
 //top left coordinate for the boxes
         int x0 = 60;
-        int y0 = 5;
+        int y0 = 55;
         int x1 = 400;
-        int y1 = 120;
+        int y1 = 140;
 
 
 
@@ -103,7 +103,7 @@ public class ReverseTeamElementPipeline extends OpenCvPipeline {
         Scalar green = new Scalar(0, 255, 0);
         Scalar blue = new Scalar(0, 0, 255);
         int biggest = Math.max(right, mid);
-        if (biggest > 3000) {
+        if (biggest > 4000) {
             if (right == biggest) { result = Result.Right;  }
             else if (mid == biggest) { result = Result.Middle; }
             else result = Result.Unknown;

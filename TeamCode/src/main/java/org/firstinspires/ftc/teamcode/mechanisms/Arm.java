@@ -53,7 +53,7 @@ public class Arm {
 
     public Arm(HardwareMap hwMap, ElapsedTime runtime) {
         this.hwMap = hwMap;
-        this.runtime = runtime;
+        this.runtime = new ElapsedTime();
 //        seePixel = hwMap.get(DistanceSensor.class, "seePixel");
 
 // set up servos
@@ -144,7 +144,6 @@ public class Arm {
                 armPID.setSetPoint(armPosition);
         }
         //armMotors.setRunMode(Motor.RunMode.PositionControl);
-
     }
 
     public void setFinger() {

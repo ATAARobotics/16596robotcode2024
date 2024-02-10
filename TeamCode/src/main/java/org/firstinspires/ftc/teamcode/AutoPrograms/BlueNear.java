@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.AutoPrograms;
 //import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.mechanisms.Camera;
 import org.firstinspires.ftc.teamcode.mechanisms.Constants;
@@ -28,7 +27,7 @@ public class BlueNear extends AutoOpMode {
                 switch(step) {
                     case 0: // Move to tape with team element on it
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, 28);
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0, 28);
                         step++;
                         break;
                     case 1:
@@ -61,7 +60,7 @@ public class BlueNear extends AutoOpMode {
                         break;
                     case 8: // move around the placed pixel
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, 12.0);
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0, 12.0);
                         step++;
                         break;
                     case 9:
@@ -70,7 +69,7 @@ public class BlueNear extends AutoOpMode {
                         }
                     case 10: // Continue moving around the pixel
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, 15);
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0, 15);
                         step++;
                         break;
                     case 11:
@@ -79,7 +78,7 @@ public class BlueNear extends AutoOpMode {
                         }
                     case 12: // Move to the backboard
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(Constants.DRIVE_SPEED, -12, 0);
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, -12, 0);
                         step++;
                         break;
 
@@ -92,7 +91,7 @@ public class BlueNear extends AutoOpMode {
                 switch(step) {
                     case 0: // Move to tape with team element on it
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, 28);
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0, 28);
                         step++;
                         break;
                     case 1:
@@ -125,7 +124,7 @@ public class BlueNear extends AutoOpMode {
                         break;
                     case 8: // move towards the backboard
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, 15.0);
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0, 15.0);
                         step++;
                         break;
                     default:
@@ -137,7 +136,7 @@ public class BlueNear extends AutoOpMode {
                 switch(step) {
                     case 0: // Move to tape with team element on it
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, 28);
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0, 28);
                         step++;
                         break;
                     case 1:
@@ -170,7 +169,7 @@ public class BlueNear extends AutoOpMode {
                         break;
                     case 8: // move towards the backboard
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, -15.0);
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0, -15.0);
                         step++;
                         break;
                     case 9:
@@ -180,7 +179,7 @@ public class BlueNear extends AutoOpMode {
                         break;
                     case 10: // move to the middle
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0.0, 25.0);
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0.0, 25.0);
                         step++;
                         break;
                     default:
@@ -206,13 +205,13 @@ public class BlueNear extends AutoOpMode {
                 driveTrain.resetOdometry();
                 switch(zone) {
                     case LEFT:
-                        driveTrain.driveTo(Constants.DRIVE_SPEED, 0, 10);
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0, 10);
                         break;
                     case MIDDLE:
-                        driveTrain.driveTo(Constants.DRIVE_SPEED, 6, 10);
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 6, 10);
                         break;
                     case RIGHT:
-                        driveTrain.driveTo(Constants.DRIVE_SPEED, 12, 10);
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 12, 10);
                         break;
                 }
                 step++;
@@ -239,13 +238,13 @@ public class BlueNear extends AutoOpMode {
                 driveTrain.resetOdometry();
                 switch(zone) {
                     case LEFT:
-                        driveTrain.driveTo(Constants.DRIVE_SPEED, -10, 6);
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, -10, 6);
                         break;
                     case MIDDLE:
-                        driveTrain.driveTo(Constants.DRIVE_SPEED, -16, 6);
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, -16, 6);
                         break;
                     case RIGHT:
-                        driveTrain.driveTo(Constants.DRIVE_SPEED, -22, 6);
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, -22, 6);
                         break;
                 }
                 step++;
@@ -257,6 +256,10 @@ public class BlueNear extends AutoOpMode {
                 break;
             default:
                 break;
+        }
+        if(runtime.seconds() > Constants.AUTO_STEP_DELAY) {
+            step++;
+            runtime.reset();
         }
         telemetry.update();
     }

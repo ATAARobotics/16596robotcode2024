@@ -131,7 +131,7 @@ public class DriveTrain {
     public boolean atTarget() { // Pythagorean theorem to get the distance from target as a number.
         double xError = getXPosition() - currentXTarget;
         double yError = getYPosition() - currentYTarget;
-        return Math.sqrt(xError * xError + yError * yError) < Constants.DRIVE_PID_ERROR;
+        return !autoEnabled || Math.sqrt(xError * xError + yError * yError) < Constants.DRIVE_PID_ERROR;
     }
 
     //============== Move in new Direction ==========
@@ -162,9 +162,9 @@ public class DriveTrain {
     public double getXPosition() { // Convert xPod into actual direction based on current heading
         double xPos = 0.0;
         if(Math.abs(headingSetPoint - Constants.back) < Constants.HEADING_ERROR) xPos = -xPea.getDistance();
-        else if(Math.abs(headingSetPoint - Constants.left) < Constants.HEADING_ERROR) xPos = -yPea.getDistance();
+        else if(Math.abs(headingSetPoint - Constants.left) < Constants.HEADING_ERROR) xPos = yPea.getDistance();
         else if(Math.abs(headingSetPoint - Constants.forward) < Constants.HEADING_ERROR) xPos = xPea.getDistance();
-        else if(Math.abs(headingSetPoint - Constants.right) < Constants.HEADING_ERROR) xPos = yPea.getDistance();
+        else if(Math.abs(headingSetPoint - Constants.right) < Constants.HEADING_ERROR) xPos = -yPea.getDistance();
         return xPos;
     }
     public double getYPosition() { // Convert yPod into actual direction based on current heading
