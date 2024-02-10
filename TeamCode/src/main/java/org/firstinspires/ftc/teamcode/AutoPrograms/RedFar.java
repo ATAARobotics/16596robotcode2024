@@ -204,7 +204,7 @@ public class RedFar extends AutoOpMode {
                         break;
                     case 2: // move to the middle
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 22.0, 0.0);
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, -5.0, 0.0);
                         runtime.reset();
                         step++;
                         break;
