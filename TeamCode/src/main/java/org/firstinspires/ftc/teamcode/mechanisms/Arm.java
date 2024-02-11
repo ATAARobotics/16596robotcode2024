@@ -205,7 +205,8 @@ public class Arm {
     }
 
     public void setHook(boolean enabled) {
-        currentWristPosition = Constants.WRIST_CLIMB_POS;
+       // currentWristPosition = Constants.WRIST_CLIMB_POS;
+        wrist.getController().pwmDisable(); // test if this depowers wrist to go limp?
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
