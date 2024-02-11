@@ -109,7 +109,7 @@ public class Arm {
                 armPID.setPID(KpUp, KiUp, KdUp);
                 armAngle = (arm1.getCurrentPosition()-Constants.ARM_MIN)*Constants.ARM_RADIANS_PER_TICK;
 
-               armOut = armPID.calculate(arm1.getCurrentPosition())+ Math.cos(armAngle)*Kff;
+               armOut = armPID.calculate(arm1.getCurrentPosition())+ Math.cos(armAngle)*Kff; // added feedforward
             //armOut = Math.cos(armAngle)*Kff;
 
 
@@ -214,6 +214,8 @@ public class Arm {
 
     public void Climb(boolean enabled) {
         if (enabled) {
+            // disable wrist to let it hand out of way of hook.
+            wrist.getController().pwmDisable();
             winch.set(1);
             armMotors.set(1);
 
