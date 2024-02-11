@@ -14,20 +14,25 @@ public class BlueFar extends AutoOpMode {
     Camera.Position zone = Camera.Position.UNKNOWN;
 
     @Override
+    public void init() {
+        isRed = true;
+        super.init();
+    }
+    @Override
     public void loop() {
         super.loop();
         telemetry.addData("Running step: ", step);
         driveTrain.printTelemetry(telemetry);
         //arm.printTelemetry(telemetry);
         if(zone == Camera.Position.UNKNOWN) zone = cam.detectElement();
-//        zone = Camera.Position.LEFT;
+        //zone = Camera.Position.LEFT;
 
         switch (zone) {
             case LEFT: // Detect Team Element position
                 switch(step) {
                     case 0: // Move to tape with team element on it
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0, 28);// was 28...cbw
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0, 50);// was 28...cbw
                         step++;
                         runtime.reset();
                         break;
@@ -47,7 +52,7 @@ public class BlueFar extends AutoOpMode {
                         break;
                     case 4: // Move to tape with team element on it
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, -18, 0);
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 18, 0);
                         runtime.reset();
                         step++;
                         break;
@@ -199,7 +204,7 @@ public class BlueFar extends AutoOpMode {
                         break;
                     case 2: // move to the middle
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, -5.0, 0.0);
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 5.0, 0.0);
                         runtime.reset();
                         step++;
                         break;
