@@ -57,6 +57,7 @@ double wristIncr;
     @Override
     public void init() {
         telemetry = new CAITelemetry(telemetry);
+        ((CAITelemetry)telemetry).setDashboardEnabled(false);
         telemetry.addData("Status", "Initializing");
         telemetry.update();
         driveTrain = new DriveTrain(hardwareMap);
@@ -77,7 +78,7 @@ double wristIncr;
         driver = new GamepadEx(gamepad1);
         operator = new GamepadEx(gamepad2);
         runtime.reset();
-        driveTrain.resetIMU();      // IMPORTANT !! LEAVE THIS IN FOR TESTING BUT COMMENT OUT FOR COMPETITION !!!!!!
+       // driveTrain.resetIMU();      // IMPORTANT !! LEAVE THIS IN FOR TESTING BUT COMMENT OUT FOR COMPETITION !!!!!!
 
     }
 

@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.mechanisms.Camera;
 import org.firstinspires.ftc.teamcode.mechanisms.Constants;
 
-@Autonomous(name = "RedFar", group = "Auto")
+@Autonomous(name = "RedNear", group = "Auto")
 public class RedNear extends AutoOpMode {
 
     private int step = 0;

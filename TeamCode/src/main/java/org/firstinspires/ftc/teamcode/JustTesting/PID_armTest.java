@@ -48,11 +48,6 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
-/* TODO:
-1: SET UP ENCODERS
-2: USE ENCODER IN AUTO
-
- */
 
 @TeleOp(name="ArmTest", group="teleop")
 public class PID_armTest extends OpMode {
@@ -88,7 +83,6 @@ public class PID_armTest extends OpMode {
     double  positionL= 0.4;// Start at open position
     double positionR =0.2;
     double position2 = 0.65; // Start at halfway position
-    // TODO clean up these before Comp2- how many presets are used?
     static final int ARM_PICKUP = -44;
     static final int ARM_DEPOSIT_MID = 113;
     static final int ARM_DEPOSIT_LONG = 188;
@@ -203,7 +197,6 @@ public class PID_armTest extends OpMode {
         double armDriveRatio = 0.4; // use this to slow down arm
 
         // move the arm:
-        //TODO: need to confirm armPosition at start, it will NOT be zero.
         if ((armSpeed < 0 && armPosition < ARM_MIN) || (armSpeed > 0 && armPosition > ARM_MAX))
             armSpeed = 0;//avoid trying to lower arm when on chassis and limit extension
         if (!armInAuto){

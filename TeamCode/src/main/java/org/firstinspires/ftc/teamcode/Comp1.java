@@ -49,11 +49,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
 // imports from hyperdroids:
 
-/* TODO:
-1: SET UP ENCODERS
-2: USE ENCODER IN AUTO
 
- */
 
 @Disabled
 public class Comp1 extends OpMode {
@@ -237,7 +233,6 @@ public class Comp1 extends OpMode {
                 heading);
 
         // move the arm:
-        //TODO: need to confirm armPosition at start, it will NOT be zero.
         if ((armSpeed < 0 && armPosition < ARM_MIN) || (armSpeed > 0 && armPosition > ARM_MAX))
             armSpeed = 0;//avoid trying to lower arm when on chassis and limit extension
 if (armSpeed >0 && gamepad1.left_trigger>0) armSpeed = .8;// override limit using trigger

@@ -46,8 +46,8 @@ public class ReverseTeamElementPipeline extends OpenCvPipeline {
 
         } else {
             // blue
-            min = new Scalar(0, 31, 69);
-            max = new Scalar(69, 255, 255);
+            min = new Scalar(100, 100, 100);
+            max = new Scalar(160, 255, 255);
         }
         isRed = red;
         processed = new Mat();

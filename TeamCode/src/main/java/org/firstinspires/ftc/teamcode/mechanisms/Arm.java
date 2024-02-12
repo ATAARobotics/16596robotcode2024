@@ -25,8 +25,6 @@ public class Arm {
     public boolean isPixel = false;
     public String armMessage = "nothing happened";   // use for debugging
     private DistanceSensor seePixel;
-    // TODO clean up these before Comp2- how many presets are used?
-
     double position2 = (0.35);// start wrist at pickup?
     double armSpeed;
 
@@ -49,6 +47,7 @@ public class Arm {
     private boolean armInAuto = true;
     public double armPosition = 0;
     private boolean fingerOpen = false;
+    private boolean isClimbing;
 
 
     public Arm(HardwareMap hwMap, ElapsedTime runtime) {
@@ -119,7 +118,7 @@ public class Arm {
 //                armOut = armOut * Constants.ARM_LIFT_MULTIPLIER;// if arm is low, needs boos
             armMotors.set(armOut);                          //Move arm with PID
         }
-        if(Constants.WRIST_LAUNCH_DELAY < runtime.milliseconds()) wrist.setPosition(currentWristPosition);
+        if(Constants.WRIST_LAUNCH_DELAY < runtime.milliseconds() && !isClimbing) wrist.setPosition(currentWristPosition);
     }
 
     public void setArmPosition(int armSetPosition) {        // sets target for arm PID
@@ -142,8 +141,11 @@ public class Arm {
                 break;
             case 4:// keep last position as target when going to auto from manual
                 armPID.setSetPoint(armPosition);
+                break;
             case 5:// climb position
                 armPID.setSetPoint(Constants.ARM_CLIMB);
+                wrist.getController().pwmDisable(); // test if this depowers wrist to go limp?
+                break;
         }
         //armMotors.setRunMode(Motor.RunMode.PositionControl);
     }
@@ -205,6 +207,7 @@ public class Arm {
     }
 
     public void setHook(boolean enabled) {
+        isClimbing = enabled;
        // currentWristPosition = Constants.WRIST_CLIMB_POS;
         wrist.getController().pwmDisable(); // test if this depowers wrist to go limp?
         try {
