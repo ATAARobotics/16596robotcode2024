@@ -4,10 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.mechanisms.Arm;
 import org.firstinspires.ftc.teamcode.mechanisms.Camera;
-import org.firstinspires.ftc.teamcode.mechanisms.DriveTrain;
-import org.firstinspires.ftc.teamcode.mechanisms.TestDriveTrain;
 
 @Autonomous(name = "Do_Nothing_Test",group = "")
 public class TestAutoOpMode extends OpMode {

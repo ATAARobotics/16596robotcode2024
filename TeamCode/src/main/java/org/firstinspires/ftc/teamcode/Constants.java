@@ -6,6 +6,8 @@ public class Constants{
     }
 
     // Odometry
-    public static final double forwardOffset = 1.0;
-    public static final double sidewaysOffset = 1.0;
+    public static final double forwardOffset = 0.0; // Distance from the line for the forward Odometry Pod to the center of rotation of the robot
+    public static final double sidewaysOffset = 0.0; // Distance from the line for the strafing Odometry Pod to the center of rotation of the robot
+
+    // Arm
 }

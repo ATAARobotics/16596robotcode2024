@@ -1,9 +1,10 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import static java.lang.Math.toRadians;
+
 import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.arcrobotics.ftclib.geometry.Twist2d;
-import com.arcrobotics.ftclib.kinematics.HolonomicOdometry;
 import com.arcrobotics.ftclib.kinematics.Odometry;
 
 import java.util.function.DoubleSupplier;
@@ -12,28 +13,28 @@ public class CAIOdometry extends Odometry {
     private final DoubleSupplier m_forwardEncoder;
     private final DoubleSupplier m_sidewaysEncoder;
     private final DoubleSupplier m_gyro;
-    private final double forwardOffset;
-    private final double sidewaysOffset;
-    private Rotation2d previousAngle;
+    private final double forwardOdoWheelOffset;
+    private final double sidewaysOdoWheelOffset;
     private double prevForwardDistance;
     private double prevSidewaysDistance;
+    private double TICKS_TO_INCHES;
 
-    public CAIOdometry(DoubleSupplier forwardEncoder, DoubleSupplier sidewaysEncoder, DoubleSupplier gyro, double forwardOffset, double sidewaysOffset, Pose2d startingPose) {
+    public CAIOdometry(DoubleSupplier forwardEncoder, DoubleSupplier sidewaysEncoder, DoubleSupplier gyro, double forwardOffset, double sidewaysOffset, Pose2d startingPose, double ticksToInches) {
         super(startingPose,1);
         m_forwardEncoder = forwardEncoder;
         m_sidewaysEncoder = sidewaysEncoder;
         m_gyro = gyro;
-        this.forwardOffset = forwardOffset;
-        this.sidewaysOffset = sidewaysOffset;
+        this.forwardOdoWheelOffset = forwardOffset;
+        this.sidewaysOdoWheelOffset = sidewaysOffset;
+        this.TICKS_TO_INCHES = ticksToInches;
     }
 
     @Override
     public void updatePose(Pose2d newPose) {
-        previousAngle = newPose.getRotation();
         robotPose = newPose;
 
-        prevForwardDistance = 0;
-        prevSidewaysDistance = 0;
+        prevForwardDistance = m_forwardEncoder.getAsDouble();
+        prevSidewaysDistance = m_sidewaysEncoder.getAsDouble();
     }
 
     @Override
@@ -44,24 +45,27 @@ public class CAIOdometry extends Odometry {
     private void update(double forwardDistance, double sidewaysDistance, double heading) {
         double deltaForwardDistance = forwardDistance - prevForwardDistance;
         double deltaSidewaysDistance = sidewaysDistance - prevSidewaysDistance;
-        double deltaHeading = heading - previousAngle.getDegrees();
+        double deltaHeading = toRadians(heading) - robotPose.getRotation().getRadians();
 
-        Rotation2d angle = new Rotation2d(heading);
+        double deltaCenterOfRobot = (deltaForwardDistance/deltaHeading + forwardOdoWheelOffset) * deltaHeading;
+        double hyp = deltaCenterOfRobot/deltaHeading*Math.sin(deltaHeading)/Math.cos(deltaHeading);
+        double driveAngle = deltaHeading/2;
+        double driveX = hyp*Math.cos(driveAngle);
+        double driveY = hyp*Math.sin(driveAngle);
 
-        double dw = (angle.minus(previousAngle).getRadians());
+        double deltaWheelStrafe =  (deltaSidewaysDistance/deltaHeading + sidewaysOdoWheelOffset) * deltaHeading;
+        double strafeAngle = (deltaHeading-Math.PI)/2;
+        double strafeX = deltaWheelStrafe*Math.cos(strafeAngle);
+        double strafeY = deltaWheelStrafe*Math.sin(strafeAngle);
 
-        double dx = deltaForwardDistance - forwardOffset * dw;
-        double dy = deltaSidewaysDistance - sidewaysOffset * dw;
-
-        Twist2d twist2d = new Twist2d(dx, dy, dw);
+        Twist2d twist2d = new Twist2d(strafeX + driveX, strafeY + driveY, deltaHeading);
 
         Pose2d newPose = robotPose.exp(twist2d);
 
         prevForwardDistance = forwardDistance;
         prevSidewaysDistance = sidewaysDistance;
-        previousAngle = angle;
 
-        robotPose = new Pose2d(newPose.getTranslation(), angle);
+        robotPose = newPose;
     }
 
 }

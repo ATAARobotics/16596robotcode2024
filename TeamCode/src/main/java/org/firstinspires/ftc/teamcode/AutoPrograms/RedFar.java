@@ -3,10 +3,8 @@ package org.firstinspires.ftc.teamcode.AutoPrograms;
 //import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
 import org.firstinspires.ftc.teamcode.mechanisms.Camera;
-import org.firstinspires.ftc.teamcode.mechanisms.Constants;
 
 @Autonomous(name = "RedFar", group = "Auto")
 public class RedFar extends AutoOpMode {

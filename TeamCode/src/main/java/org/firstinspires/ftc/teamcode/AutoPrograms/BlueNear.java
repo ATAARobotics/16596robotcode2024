@@ -5,7 +5,6 @@ package org.firstinspires.ftc.teamcode.AutoPrograms;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.mechanisms.Camera;
-import org.firstinspires.ftc.teamcode.mechanisms.Constants;
 
 @Autonomous(name = "BlueNear", group = "Auto")
 public class BlueNear extends AutoOpMode {

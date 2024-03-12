@@ -32,16 +32,9 @@ package org.firstinspires.ftc.teamcode.JustTesting;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
-import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.teamcode.mechanisms.Airplane;
-import org.firstinspires.ftc.teamcode.mechanisms.Arm;
-import org.firstinspires.ftc.teamcode.mechanisms.Constants;
-import org.firstinspires.ftc.teamcode.mechanisms.DriveTrain;
-import org.firstinspires.ftc.teamcode.mechanisms.TestDriveTrain;
 
 @TeleOp (name = "Practice")
 public class PracticeTeleop extends OpMode {

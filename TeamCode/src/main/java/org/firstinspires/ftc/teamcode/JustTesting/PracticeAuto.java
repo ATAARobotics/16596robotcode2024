@@ -4,9 +4,7 @@ package org.firstinspires.ftc.teamcode.JustTesting;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.AutoPrograms.AutoOpMode;
 import org.firstinspires.ftc.teamcode.mechanisms.Camera;
-import org.firstinspires.ftc.teamcode.mechanisms.Constants;
 
 @Autonomous(name = "PracticeAuto", group = "Auto")
 public class PracticeAuto extends TestAutoOpMode {
