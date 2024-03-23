@@ -15,7 +15,7 @@ public class BlueFar extends AutoOpMode {
 
     @Override
     public void init() {
-        isRed = true;
+        isRed = false;
         super.init();
     }
     @Override
@@ -466,6 +466,7 @@ public class BlueFar extends AutoOpMode {
             step++;
             runtime.reset();
         }
+        telemetry.addData("VisionBiggest",cam.getBiggest());
         telemetry.update();
     }
 }

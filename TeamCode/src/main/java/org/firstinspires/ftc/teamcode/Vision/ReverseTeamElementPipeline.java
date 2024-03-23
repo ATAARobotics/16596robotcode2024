@@ -29,6 +29,8 @@ public class ReverseTeamElementPipeline extends OpenCvPipeline {
     int y1 = 142;
     int x2 = 640;
     int y2 = 247;
+    int biggest = 0;
+
     public ReverseTeamElementPipeline() {
         min = new Scalar(100, 100, 100);
         max = new Scalar(160, 255, 255);
@@ -46,8 +48,8 @@ public class ReverseTeamElementPipeline extends OpenCvPipeline {
 
         } else {
             // blue
-            min = new Scalar(100, 100, 100);
-            max = new Scalar(160, 255, 255);
+            min = new Scalar(0, 31, 69);
+            max = new Scalar(69, 255, 255);
         }
         isRed = red;
         processed = new Mat();
@@ -102,7 +104,7 @@ public class ReverseTeamElementPipeline extends OpenCvPipeline {
         Scalar red = new Scalar(255, 0, 0);
         Scalar green = new Scalar(0, 255, 0);
         Scalar blue = new Scalar(0, 0, 255);
-        int biggest = Math.max(right, mid);
+        biggest = Math.max(right, mid);
         if (biggest > 4000) {
             if (right == biggest) { result = Result.Right;  }
             else if (mid == biggest) { result = Result.Middle; }
@@ -121,5 +123,9 @@ public class ReverseTeamElementPipeline extends OpenCvPipeline {
             return annotated;
         }
         return processed;
+    }
+
+    public int getBiggest(){
+        return biggest;
     }
 }

@@ -65,9 +65,12 @@ public class Camera {
 
 //            cam.stopStreaming();
         }
+
         return target;
     }
-
+public int getBiggest(){
+        return pipeline.getBiggest();
+}
     public void printTelemetry() {
         telemetry.addData("Frame Count", cam.getFrameCount());
         telemetry.addData("FPS", cam.getFps());

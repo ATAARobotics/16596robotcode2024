@@ -31,8 +31,8 @@ public class Arm {
     double armOut;
     public double armTarget;
     public PIDController armPID;
-    public double KpUp = 0.007;//gain change after implementing FeedForward
-    // was 5, working but too agressive
+    public double KpUp = 0.01;//gain change after implementing FeedForward
+    // was 0.007
     public double KiUp = 0.0005;
     public double KdUp = 0.0;
     public double KpDown = 0.002;

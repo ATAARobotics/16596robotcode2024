@@ -48,11 +48,11 @@ public class BlueNear extends AutoOpMode {
                         step++;
                         break;
                     case 3:
-                        //  if(driveTrain.onHeading()) step++;
+                        if(driveTrain.onHeading()) step++;
                         break;
                     case 4: // Move to tape with team element on it
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, -12
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, -14
 
                                 , 0);
                         runtime.reset();
@@ -204,14 +204,14 @@ public class BlueNear extends AutoOpMode {
                             step++;
                         }
                         break;
-                    case 2: // move to the middle
-                        driveTrain.resetOdometry();
-                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, -5.0, 0.0);
+                    case 2: // rotate to right tape
+                        driveTrain.setDirection(Constants.right);
                         runtime.reset();
                         step++;
                         break;
-                    case 3: // rotate to right tape
-                        driveTrain.setDirection(Constants.right);
+                    case 3: // move to the right tape
+                        driveTrain.resetOdometry();
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 5.0, 0.0);
                         runtime.reset();
                         step++;
                         break;
