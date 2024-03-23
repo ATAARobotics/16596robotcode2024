@@ -32,7 +32,7 @@ public class BlueFar extends AutoOpMode {
                 switch(step) {
                     case 0: // Move to tape with team element on it
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0, 50);// was 28...cbw
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0, 28);// was 28...cbw
                         step++;
                         runtime.reset();
                         break;
@@ -42,27 +42,33 @@ public class BlueFar extends AutoOpMode {
                             step++;
                         }
                         break;
-                    case 2: // rotate to left tape
-                        //  driveTrain.setDirection(Constants.left);
-                        runtime.reset();
-                        step++;
-                        break;
-                    case 3:
-                        //  if(driveTrain.onHeading()) step++;
-                        break;
-                    case 4: // Move to tape with team element on it
+                    case 2: //straf right before turning
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 18, 0);
+                            driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED,+10,0);
+                    step++;
+                    runtime.reset();
+                    break;
+                    case 3: // rotate to left tape
+                        driveTrain.setDirection(Constants.left);
                         runtime.reset();
                         step++;
                         break;
-                    case 5:
+                    case 4:
+                        if(driveTrain.onHeading()) step++;
+                        break;
+                    case 5: // Move to tape with team element on it
+                        driveTrain.resetOdometry();
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, -2, 0);//x was -14
+                        runtime.reset();
+                        step++;
+                        break;
+                    case 6:
                         if(driveTrain.atTarget()) {
                             runtime.reset();
                             step++;
                         }
                         break;
-                    case 6: // Move Arm into drive position
+                    case 7: // Move Arm into drive position
                         arm.setArmPosition(2);
                         if(arm.isInPosition()) {
                             runtime.reset();
@@ -204,7 +210,7 @@ public class BlueFar extends AutoOpMode {
                         break;
                     case 2: // move to the middle
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 5.0, 0.0);
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 2.0, 0.0);
                         runtime.reset();
                         step++;
                         break;

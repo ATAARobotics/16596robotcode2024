@@ -52,7 +52,7 @@ public class RedNear extends AutoOpMode {
                         break;
                     case 4: // Move to tape with team element on it
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 18, 0);
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, -14, 0);
                         runtime.reset();
                         step++;
                         break;
