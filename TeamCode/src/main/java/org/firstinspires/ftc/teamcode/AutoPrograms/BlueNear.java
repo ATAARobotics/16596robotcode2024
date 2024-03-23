@@ -453,8 +453,7 @@ public class BlueNear extends AutoOpMode {
                 driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0, 6);
                 runtime.reset();
                 step++;
-                break;
-            case 46:
+                break;            case 34:
                 if (driveTrain.atTarget()) {
                     driveTrain.stop();
                     runtime.reset();
