@@ -75,21 +75,21 @@ public class BlueFar extends AutoOpMode {
                             step++;
                         }
                         break;
-                    case 7: // Move Arm into pickup position
+                    case 8: // Move Arm into pickup position
                         arm.setArmPosition(1);
                         if(arm.isInPosition()) {
                             runtime.reset();
                             step++;
                         }
                         break;
-                    case 8: // Deposit ONE pixel
+                    case 9: // Deposit ONE pixel
                         arm.fingerDepositPixelAuto(true);
                         if(arm.fingerOpen(true)) {
                             runtime.reset();
                             step++;
                         }
                         break;
-                    case 9: // lift arm into drive position
+                    case 10: // lift arm into drive position
                         arm.setArmPosition(2);
                         if(arm.isInPosition()) {
                             runtime.reset();
@@ -97,36 +97,36 @@ public class BlueFar extends AutoOpMode {
                         }
                         step = 100;
                         break;
-                    case 10: // Move to tape with team element on it
+                    case 11: // Move to tape with team element on it
                         driveTrain.resetOdometry();
                         driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0, 5);
                         runtime.reset();
                         step++;
                         break;
-                    case 11:
+                    case 12:
                         if(driveTrain.atTarget()) {
                             runtime.reset();
                             step++;
                         }
                         break;
-                    case 12: // rotate back to drive forward
+                    case 13: // rotate back to drive forward
                         driveTrain.setDirection(Constants.forward);
                         runtime.reset();
                         step++;
                         break;
-                    case 13:
+                    case 14:
                         if(driveTrain.onHeading()) {
                             runtime.reset();
                             step++;
                         }
                         break;
-                    case 14: // move to the middle
+                    case 15: // move to the middle
                         driveTrain.resetOdometry();
                         driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, .0, 25.0);
                         runtime.reset();
                         step++;
                         break;
-                    case 15:
+                    case 16:
                         step = 21;
                         break;
                 }
