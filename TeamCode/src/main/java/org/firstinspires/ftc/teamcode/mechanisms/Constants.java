@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.mechanisms;
 
 public class Constants {
-    public static final boolean DASHBOARD_ENABLED = true;
+    public static final boolean DASHBOARD_ENABLED = true;// this needs to be false for competitions!!
     public static final boolean TELEMETRY_ENABLED = true;
 
     public static final double TICKS_TO_INCHES = Math.PI * 48 / (25.4 * 2000);                      // for use in Odometry

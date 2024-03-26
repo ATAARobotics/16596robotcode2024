@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.mechanisms.Constants;
 
 @Autonomous(name = "RedFar", group = "Auto")
 public class RedFar extends AutoOpMode {
-
+    // NOTE: ensure that dashboard is disabled for competitions; set  DASHBOARD_ENABLED = false in Constants.
     private int step = 0;
     Camera.Position zone = Camera.Position.UNKNOWN;
 

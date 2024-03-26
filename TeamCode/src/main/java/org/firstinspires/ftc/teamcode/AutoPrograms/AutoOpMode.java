@@ -21,6 +21,7 @@ public class AutoOpMode extends OpMode {
     protected Camera.Position gameElementPosition = Camera.Position.RIGHT;
 
     @Override
+    // NOTE: ensure that dashboard is disabled for competitions; set  DASHBOARD_ENABLED = false in Constants.
     public void init() {
         driveTrain = new DriveTrain(hardwareMap);
         arm = new Arm(hardwareMap, runtime);
