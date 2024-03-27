@@ -246,7 +246,7 @@ public class BlueNear extends AutoOpMode {
                             runtime.reset();
 //                            step++;
                         }
-                        step = 100;
+                        step = 100; // this truncates auto to this step
                         break;
                     case 9: // rotate back to drive forward
                         driveTrain.setDirection(Constants.forward);
