@@ -5,34 +5,19 @@ import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.gamepad.ButtonReader;
-import com.arcrobotics.ftclib.gamepad.GamepadEx;
-import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.geometry.Pose2d;
-import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.arcrobotics.ftclib.hardware.RevIMU;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
-import com.arcrobotics.ftclib.kinematics.Odometry;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.Constants.DriveTrain;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class DriveSubsystem extends SubsystemBase {
-// ** Constants
-    private static final double WHEEL_DIAMETER = 4; // Inches
-    private static final int TICKS_PER_REV = 8192;
-    private static final double TICKS_TO_INCHES = 2 * Math.PI * WHEEL_DIAMETER / TICKS_PER_REV;
-    // 48 / (25.4 * 2000)
-    private static final Motor.Direction ODOMETRY_STRAFE_DIRECTION = Motor.Direction.FORWARD;
-    private static final Motor.Direction ODOMETRY_FORWARD_DIRECTION = Motor.Direction.FORWARD;
-    private static final double TRACKWIDTH = 14.7; // The distance from the forward facing odometry module wheel's line from the center of rotation
-    private static final double CENTER_WHEEL_OFFSET = -2.1; // The distance from the sideways facing odometry module wheel's line from the center of rotation
-
 // ** Variables
-    GamepadEx driverGamepad;
     Telemetry telemetry;
     OdometrySubsystem odometry;
     //Gyro
@@ -40,8 +25,6 @@ public class DriveSubsystem extends SubsystemBase {
     private MotorEx backLeftMotor, frontLeftMotor, backRightMotor, frontRightMotor;
     private MecanumDrive driveTrain;
     private Motor forwardEncoder, horizontalEncoder;
-
-    ButtonReader slowDownButton;
 
     private PIDController headingControl = null;
     private PIDController xControl = null;
@@ -55,10 +38,10 @@ public class DriveSubsystem extends SubsystemBase {
     private double currentSpeed = 0;
     private double currentXTarget = 0;
     private double currentYTarget = 0;
+    private boolean slowIsSet = false;
 
 
-    public DriveSubsystem(GamepadEx driverGamepad, HardwareMap hw, Telemetry telemetry, Pose2d startingPose) {
-        this.driverGamepad = driverGamepad;
+    public DriveSubsystem(HardwareMap hw, Telemetry telemetry, Pose2d startingPose) {
         this.telemetry = telemetry;
 
         backLeftMotor = new MotorEx(hw, "backLeftMotor");
@@ -70,18 +53,17 @@ public class DriveSubsystem extends SubsystemBase {
 
         forwardEncoder = new Motor(hw,"forwardEncoder");
         horizontalEncoder = new Motor(hw,"sidewaysEncoder");
-        forwardEncoder.encoder.setDistancePerPulse(TICKS_TO_INCHES);
-        horizontalEncoder.encoder.setDistancePerPulse(TICKS_TO_INCHES);
-        forwardEncoder.encoder.setDirection(ODOMETRY_FORWARD_DIRECTION);
-        horizontalEncoder.encoder.setDirection(ODOMETRY_STRAFE_DIRECTION);
-        this.odometry = new OdometrySubsystem(new CAIOdometry(forwardEncoder.encoder::getDistance,horizontalEncoder.encoder::getDistance,gyro::getHeading,TRACKWIDTH,CENTER_WHEEL_OFFSET,startingPose, TICKS_TO_INCHES));
+        forwardEncoder.encoder.setDistancePerPulse(DriveTrain.TICKS_TO_INCHES);
+        horizontalEncoder.encoder.setDistancePerPulse(DriveTrain.TICKS_TO_INCHES);
+        forwardEncoder.encoder.setDirection(Constants.Odometry.FORWARD_DIRECTION);
+        horizontalEncoder.encoder.setDirection(Constants.Odometry.STRAFE_DIRECTION);
+
+        this.odometry = new OdometrySubsystem(new CAIOdometry(forwardEncoder.encoder::getDistance,horizontalEncoder.encoder::getDistance,gyro::getHeading,DriveTrain.TRACKWIDTH,DriveTrain.CENTER_WHEEL_OFFSET,startingPose, DriveTrain.TICKS_TO_INCHES));
 
         backLeftMotor.setInverted(true);
         frontLeftMotor.setInverted(true);
 
         driveTrain = new MecanumDrive(false, frontLeftMotor, frontRightMotor, backLeftMotor, backRightMotor);
-
-        slowDownButton = new ButtonReader(driverGamepad, GamepadKeys.Button.X);
 
         headingControl = new PIDController(0.01, 0.004, 0.0);
         xControl = new PIDController(0.1, 0.04, 0.0);
@@ -104,19 +86,13 @@ public class DriveSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         // Update the joystick values
-        slowDownButton.readValue();
 
         double maxSpeed;
-
-        if (slowDownButton.isDown())
-            maxSpeed = 0.5;
-        else
-            maxSpeed = 1;
 
         double newHeading = getHeading();
 
         // Because it's a double, can't check for exactly 180, so we check if it's almost 180 in either direction.
-        if (Math.abs(Math.abs(headingSetPoint) - 180.0) < org.firstinspires.ftc.teamcode.mechanisms.Constants.HEADING_ERROR) {
+        if (Math.abs(Math.abs(headingSetPoint) - 180.0) < Constants.DriveTrain.HEADING_ERROR_TOLERANCE) {
 
             // "south" is special because it's around the 180/-180 toggle-point
             // Change setpoint between 180/-180 depending on which is closer.
@@ -150,12 +126,14 @@ public class DriveSubsystem extends SubsystemBase {
             autoEnabled = false;
         }
 
+        if(slowIsSet) maxSpeed = 0.5;
+        else maxSpeed = 1.0;
         driveTrain.driveFieldCentric(
-                driverGamepad.getLeftX() * maxSpeed,
-                driverGamepad.getLeftY() * maxSpeed,
+                xSpeed * maxSpeed,
+                ySpeed * maxSpeed,
                 headingCorrection,
                 newHeading,
-                slowDownButton.isDown());
+                slowIsSet);
     }
 
     public void stop() {
@@ -163,18 +141,16 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public void drive(double forwardSpeed,  double strafeSpeed) {
-        // tell ftclib its inputs  strafeSpeed,forwardSpeed,turn,heading
-
         xSpeed = strafeSpeed;
         ySpeed = forwardSpeed;
     }
 
     public boolean onHeading() {
-        return Math.abs(getHeading() - headingSetPoint) < org.firstinspires.ftc.teamcode.mechanisms.Constants.HEADING_ERROR;
+        return Math.abs(getHeading() - headingSetPoint) < Constants.DriveTrain.HEADING_ERROR_TOLERANCE;
     }
 
     public boolean atTarget() {
-        return Math.abs(getXPosition() - currentXTarget) + Math.abs(getYPosition() - currentYTarget) < org.firstinspires.ftc.teamcode.mechanisms.Constants.DRIVE_PID_ERROR;
+        return Math.abs(getXPosition() - currentXTarget) + Math.abs(getYPosition() - currentYTarget) < Constants.DriveTrain.DRIVE_PID_TOLERANCE;
     }
 
     public double getHeading() {
@@ -198,5 +174,21 @@ public class DriveSubsystem extends SubsystemBase {
 
     public MecanumDrive getDriveTrain() {
         return driveTrain;
+    }
+
+    public void setDirection(double direction) {
+        headingSetPoint = direction;
+    }
+
+    public void setSlow() {
+        slowIsSet = true;
+    }
+
+    public void unSetSlow() {
+        slowIsSet = false;
+    }
+
+    public boolean IsSlowSet() {
+        return slowIsSet;
     }
 }

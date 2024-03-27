@@ -5,18 +5,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.Constants.Wrist;
 
 public class WristSubsystem extends SubsystemBase {
-// ** Constants
-    public  static final double WRIST_PICKUP = 1.0;
-    public static final double WRIST_DEPOSIT_MID = 1.0;
-    public  static final double WRIST_DEPOSIT_LONG = 1.0;
-    public static final double WRIST_CLIMB_POS = 0.0;
-    public static final double WRIST_SPEED = 0.025;
-    public static final double WRIST_LAUNCH_DELAY = 500; // Milliseconds
-
-
     // ** Variables
     private Servo wrist;
     double currentWristPosition = 0.0;
@@ -24,7 +15,7 @@ public class WristSubsystem extends SubsystemBase {
     private boolean timerStarted = false;
     private boolean timerFinished = false;
 
-    WristSubsystem(HardwareMap hwMap) {
+    public WristSubsystem(HardwareMap hwMap) {
         wrist = hwMap.get(Servo.class, "Wrist");
         runtime = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
     }
@@ -37,30 +28,45 @@ public class WristSubsystem extends SubsystemBase {
             runtime.reset();
         }
         else if (!timerFinished){
-            if (WRIST_LAUNCH_DELAY < runtime.milliseconds()) wrist.setPosition(currentWristPosition);
+            if (Wrist.LAUNCH_DELAY < runtime.milliseconds()) wrist.setPosition(currentWristPosition);
         }
     }
 
     public void setHook(boolean enabled) {
-        currentWristPosition = WRIST_CLIMB_POS;
+        currentWristPosition = Wrist.CLIMB_POS;
     }
 
     public void setWristPosition(double manualWrist) {
-        currentWristPosition = Math.min(WRIST_PICKUP,Math.max(WRIST_CLIMB_POS,currentWristPosition + manualWrist * WRIST_SPEED));
+        currentWristPosition = Math.min(Wrist.PICKUP,Math.max(Wrist.CLIMB_POS,currentWristPosition + manualWrist * Wrist.SPEED));
     }
 
     public void setWristPosition(int armSetPosition) {
         switch (armSetPosition) {
             case 1: // Intake
-                currentWristPosition = WRIST_PICKUP;
+                currentWristPosition = Wrist.PICKUP;
                 break;
             case 2: // Driving
-                currentWristPosition = WRIST_DEPOSIT_MID;
+                currentWristPosition = Wrist.DEPOSIT_MID;
                 break;
             case 3: // Scoring
-                currentWristPosition = WRIST_DEPOSIT_LONG;
+                currentWristPosition = Wrist.DEPOSIT_LONG;
                 break;
         }
     }
 
+    public boolean isInPosition() {
+        return Math.abs(currentWristPosition - wrist.getPosition()) < Wrist.ERROR_TOLERANCE;
+    }
+
+    public void setWristPickup() {
+        setWristPosition(Wrist.PICKUP);
+    }
+
+    public void setWristDriving() {
+        setWristPosition(Wrist.DEPOSIT_MID);
+    }
+
+    public void setWristScoring() {
+        setWristPosition(Wrist.DEPOSIT_LONG);
+    }
 }

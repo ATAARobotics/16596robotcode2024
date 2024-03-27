@@ -11,25 +11,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.Constants.Arm;
 
 public class ArmSubsystem extends SubsystemBase {
-// ** Constants
-    public double ArmKp = 0.005;
-    public double ArmKi = 0.0004;
-    public double ArmKd = 0.0;
-    public double ArmFF = 0.0;
-    public static final double ARM_TICKS_PER_90DEG = 113;   // CONFIRM #TICKS PER 90.
-    public static final int ARM_MAX = 175;
-    public static final int ARM_MIN = -50;
-    public static final int ARM_PICKUP = 0;
-    public static final int ARM_DEPOSIT_MID = 52;
-    public  static final int ARM_DEPOSIT_LONG = 173;
-    public  static final int ARM_CLIMB = 159;
-    public  static final double ARM_START_ANGLE = 0.0;
-
-    public static final double ARM_ERROR = 10; // Encoder ticks
-    public static double ARM_DRIVE_RATIO = 0.4; // Manual arm control power level
-
     // ** Variables
     private final ElapsedTime runtime;
     HardwareMap hwMap;
@@ -48,9 +32,9 @@ public class ArmSubsystem extends SubsystemBase {
     private boolean armInAuto = true;
     public double armPosition = 0;
 
-    public ArmSubsystem(HardwareMap hwMap, ElapsedTime runtime) {
+    public ArmSubsystem(HardwareMap hwMap) {
         this.hwMap = hwMap;
-        this.runtime = runtime;
+        this.runtime = new ElapsedTime();
 
         arm1 = new Motor(hwMap, "arm1");
         arm2 = new Motor(hwMap, "arm2");
@@ -63,7 +47,7 @@ public class ArmSubsystem extends SubsystemBase {
 
         // Creates a PID Controller with gains kP, kI, kD
         // testing [without the wrist!] and 0 setpoint: Kp=0.02,Ki=0.004,Kd=0
-        armPID = new PIDController(ArmKp, ArmKi, ArmKd);
+        armPID = new PIDController(Arm.Kp, Arm.Ki, Arm.Kd);
         arm1.resetEncoder();// use this for arm position & PID
         arm2.resetEncoder();// use this for arm position & PID
     }
@@ -72,12 +56,12 @@ public class ArmSubsystem extends SubsystemBase {
     public void periodic() {
         armPosition = arm1.getCurrentPosition();
         armTarget = armPID.getSetPoint();
-        if ((armSpeed < 0 && armPosition < ARM_MIN) || (armSpeed > 0 && armPosition > ARM_MAX))
+        if ((armSpeed < 0 && armPosition < Arm.MIN) || (armSpeed > 0 && armPosition > Arm.MAX))
             armSpeed = 0;       //avoid trying to lower arm when on chassis and limit extension
 
-        double ffValue = Math.cos(getAngle()) * ArmFF;
+        double ffValue = Math.cos(getAngle()) * Arm.FF;
         if (!armInAuto) {
-            armMotors.set(ARM_DRIVE_RATIO * armSpeed);  // Move arm manually
+            armMotors.set(Arm.DRIVE_RATIO * armSpeed);  // Move arm manually
         } else {
             //Move arm with PID
             // armMotors.set(armPID.calculate(arm1.getCurrentPosition()) + ArmFF);
@@ -85,28 +69,23 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     private double getAngle() {
-        return armPosition/ARM_TICKS_PER_90DEG*90.0;
+        return armPosition/Arm.TICKS_PER_90DEG*90.0;
     }
 
     public void setArmPosition(int armSetPosition) {        // sets target for arm PID
         switch (armSetPosition) {
-            case 1: // Intake
-                armPID.setSetPoint(ARM_PICKUP);
-//                currentWristPosition = WRIST_PICKUP;
+            case Arm.PICKUP: // Intake
+                armPID.setSetPoint(Arm.PICKUP);
                 break;
-            case 2: // Driving
-                armPID.setSetPoint(ARM_DEPOSIT_MID);
-//                currentWristPosition = WRIST_DEPOSIT_MID;
+            case Arm.DEPOSIT_MID: // Driving
+                armPID.setSetPoint(Arm.DEPOSIT_MID);
                 break;
-            case 3: // Scoring
-                armPID.setSetPoint(ARM_DEPOSIT_LONG);
-//                currentWristPosition = WRIST_DEPOSIT_LONG;
+            case Arm.DEPOSIT_LONG: // Scoring
+                armPID.setSetPoint(Arm.DEPOSIT_LONG);
                 break;
-            case 4:// keep last position as target when going to auto from manual
+            default:// keep last position as target when going to auto from manual
                 armPID.setSetPoint(armPosition);
         }
-        //armMotors.setRunMode(Motor.RunMode.PositionControl);
-
     }
 
 
@@ -114,14 +93,6 @@ public class ArmSubsystem extends SubsystemBase {
         armSpeed = speed;
     }
 
-//    public boolean findPixel() {
-//        double pixelDistance = seePixel.getDistance(DistanceUnit.MM);
-//        if (pixelDistance < PIXEL_THRESHOLD) return true;
-//        else return false;
-//    }
-
-
-    // these did use ternary operator: boolean (expression) ? actionIfTrue : actionIfFalse
     public boolean getArmInAuto() {
         return armInAuto;
     }
@@ -136,14 +107,6 @@ public class ArmSubsystem extends SubsystemBase {
         armInAuto = !armInAuto;
     }
 
-    public void Climb(boolean enabled) {
-        if (enabled) {
-            armMotors.set(1);
-
-        }
-
-    }
-
     public void printTelemetry(Telemetry telemetry) {
         telemetry.addData("arm set point:", armPID.getSetPoint());
         telemetry.addData("arm position:", armMotors.getPositions());
@@ -154,10 +117,19 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public boolean isInPosition() {
-        return Math.abs(armPosition - armTarget) < ARM_ERROR;
+        return Math.abs(armPosition - armTarget) < Arm.ERROR_TOLERANCE;
     }
 
 
+    public void setArmDriving() {
+        setArmPosition(Arm.DEPOSIT_MID);
+    }
 
+    public void setArmPickup() {
+        setArmPosition(Arm.PICKUP);
+    }
 
+    public void setArmScoring() {
+        setArmPosition(Arm.DEPOSIT_LONG);
+    }
 }

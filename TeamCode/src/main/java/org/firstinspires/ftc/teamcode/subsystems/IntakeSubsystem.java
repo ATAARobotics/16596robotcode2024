@@ -19,7 +19,7 @@ public class IntakeSubsystem extends SubsystemBase {
     private Servo LFinger, RFinger;
     private boolean fingerOpen = false;
 
-    IntakeSubsystem(HardwareMap hwMap) {
+    public IntakeSubsystem(HardwareMap hwMap) {
         LFinger = hwMap.get(Servo.class, "LFinger");
         RFinger = hwMap.get(Servo.class, "RFinger");
         LFinger.setPosition(LF_CLOSED);
@@ -75,4 +75,11 @@ public class IntakeSubsystem extends SubsystemBase {
 
     }
 
+    public void fingerOpenLeft() {
+        fingerDepositPixelAuto(true);
+    }
+
+    public void fingerOpenRight() {
+        fingerDepositPixelAuto(false);
+    }
 }

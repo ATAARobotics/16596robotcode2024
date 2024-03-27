@@ -5,13 +5,16 @@ import com.arcrobotics.ftclib.command.PurePursuitCommand;
 import com.arcrobotics.ftclib.purepursuit.waypoints.EndWaypoint;
 import com.arcrobotics.ftclib.purepursuit.waypoints.GeneralWaypoint;
 import com.arcrobotics.ftclib.purepursuit.waypoints.StartWaypoint;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+@Autonomous(name = "Test Auto",group = "")
 public class AutoCommandMode extends CommandOpMode {
     private PurePursuitCommand ppCommand;
 
     @Override
     public void initialize() {
         CAIRobot m_robot = new CAIRobot(Constants.OpModeType.AUTO, hardwareMap, new CAITelemetry(telemetry));
+
         ppCommand = new PurePursuitCommand(
                 m_robot.getDrive(), m_robot.getOdometry(),
                 new StartWaypoint(0, 0),
@@ -26,4 +29,5 @@ public class AutoCommandMode extends CommandOpMode {
         schedule(ppCommand);
 
     }
+
 }
