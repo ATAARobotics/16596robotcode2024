@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.mechanisms.Constants;
 
 @Autonomous(name = "RedFar", group = "Auto")
 public class RedFar extends AutoOpMode {
-    // NOTE: ensure that dashboard is disabled for competitions; set  DASHBOARD_ENABLED = false in Constants.
+
     private int step = 0;
     Camera.Position zone = Camera.Position.UNKNOWN;
 
@@ -52,7 +52,7 @@ public class RedFar extends AutoOpMode {
                         break;
                     case 4: // Move to tape with team element on it
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, -13 , 0); //was -16 for x.
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, -13 , 0);//was -16
                         runtime.reset();
                         step++;
                         break;
@@ -204,7 +204,7 @@ public class RedFar extends AutoOpMode {
                         break;
                     case 2: // move to the middle
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, -7.0, 0.0); //was -5 for x.
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, -7.0, 0.0);
                         runtime.reset();
                         step++;
                         break;
