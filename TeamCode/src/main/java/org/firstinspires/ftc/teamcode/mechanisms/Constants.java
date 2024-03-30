@@ -37,10 +37,11 @@ public class Constants {
 
 // ===========  for arm movements ======================
     public static final int ARM_PICKUP = -50;
-    public static final int ARM_DEPOSIT_MID = 10;// was +52, new ask by drive team
+    public static final int ARM_DEPOSIT_MID = 25;// was 10
     public  static final int ARM_DEPOSIT_LONG = 155;// was 170 mar23, now
+    public static final int ARM_AUTO_INTERMEDIATE= 50;
     public  static final int ARM_CLIMB = 115;
-    public  static final double WRIST_PICKUP = .1;//wrist servo overshoots so don't do 1.0 or higher
+    public  static final double WRIST_PICKUP = .45;//wrist servo overshoots so don't do 1.0 or higher
     public static final double WRIST_DEPOSIT_MID = .5;//was .6
     public  static final double WRIST_DEPOSIT_LONG = .5;// was 1
     public static final double WRIST_CLIMB_POS = 0.0;

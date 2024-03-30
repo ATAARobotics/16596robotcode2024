@@ -35,7 +35,7 @@ public class Arm {
     // was 0.007
     public double KiUp = 0.0005;
     public double KdUp = 0.0;
-    public double KpDown = 0.002;
+    public double KpDown = 0.0075;
     public double KiDown = 0.0004;
     public double KdDown = 0.0;
     public double Kff = 0.2;
@@ -146,6 +146,9 @@ public class Arm {
                 armPID.setSetPoint(Constants.ARM_CLIMB);
                 wrist.getController().pwmDisable(); // test if this depowers wrist to go limp?
                 break;
+            case 6://lift for auto before going to deposit
+
+                currentWristPosition = Constants.WRIST_PICKUP;
         }
         //armMotors.setRunMode(Motor.RunMode.PositionControl);
     }

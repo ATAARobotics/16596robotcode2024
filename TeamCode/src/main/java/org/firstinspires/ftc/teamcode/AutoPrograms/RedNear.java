@@ -32,7 +32,7 @@ public class RedNear extends AutoOpMode {
                 switch(step) {
                     case 0: // Move to tape with team element on it
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0, 20);// was 28...cbw
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0, 32);// was 28...cbw
                         step++;
                         runtime.reset();
                         break;
@@ -61,8 +61,9 @@ public class RedNear extends AutoOpMode {
                         break;
                     case 5: // Move Arm into drive position & move right 12
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, -12.0, 0.0);
-                        arm.setArmPosition(2);
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 12.0, 0.0);
+                        arm.setArmPosition(3);
+
                         if(arm.isInPosition()) {
                             runtime.reset();
                             step++;
@@ -84,8 +85,8 @@ public class RedNear extends AutoOpMode {
                         }
                         break;*/
 
-                    case 6: // Move Arm into drive position
-                         // Move Arm into pickup position
+                    case 6:
+                         // Move Arm into pickup/deposit position
                         arm.setArmPosition(1);
                         if(arm.isInPosition()) {
                             runtime.reset();
