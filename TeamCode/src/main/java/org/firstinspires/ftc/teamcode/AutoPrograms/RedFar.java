@@ -33,7 +33,7 @@ public class RedFar extends AutoOpMode {
                     case 0: // Move to tape with team element on it
                         driveTrain.resetOdometry();
                         // move to push game piece off of tape in next step
-                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0, 35);// was 28...cbw
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0,37);//  28...cbw
                         step++;
                         runtime.reset();
                         break;
@@ -53,7 +53,7 @@ public class RedFar extends AutoOpMode {
                         break;
                     case 4: // Move to tape with team element on it
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, -12 , 0);//was -16
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, -16 , 0);//was -16
                         runtime.reset();
                         step++;
                         break;
