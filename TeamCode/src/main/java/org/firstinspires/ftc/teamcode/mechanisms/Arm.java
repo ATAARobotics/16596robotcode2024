@@ -215,7 +215,9 @@ public class Arm {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        hook.setPosition(enabled ? HOOK_ENABLED : HOOK_DISABLED);
+
+       // hook.setPosition(enabled ? HOOK_ENABLED : HOOK_DISABLED);
+        hook.setPosition(1);
     }
 
     public void Climb(boolean enabled) {

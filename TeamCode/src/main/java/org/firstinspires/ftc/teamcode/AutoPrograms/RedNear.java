@@ -59,9 +59,25 @@ public class RedNear extends AutoOpMode {
                     case 5:
                         if(driveTrain.atTarget()) {
                             runtime.reset();
-                            step++;
+                            step = 200;
                         }
                         break;
+                        // temp insert of new step for testing
+                    case 200:
+                        driveTrain.resetOdometry();
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0, 8);
+                        runtime.reset();
+                        step++;
+                        break;
+
+                    case 201:
+
+                        if(driveTrain.atTarget()) {
+                            runtime.reset();
+                            step = 6;
+                        }
+                        break;
+
                     case 6: // Move Arm into drive position
                         arm.setArmPosition(2);
                         if(arm.isInPosition()) {
