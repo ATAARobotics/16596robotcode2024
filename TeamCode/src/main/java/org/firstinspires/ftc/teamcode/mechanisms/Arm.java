@@ -100,14 +100,14 @@ public class Arm {
             armMotors.set(Constants.ARM_DRIVE_RATIO * armSpeed);  // Move arm manually
         } else {
             //armOut = armPID.calculate(arm1.getCurrentPosition()) - setArmFeedForward();// calculate final arm speed to send; confirm if - setArmFeedForward works.
-//            if (armPosition > armTarget) { // target is to move down, use down PID
-//                armPID.setPID(KpDown, KiDown, KdDown);
-//                armOut = armPID.calculate(arm1.getCurrentPosition());
-//                armMessage = "using down gains";
-//            } else {            // Otherwise use 'up' PID gains
+            if (armPosition > armTarget) { // target is to move down, use down PID
+                armPID.setPID(KpDown, KiDown, KdDown);
+                armOut = armPID.calculate(arm1.getCurrentPosition());
+                armMessage = "using down gains";
+            } else {            // Otherwise use 'up' PID gains
                 armPID.setPID(KpUp, KiUp, KdUp);
                 armAngle = (arm1.getCurrentPosition()-Constants.ARM_MIN)*Constants.ARM_RADIANS_PER_TICK;
-
+}
                armOut = armPID.calculate(arm1.getCurrentPosition())+ Math.cos(armAngle)*Kff; // added feedforward
             //armOut = Math.cos(armAngle)*Kff;
 

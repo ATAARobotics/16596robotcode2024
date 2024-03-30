@@ -32,7 +32,7 @@ public class RedNear extends AutoOpMode {
                 switch(step) {
                     case 0: // Move to tape with team element on it
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0, 50);// was 28...cbw
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0, 20);// was 28...cbw
                         step++;
                         runtime.reset();
                         break;
@@ -42,24 +42,30 @@ public class RedNear extends AutoOpMode {
                             step++;
                         }
                         break;
-                    case 2: // rotate to left tape
-                        //  driveTrain.setDirection(Constants.left);
-                        runtime.reset();
-                        step++;
-                        break;
-                    case 3:
-                        //  if(driveTrain.onHeading()) step++;
-                        break;
-                    case 4: // Move to tape with team element on it
+                    case 2: // move to the middle
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, -14, 0);
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 3.0, 0.0);//was -7
                         runtime.reset();
                         step++;
                         break;
-                    case 5:
-                        if(driveTrain.atTarget()) {
+                    case 3: // rotate to right tape
+                        driveTrain.setDirection(Constants.left);
+                        runtime.reset();
+                        step++;
+                        break;
+                    case 4:
+                        if(driveTrain.onHeading()) {
                             runtime.reset();
-                            step = 200;
+                            step++;
+                        }
+                        break;
+                    case 5: // Move Arm into drive position & move right 12
+                        driveTrain.resetOdometry();
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, -12.0, 0.0);
+                        arm.setArmPosition(2);
+                        if(arm.isInPosition()) {
+                            runtime.reset();
+                            step++;
                         }
                         break;
                         // temp insert of new step for testing
@@ -79,27 +85,21 @@ public class RedNear extends AutoOpMode {
                         break;*/
 
                     case 6: // Move Arm into drive position
-                        arm.setArmPosition(2);
-                        if(arm.isInPosition()) {
-                            runtime.reset();
-                            step++;
-                        }
-                        break;
-                    case 7: // Move Arm into pickup position
+                         // Move Arm into pickup position
                         arm.setArmPosition(1);
                         if(arm.isInPosition()) {
                             runtime.reset();
                             step++;
                         }
                         break;
-                    case 8: // Deposit ONE pixel
+                    case 7: // Deposit ONE pixel
                         arm.fingerDepositPixelAuto(true);
                         if(arm.fingerOpen(true)) {
                             runtime.reset();
                             step++;
                         }
                         break;
-                    case 9: // lift arm into drive position
+                    case 8: // lift arm into drive position
                         arm.setArmPosition(2);
                         if(arm.isInPosition()) {
                             runtime.reset();
@@ -107,22 +107,25 @@ public class RedNear extends AutoOpMode {
                         }
                         step = 100;
                         break;
-                    case 10: // Move to tape with team element on it
-                        driveTrain.resetOdometry();
-                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0, 5);
+                    case 9: // rotate back to drive forward
+                        driveTrain.setDirection(Constants.forward);
                         runtime.reset();
                         step++;
                         break;
-                    case 11:
-                        if(driveTrain.atTarget()) {
+                    case 10:
+                        if(driveTrain.onHeading()) {
                             runtime.reset();
                             step++;
                         }
                         break;
-                    case 12: // rotate back to drive forward
-                        driveTrain.setDirection(Constants.forward);
+                    case 11: // move to the middle
+                        driveTrain.resetOdometry();
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, .0, 25.0);
                         runtime.reset();
                         step++;
+                        break;
+                    case 12:
+                        step = 21;
                         break;
                     case 13:
                         if(driveTrain.onHeading()) {
