@@ -41,7 +41,7 @@ public class Arm {
     public double Kff = 0.2;
     double winchspeed = .25;
     boolean climbing = false;
-    double currentWristPosition = 0.0;
+    double currentWristPosition = Constants.WRIST_DEPOSIT_MID;
     public int fingerPositionLeft;
     public int fingerPositionRight;
     private boolean armInAuto = true;

@@ -33,7 +33,7 @@ public class RedFar extends AutoOpMode {
                     case 0: // Move to tape with team element on it
                         driveTrain.resetOdometry();
                         // move to push game piece off of tape in next step
-                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0,40);//  was 37...cbw
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, -16,38);//  was 37...cbw
                         step++;
                         runtime.reset();
                         break;
@@ -53,7 +53,7 @@ public class RedFar extends AutoOpMode {
                         break;
                     case 4: // Move to tape with team element on it
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, -16 , 0);//was -16
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0 , 0);//was -16
                         runtime.reset();
                         step++;
                         break;
@@ -63,28 +63,42 @@ public class RedFar extends AutoOpMode {
                             step++;
                         }
                         break;
-                    case 6: // Move Arm into drive position
+                    case 6: // Move to tape with team element on it
+                        driveTrain.resetOdometry();
+                        // move to push game piece off of tape in next step
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0,8);//  was 37...cbw
+                        step++;
+                        runtime.reset();
+                        break;
+                    case 7:
+                        if(driveTrain.atTarget()) {
+                            runtime.reset();
+                            step++;
+                        }
+                        break;
+
+                    case 8: // Move Arm into drive position
                         arm.setArmPosition(2);
                         if(arm.isInPosition()) {
                             runtime.reset();
                             step++;
                         }
                         break;
-                    case 7: // Move Arm into pickup position
+                    case 9: // Move Arm into pickup position
                         arm.setArmPosition(1);
                         if(arm.isInPosition()) {
                             runtime.reset();
                             step++;
                         }
                         break;
-                    case 8: // Deposit ONE pixel
+                    case 10: // Deposit ONE pixel
                         arm.fingerDepositPixelAuto(true);
                         if(arm.fingerOpen(true)) {
                             runtime.reset();
                             step++;
                         }
                         break;
-                    case 9: // lift arm into drive position
+                    case 11: // lift arm into drive position
                         arm.setArmPosition(2);
                         if(arm.isInPosition()) {
                             runtime.reset();
@@ -92,36 +106,36 @@ public class RedFar extends AutoOpMode {
                         }
                         step = 100;
                         break;
-                    case 10: // Move to tape with team element on it
+                    case 12: // Move to tape with team element on it
                         driveTrain.resetOdometry();
                         driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0, 5);
                         runtime.reset();
                         step++;
                         break;
-                    case 11:
+                    case 13:
                         if(driveTrain.atTarget()) {
                             runtime.reset();
                             step++;
                         }
                         break;
-                    case 12: // rotate back to drive forward
+                    case 14: // rotate back to drive forward
                         driveTrain.setDirection(Constants.forward);
                         runtime.reset();
                         step++;
                         break;
-                    case 13:
+                    case 15:
                         if(driveTrain.onHeading()) {
                             runtime.reset();
                             step++;
                         }
                         break;
-                    case 14: // move to the middle
+                    case 16: // move to the middle
                         driveTrain.resetOdometry();
                         driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, .0, 25.0);
                         runtime.reset();
                         step++;
                         break;
-                    case 15:
+                    case 17:
                         step = 21;
                         break;
                 }
@@ -222,7 +236,7 @@ public class RedFar extends AutoOpMode {
                         break;
                     case 5: // Move Arm into drive position & move right 12
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 12.0, 0.0);
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 11.0, 0.0);
                         arm.setArmPosition(2);
                         if(arm.isInPosition()) {
                             runtime.reset();

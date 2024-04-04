@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.mechanisms.Constants;
 
 @Autonomous(name = "BlueFar", group = "Auto")
 public class BlueFar extends AutoOpMode {
-    // NOTE: ensure that dashboard is disabled for competitions; set  DASHBOARD_ENABLED = false in Constants.
+    //testing pushing
     private int step = 0;
     Camera.Position zone = Camera.Position.UNKNOWN;
 
@@ -28,11 +28,12 @@ public class BlueFar extends AutoOpMode {
         //zone = Camera.Position.LEFT;
 
         switch (zone) {
-            case LEFT: // Detect Team Element position
+            case RIGHT: // Detect Team Element position
                 switch(step) {
                     case 0: // Move to tape with team element on it
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0, 28);// was 28...cbw
+                        // move to push game piece off of tape in next step
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 8,40);//  was 37...cbw
                         step++;
                         runtime.reset();
                         break;
@@ -42,54 +43,62 @@ public class BlueFar extends AutoOpMode {
                             step++;
                         }
                         break;
-                    case 2: //straf right before turning
-                        driveTrain.resetOdometry();
-                            driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED,+10,0);
-                    step++;
-                    runtime.reset();
-                    break;
-                    case 3: // rotate to left tape
-                        driveTrain.setDirection(Constants.left);
+                    case 2: // rotate to left tape
+                        //  driveTrain.setDirection(Constants.left);
                         runtime.reset();
                         step++;
                         break;
-                    case 4:
-                        if(driveTrain.onHeading()) step++;
+                    case 3:
+                        //  if(driveTrain.onHeading()) step++;
                         break;
-                    case 5: // Move to tape with team element on it
+                    case 4: // Move to tape with team element on it
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, -2, 0);//x was -14
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0 , 0);//was -16
                         runtime.reset();
                         step++;
                         break;
-                    case 6:
+                    case 5:
                         if(driveTrain.atTarget()) {
                             runtime.reset();
                             step++;
                         }
                         break;
-                    case 7: // Move Arm into drive position
+                    case 6: // Move to tape with team element on it
+                        driveTrain.resetOdometry();
+                        // move to push game piece off of tape in next step
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0,8);//  was 37...cbw
+                        step++;
+                        runtime.reset();
+                        break;
+                    case 7:
+                        if(driveTrain.atTarget()) {
+                            runtime.reset();
+                            step++;
+                        }
+                        break;
+
+                    case 8: // Move Arm into drive position
                         arm.setArmPosition(2);
                         if(arm.isInPosition()) {
                             runtime.reset();
                             step++;
                         }
                         break;
-                    case 8: // Move Arm into pickup position
+                    case 9: // Move Arm into pickup position
                         arm.setArmPosition(1);
                         if(arm.isInPosition()) {
                             runtime.reset();
                             step++;
                         }
                         break;
-                    case 9: // Deposit ONE pixel
+                    case 10: // Deposit ONE pixel
                         arm.fingerDepositPixelAuto(true);
                         if(arm.fingerOpen(true)) {
                             runtime.reset();
                             step++;
                         }
                         break;
-                    case 10: // lift arm into drive position
+                    case 11: // lift arm into drive position
                         arm.setArmPosition(2);
                         if(arm.isInPosition()) {
                             runtime.reset();
@@ -97,36 +106,36 @@ public class BlueFar extends AutoOpMode {
                         }
                         step = 100;
                         break;
-                    case 11: // Move to tape with team element on it
+                    case 12: // Move to tape with team element on it
                         driveTrain.resetOdometry();
                         driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0, 5);
                         runtime.reset();
                         step++;
                         break;
-                    case 12:
+                    case 13:
                         if(driveTrain.atTarget()) {
                             runtime.reset();
                             step++;
                         }
                         break;
-                    case 13: // rotate back to drive forward
+                    case 14: // rotate back to drive forward
                         driveTrain.setDirection(Constants.forward);
                         runtime.reset();
                         step++;
                         break;
-                    case 14:
+                    case 15:
                         if(driveTrain.onHeading()) {
                             runtime.reset();
                             step++;
                         }
                         break;
-                    case 15: // move to the middle
+                    case 16: // move to the middle
                         driveTrain.resetOdometry();
                         driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, .0, 25.0);
                         runtime.reset();
                         step++;
                         break;
-                    case 16:
+                    case 17:
                         step = 21;
                         break;
                 }
@@ -194,11 +203,11 @@ public class BlueFar extends AutoOpMode {
                         break;
                 }
                 break;
-            case RIGHT:
+            case LEFT:
                 switch(step) {
                     case 0: // Move to tape with team element on it
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0, 28);
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0, 28);//was 28
                         runtime.reset();
                         step++;
                         break;
@@ -210,12 +219,12 @@ public class BlueFar extends AutoOpMode {
                         break;
                     case 2: // move to the middle
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 2.0, 0.0);
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 3.0, 0.0);//was -7
                         runtime.reset();
                         step++;
                         break;
                     case 3: // rotate to right tape
-                        driveTrain.setDirection(Constants.right);
+                        driveTrain.setDirection(Constants.left);
                         runtime.reset();
                         step++;
                         break;
@@ -225,7 +234,9 @@ public class BlueFar extends AutoOpMode {
                             step++;
                         }
                         break;
-                    case 5: // Move Arm into drive position
+                    case 5: // Move Arm into drive position & move right 12
+                        driveTrain.resetOdometry();
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 13.0, 4.0);
                         arm.setArmPosition(2);
                         if(arm.isInPosition()) {
                             runtime.reset();
@@ -287,7 +298,7 @@ public class BlueFar extends AutoOpMode {
                 }
                 break;
             case 22: // rotate to drive backwards
-                driveTrain.setDirection(Constants.right);
+                driveTrain.setDirection(Constants.left);
                 runtime.reset();
                 step++;
                 break;
@@ -326,13 +337,13 @@ public class BlueFar extends AutoOpMode {
             case 28: // move to the backboard
                 driveTrain.resetOdometry();
                 switch(zone) {
-                    case LEFT:
+                    case RIGHT:
                         driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0, 22);
                         break;
                     case MIDDLE:
                         driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0, 28);
                         break;
-                    case RIGHT:
+                    case LEFT:
                         driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0, 34);
                         break;
                 }
@@ -347,7 +358,7 @@ public class BlueFar extends AutoOpMode {
                 }
                 break;
             case 30: // go into scoring position
-                driveTrain.setDirection(Constants.left);
+                driveTrain.setDirection(Constants.right);
                 runtime.reset();
                 step++;
                 break;
@@ -423,13 +434,13 @@ public class BlueFar extends AutoOpMode {
                 runtime.reset();
                 step++;
                 switch(zone) {
-                    case LEFT:
+                    case RIGHT:
                         driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0, -28);
                         break;
                     case MIDDLE:
                         driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0, -34);
                         break;
-                    case RIGHT:
+                    case LEFT:
                         driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0, -40);
                         break;
                 }
@@ -441,7 +452,7 @@ public class BlueFar extends AutoOpMode {
                 }
                 break;
             case 43: // go into scoring position
-                driveTrain.setDirection(Constants.left);
+                driveTrain.setDirection(Constants.right);
                 runtime.reset();
                 step++;
                 break;
@@ -472,7 +483,6 @@ public class BlueFar extends AutoOpMode {
             step++;
             runtime.reset();
         }
-        telemetry.addData("VisionBiggest",cam.getBiggest());
         telemetry.update();
     }
 }
