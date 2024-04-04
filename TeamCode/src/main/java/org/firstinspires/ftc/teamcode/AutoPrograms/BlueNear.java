@@ -104,29 +104,35 @@ public class BlueNear extends AutoOpMode {
                         arm.setArmPosition(2);
                         if(arm.isInPosition()) {
                             runtime.reset();
-//                            step++;
+                            step++;
                         }
-                        step = 100;
+                      //  step = 100;
                         break;
-                    case 9: // rotate back to drive forward
-                        driveTrain.setDirection(Constants.forward);
-                        runtime.reset();
-                        step++;
-                        break;
-                    case 10:
-                        if(driveTrain.onHeading()) {
+                    case 9: // Move Arm into drive position
+                        arm.setArmPosition(2);
+                        if(arm.isInPosition()) {
                             runtime.reset();
                             step++;
                         }
                         break;
-                    case 11: // move to the middle
+                    case 10:
+                        // move to the middle
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, .0, 25.0);
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, -6, 0);
                         runtime.reset();
                         step++;
                         break;
-                    case 12:
-                        step = 21;
+                    case 11:
+                        if(driveTrain.atTarget()) {
+                            driveTrain.stop();
+                            runtime.reset();
+                            step++;
+                        }
+                        break;
+                    case 12: // rotate back to drive forward
+                        driveTrain.setDirection(Constants.right);
+                        runtime.reset();
+                        step++;
                         break;
                     case 13:
                         if(driveTrain.onHeading()) {
@@ -136,12 +142,17 @@ public class BlueNear extends AutoOpMode {
                         break;
                     case 14: // move to the middle
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, .0, 25.0);
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, -50, -32);
                         runtime.reset();
                         step++;
                         break;
                     case 15:
-                        step = 21;
+                        if(driveTrain.atTarget()) {
+                            driveTrain.stop();
+                            runtime.reset();
+                            step = 200;
+                        }
+
                         break;
                 }
                 break;
@@ -186,25 +197,56 @@ public class BlueNear extends AutoOpMode {
                         arm.setArmPosition(2);
                         if(arm.isInPosition()) {
                             runtime.reset();
-                            //step++;
+
                         }
-                        step = 100;
+                        step = 8;
+                        //step = 100;
                         break;
-                    case 6: // move to the middle
+                    case 8: // Move Arm into drive position
+                        arm.setArmPosition(2);
+                        if(arm.isInPosition()) {
+                            runtime.reset();
+                            step++;
+                        }
+                        break;
+                    case 9:
+                     // move to the middle
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0, 25.0);
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, -6, 0);
                         runtime.reset();
                         step++;
                         break;
-                    case 7:
+                    case 10:
                         if(driveTrain.atTarget()) {
                             driveTrain.stop();
                             runtime.reset();
                             step++;
                         }
                         break;
-                    case 8:
-                        step = 21;
+                    case 11: // rotate back to drive forward
+                        driveTrain.setDirection(Constants.right);
+                        runtime.reset();
+                        step++;
+                        break;
+                    case 12:
+                        if(driveTrain.onHeading()) {
+                            runtime.reset();
+                            step++;
+                        }
+                        break;
+                    case 13: // move to the middle
+                        driveTrain.resetOdometry();
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, -25, -70);
+                        runtime.reset();
+                        step++;
+                        break;
+                    case 14:
+                        if(driveTrain.atTarget()) {
+                            driveTrain.stop();
+                            runtime.reset();
+                            step = 200;
+                        }
+
                         break;
                 }
                 break;
@@ -217,7 +259,7 @@ public class BlueNear extends AutoOpMode {
                         step++;
                         break;
                     case 1:
-                        if(driveTrain.atTarget()) {
+                        if (driveTrain.atTarget()) {
                             runtime.reset();
                             step++;
                         }
@@ -229,7 +271,7 @@ public class BlueNear extends AutoOpMode {
                         step++;
                         break;
                     case 3:
-                        if(driveTrain.atTarget()) {
+                        if (driveTrain.atTarget()) {
                             runtime.reset();
                             step++;
                         }
@@ -241,60 +283,79 @@ public class BlueNear extends AutoOpMode {
                         step++;
                         break;
                     case 5:
-                        if(driveTrain.atTarget()) {
+                        if (driveTrain.atTarget()) {
                             runtime.reset();
                             step = 8;
                         }
                         break;
                     case 8: // Move Arm into drive position
                         arm.setArmPosition(2);
-                        if(arm.isInPosition()) {
+                        if (arm.isInPosition()) {
                             runtime.reset();
                             step++;
                         }
                         break;
                     case 9: // Move Arm into pickup position
                         arm.setArmPosition(1);
-                        if(arm.isInPosition()) {
+                        if (arm.isInPosition()) {
                             runtime.reset();
                             step++;
                         }
                         break;
                     case 10: // Deposit ONE pixel
                         arm.fingerDepositPixelAuto(true);
-                        if(arm.fingerOpen(true)) {
+                        if (arm.fingerOpen(true)) {
                             runtime.reset();
                             step++;
                         }
                         break;
                     case 11: // lift arm into drive position
                         arm.setArmPosition(2);
-                        if(arm.isInPosition()) {
+                        if (arm.isInPosition()) {
                             runtime.reset();
-//                            step++;
+                            step++;
                         }
-                        step = 100;
+                        //step = 8;
                         break;
-                    case 12: // rotate back to drive forward
-                        driveTrain.setDirection(Constants.forward);
+
+                    case 12:
+                        // move to the middle
+                        driveTrain.resetOdometry();
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, -6, 0);
                         runtime.reset();
                         step++;
                         break;
                     case 13:
-                        if(driveTrain.onHeading()) {
+                        if (driveTrain.atTarget()) {
+                            driveTrain.stop();
                             runtime.reset();
                             step++;
                         }
                         break;
-
-                    case 14: // move to the middle
-                        driveTrain.resetOdometry();
-                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, .0, 25.0);
+                    case 14: // rotate back to drive forward
+                        driveTrain.setDirection(Constants.right);
                         runtime.reset();
                         step++;
                         break;
                     case 15:
-                        step = 21;
+                        if (driveTrain.onHeading()) {
+                            runtime.reset();
+                            step++;
+                        }
+                        break;
+                    case 16: // move to the middle
+                        driveTrain.resetOdometry();
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, -25, -60);
+                        runtime.reset();
+                        step++;
+                        break;
+                    case 17:
+                        if (driveTrain.atTarget()) {
+                            driveTrain.stop();
+                            runtime.reset();
+                            step = 200;
+                        }
+
                         break;
                 }
         }
