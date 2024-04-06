@@ -33,7 +33,7 @@ public class BlueFar extends AutoOpMode {
                     case 0: // Move to tape with team element on it
                         driveTrain.resetOdometry();
                         // move to push game piece off of tape in next step
-                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 8,40);//  was 37...cbw
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 11,40);//  was 37...cbw
                         step++;
                         runtime.reset();
                         break;
@@ -97,6 +97,7 @@ public class BlueFar extends AutoOpMode {
                             runtime.reset();
                             step++;
                         }
+                        break;
                     case 11: // lift arm into drive position
                         arm.setArmPosition(2);
                         if(arm.isInPosition()) {
