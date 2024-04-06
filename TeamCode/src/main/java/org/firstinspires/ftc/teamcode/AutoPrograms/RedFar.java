@@ -63,63 +63,66 @@ public class RedFar extends AutoOpMode {
                             step++;
                         }
                         break;
-                    case 6: // Move to tape with team element on it
-                        driveTrain.resetOdometry();
-                        // move to push game piece off of tape in next step
-                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0,8);//  was 37...cbw
-                        step++;
-                        runtime.reset();
-                        break;
-                    case 7:
-                        if(driveTrain.atTarget()) {
-                            runtime.reset();
-                            step++;
-                        }
-                        break;
 
-                    case 8: // Move Arm into drive position
-                        arm.setArmPosition(2);
-                        if(arm.isInPosition()) {
-                            runtime.reset();
-                            step++;
-                        }
-                        break;
-                    case 9: // Move Arm into pickup position
+                    case 6: // Move Arm into pickup position
                         arm.setArmPosition(1);
                         if(arm.isInPosition()) {
                             runtime.reset();
                             step++;
                         }
                         break;
-                    case 10: // Deposit ONE pixel
+                    case 7: // Move to tape with team element on it
+                        driveTrain.resetOdometry();
+                        // move to push game piece off of tape in next step
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0,8);//  was 37...cbw
+                        step++;
+                        runtime.reset();
+                        break;
+                    case 8:
+                        if(driveTrain.atTarget()) {
+                            runtime.reset();
+                            step++;
+                        }
+                        break;
+
+                    case 9: // Deposit ONE pixel
+                        if (runtime.seconds() > 0.5) {
+                            arm.fingerDepositPixelAuto(true);
+                            runtime.reset();
+                            step++;
+                        }
+                    case 10: // lift arm into drive position
+                        arm.setArmPosition(2);
+                        if(arm.isInPosition()) {
+                            runtime.reset();
+                            step++;
+                        }
+                        break;
+
+                    case 11: // close finger
                         arm.fingerDepositPixelAuto(true);
                         if(arm.fingerOpen(true)) {
                             runtime.reset();
                             step++;
                         }
                         break;
-                    case 11: // lift arm into drive position
-                        arm.setArmPosition(2);
-                        if(arm.isInPosition()) {
-                            runtime.reset();
-//                            step++;
-                        }
-                        step = 100;
-                        break;
-                    case 12: // Move to tape with team element on it
+
+                    case 12: //driving to center of field
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0, 5);
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 10.22 , 17.61);
                         runtime.reset();
                         step++;
                         break;
                     case 13:
                         if(driveTrain.atTarget()) {
+                            driveTrain.stop();
                             runtime.reset();
                             step++;
                         }
                         break;
-                    case 14: // rotate back to drive forward
-                        driveTrain.setDirection(Constants.forward);
+                    case 14: // rotate to go under the door
+                        driveTrain.stop();
+                        driveTrain.setDirection(Constants.left);
                         runtime.reset();
                         step++;
                         break;
@@ -129,22 +132,39 @@ public class RedFar extends AutoOpMode {
                             step++;
                         }
                         break;
-                    case 16: // move to the middle
+                    case 16: // going under door
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, .0, 25.0);
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 71.66 , -0.07);
                         runtime.reset();
                         step++;
                         break;
                     case 17:
-                        step = 21;
+                        if(driveTrain.atTarget()) {
+                            runtime.reset();
+                            step++;
+                        }
                         break;
+                    case 18: // PARKING!
+                        driveTrain.resetOdometry();
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 30.02 , -29.78);
+                        runtime.reset();
+                        step++;
+                        break;
+                    case 19:
+                        if(driveTrain.atTarget()) {
+                            runtime.reset();
+                            step++;
+                        }
+                        step = 100;
+                        break;
+
                 }
                 break;
             case MIDDLE:
                 switch(step) {
                     case 0: // Move Arm into drive position
                         arm.setArmPosition(2);
-                        if(arm.isInPosition()) {
+                        if (arm.isInPosition()) {
                             runtime.reset();
                             step++;
                         }
@@ -156,50 +176,83 @@ public class RedFar extends AutoOpMode {
                         step++;
                         break;
                     case 2:
-                        if(driveTrain.atTarget()) {
+                        if (driveTrain.atTarget()) {
                             driveTrain.stop();
                             runtime.reset();
                             step++;
                         }
                         break;
-
                     case 3: // Move Arm into pickup position
                         arm.setArmPosition(1);
-                        if(arm.isInPosition()) {
+                        if (arm.isInPosition()) {
                             runtime.reset();
                             step++;
                         }
                         break;
                     case 4: // Deposit ONE pixel
-                        arm.fingerDepositPixelAuto(true);
-                        if(arm.fingerOpen(true)) {
+                        if (runtime.seconds() > 0.5) {
+                            arm.fingerDepositPixelAuto(true);
                             runtime.reset();
                             step++;
                         }
                         break;
                     case 5: // lift arm into drive position
                         arm.setArmPosition(2);
-                        if(arm.isInPosition()) {
+                        if (arm.isInPosition()) {
                             runtime.reset();
-                            //step++;
+                            step++;
                         }
-                        step = 100;
                         break;
                     case 6: // move to the middle
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0, 25.0);
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0, 10);
                         runtime.reset();
                         step++;
                         break;
                     case 7:
-                        if(driveTrain.atTarget()) {
+                        if (driveTrain.atTarget()) {
                             driveTrain.stop();
                             runtime.reset();
                             step++;
                         }
                         break;
-                    case 8:
-                        step = 21;
+                    case 8: // rotate to go under door
+                        driveTrain.setDirection(Constants.left);
+                        runtime.reset();
+                        step++;
+                        break;
+                    case 9:
+                        if (driveTrain.onHeading()) {
+                            runtime.reset();
+                            step++;
+                        }
+                        break;
+                    case 10: // move to back, under door
+                        driveTrain.resetOdometry();
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 67, -6);
+                        runtime.reset();
+                        step++;
+                        break;
+                    case 11:
+                        if (driveTrain.atTarget()) {
+                            driveTrain.stop();
+                            runtime.reset();
+                            step++;
+                        }
+                        break;
+                    case 12: // PARKING!
+                        driveTrain.resetOdometry();
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 46, -11);
+                        runtime.reset();
+                        step++;
+                        break;
+
+                    case 13:
+                        if (driveTrain.atTarget()) {
+                            driveTrain.stop();
+                            runtime.reset();
+                            step++;
+                        }
                         break;
                 }
                 break;
@@ -214,271 +267,140 @@ public class RedFar extends AutoOpMode {
                     case 1:
                         if(driveTrain.atTarget()) {
                             runtime.reset();
+                            driveTrain.stop();
                             step++;
                         }
                         break;
-                    case 2: // move to the middle
+                    case 2: // move away from structure
                         driveTrain.resetOdometry();
                         driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, -3.0, 0.0);//was -7
                         runtime.reset();
                         step++;
                         break;
-                    case 3: // rotate to right tape
+                    case 3:
+                        if(driveTrain.atTarget()) {
+                            runtime.reset();
+                            driveTrain.stop();
+
+                            step++;
+                        }
+                        break;
+                    case 4: // rotate to right tape
                         driveTrain.setDirection(Constants.right);
                         runtime.reset();
                         step++;
                         break;
-                    case 4:
+                    case 5:
                         if(driveTrain.onHeading()) {
                             runtime.reset();
                             step++;
                         }
                         break;
-                    case 5: // Move Arm into drive position & move right 12
-                        driveTrain.resetOdometry();
-                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 11.0, 0.0);
-                        arm.setArmPosition(2);
-                        if(arm.isInPosition()) {
-                            runtime.reset();
-                            step++;
-                        }
-                        break;
-                    case 6: // Move Arm into pickup position
+                    case 6: // moving arm into pickup
                         arm.setArmPosition(1);
                         if(arm.isInPosition()) {
                             runtime.reset();
                             step++;
                         }
                         break;
-                    case 7: // Deposit ONE pixel
-                        arm.fingerDepositPixelAuto(true);
-                        if(arm.fingerOpen(true)) {
+                    case 7: // move right 12 onto tape
+                        driveTrain.resetOdometry();
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 13.0, 4.0);
+                        runtime.reset();
+                        step++;
+                        break;
+                    case 8:
+                        if(driveTrain.atTarget()) {
+                            runtime.reset();
+                            driveTrain.stop();
+
+                            step++;
+                        }
+                        break;
+                    case 9: // Deposit ONE pixel
+                        if (runtime.seconds() > 0.5) {
+                            arm.fingerDepositPixelAuto(true);
                             runtime.reset();
                             step++;
                         }
                         break;
-                    case 8: // lift arm into drive position
+                    case 10: // lift arm into drive position
                         arm.setArmPosition(2);
                         if(arm.isInPosition()) {
                             runtime.reset();
-//                            step++;
-                        }
-                        step = 100;
+                            step++;
+                        };
                         break;
-                    case 9: // rotate back to drive forward
-                        driveTrain.setDirection(Constants.forward);
+                    case 11: // drive away from structure
+                       driveTrain.resetOdometry();;
+                       driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED,-10,0);
+                       runtime.reset();
+                       step++;
+                       break;
+                    case 12:
+                        if(driveTrain.atTarget()) {
+                            runtime.reset();
+                            driveTrain.stop();
+                            step++;
+                        }
+                        break;
+
+                    case 13: // move to the middle
+                        driveTrain.resetOdometry();
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, .0, 32.0);
                         runtime.reset();
                         step++;
                         break;
-                    case 10:
+                    case 14:
+                        if(driveTrain.atTarget()) {
+                            runtime.reset();
+                            driveTrain.stop();
+                            step++;
+                        }
+                        break;
+                    case 15: // rotate to drive under door
+                        //driveTrain.setDirection(Constants.left);
+                        runtime.reset();
+                        step++;
+                        break;
+                    case 16:
                         if(driveTrain.onHeading()) {
                             runtime.reset();
                             step++;
                         }
                         break;
-
-                    case 11: // move to the middle
+                    case 17: // move under the door
                         driveTrain.resetOdometry();
-                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, .0, 25.0);
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 76, 0);
                         runtime.reset();
                         step++;
                         break;
-                    case 12:
-                        step = 21;
+                    case 18:
+                        if(driveTrain.atTarget()) {
+                            runtime.reset();
+                            driveTrain.stop();
+                            step++;
+                        }
+                        break;
+                    case 19: // PARKING
+                        driveTrain.resetOdometry();
+                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 30, -8);
+                        runtime.reset();
+                        step++;
+                        break;
+                    case 20:
+                        if(driveTrain.atTarget()) {
+                            runtime.reset();
+                            driveTrain.stop();
+                            step++;
+                        }
+                        break;
+                    case 21:
+                        step = 200;
                         break;
                 }
         }
 
-        switch(step) {
-            case 21:
-                if (driveTrain.atTarget()) {
-                    driveTrain.stop();
-                    runtime.reset();
-                    step++;
-                }
-                break;
-            case 22: // rotate to drive backwards
-                driveTrain.setDirection(Constants.right);
-                runtime.reset();
-                step++;
-                break;
-            case 23:
-                if(driveTrain.onHeading()) {
-                    driveTrain.stop();
-                    runtime.reset();
-                    step++;
-                }
-                break;
-            case 24: // move towards the back of the field
-                driveTrain.resetOdometry();
-                driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0, 84.0);
-                runtime.reset();
-                step++;
-                break;
-            case 25:
-                if (driveTrain.atTarget()) {
-                    driveTrain.stop();
-                    runtime.reset();
-                    step++;
-                }
-                break;
-            case 26: // set direction to forwards
-                driveTrain.setDirection(Constants.forward);
-                runtime.reset();
-                step++;
-                break;
-            case 27:
-                if (driveTrain.onHeading()) {
-                    driveTrain.stop();
-                    runtime.reset();
-                    step++;
-                }
-                break;
-            case 28: // move to the backboard
-                driveTrain.resetOdometry();
-                switch(zone) {
-                    case LEFT:
-                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0, 22);
-                        break;
-                    case MIDDLE:
-                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0, 28);
-                        break;
-                    case RIGHT:
-                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0, 34);
-                        break;
-                }
-                runtime.reset();
-                step++;
-                break;
-            case 29:
-                if (driveTrain.atTarget()) {
-                    driveTrain.stop();
-                    runtime.reset();
-                    step++;
-                }
-                break;
-            case 30: // go into scoring position
-                driveTrain.setDirection(Constants.left);
-                runtime.reset();
-                step++;
-                break;
-            case 31:
-                if (driveTrain.onHeading()) {
-                    driveTrain.stop();
-                    runtime.reset();
-                    step++;
-                }
-                break;
-            case 32: // move to the backboard
-                driveTrain.resetOdometry();
-                driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0, -6);
-                runtime.reset();
-                step++;
-                break;
-            case 33:
-                if (driveTrain.atTarget()) {
-                    driveTrain.stop();
-                    runtime.reset();
-                    step++;
-                }
-                break;
-            case 34: // Move Arm into scoring position
-                arm.setArmPosition(3);
-                if (arm.isInPosition()) {
-                    runtime.reset();
-                    step++;
-                }
-                break;
-            case 35: // Deposit ONE pixel
-                arm.fingerDepositPixelAuto(true);
-                if (arm.fingerOpen(true)) {
-                    runtime.reset();
-                    step++;
-                }
-                break;
-            case 36: // lift arm into drive position
-                arm.setArmPosition(2);
-                if (arm.isInPosition()) {
-                    runtime.reset();
-                    step++;
-                }
-                break;
-            case 37: // move to the backboard
-                driveTrain.resetOdometry();
-                driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0, 6);
-                runtime.reset();
-                step++;
-                break;
-            case 38:
-                if (driveTrain.atTarget()) {
-                    driveTrain.stop();
-                    runtime.reset();
-                    step++;
-                }
-                break;
-            case 39: // go into scoring position
-                driveTrain.setDirection(Constants.forward);
-                runtime.reset();
-                step++;
-                break;
-            case 40:
-                if (driveTrain.onHeading()) {
-                    driveTrain.stop();
-                    runtime.reset();
-                    step++;
-                }
-                break;
-
-            case 41: // move to park
-                driveTrain.resetOdometry();
-                runtime.reset();
-                step++;
-                switch(zone) {
-                    case LEFT:
-                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0, -28);
-                        break;
-                    case MIDDLE:
-                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0, -34);
-                        break;
-                    case RIGHT:
-                        driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0, -40);
-                        break;
-                }
-            case 42:
-                if (driveTrain.atTarget()) {
-                    driveTrain.stop();
-                    runtime.reset();
-                    step++;
-                }
-                break;
-            case 43: // go into scoring position
-                driveTrain.setDirection(Constants.left);
-                runtime.reset();
-                step++;
-                break;
-            case 44:
-                if (driveTrain.onHeading()) {
-                    driveTrain.stop();
-                    runtime.reset();
-                    step++;
-                }
-                break;
-            case 45: // move to the backboard
-                driveTrain.resetOdometry();
-                driveTrain.driveTo(Constants.AUTO_DRIVE_SPEED, 0, 6);
-                runtime.reset();
-                step++;
-                break;
-            case 46:
-                if (driveTrain.atTarget()) {
-                    driveTrain.stop();
-                    runtime.reset();
-                    step++;
-                }
-                break;
-            default:
-                break;
-        }
         if(runtime.seconds() > Constants.AUTO_STEP_DELAY) {
             step++;
             runtime.reset();

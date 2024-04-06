@@ -110,12 +110,14 @@ double wristIncr;
         if (operator.wasJustPressed(GamepadKeys.Button.A))
             arm.setArmPosition(1);// set arm and wrist for pickup
         if (operator.wasJustPressed(GamepadKeys.Button.B))
-            arm.setArmPosition(2);// set arm and wrist for mid deposit
+            arm.setArmPosition(3);// set arm and wrist for mid deposit
         if (operator.wasJustPressed(GamepadKeys.Button.X))
-            arm.setFinger();// finger defaults closed;this is to open it
+            arm.setArmPosition(2);// set arm and wrist for driving
         if (operator.wasJustPressed(GamepadKeys.Button.Y))
-            arm.setArmPosition(3);// set arm and wrist for long deposit
+            arm.setArmPosition(4);// set arm and wrist for long deposit
 
+        if (operator.wasJustPressed(GamepadKeys.Button.DPAD_DOWN))
+            arm.setFinger();// set toggle fingers (open/close)
         if (operator.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
             arm.toggleArmInAuto();    // toggle arm auto mode
         }

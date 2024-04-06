@@ -130,23 +130,28 @@ public class Arm {
                 currentWristPosition = Constants.WRIST_PICKUP;
                 break;
             case 2:
-                armPID.setSetPoint(Constants.ARM_DEPOSIT_MID);
+                armPID.setSetPoint(Constants.ARM_DRIVE);
                 //armMotors.setTargetPosition(Constants .ARM_DEPOSIT_MID);
                 currentWristPosition = Constants.WRIST_DEPOSIT_MID;
                 break;
             case 3:
+                armPID.setSetPoint(Constants.ARM_DEPOSIT_MID);
+                //armMotors.setTargetPosition(Constants .ARM_DEPOSIT_MID);
+                currentWristPosition = Constants.WRIST_DEPOSIT_MID;
+                break;
+            case 4:
                 armPID.setSetPoint(Constants.ARM_DEPOSIT_LONG);
                 // armMotors.setTargetPosition(Constants .ARM_DEPOSIT_LONG);
                 currentWristPosition = Constants.WRIST_DEPOSIT_LONG;
                 break;
-            case 4:// keep last position as target when going to auto from manual
+            case 5:// keep last position as target when going to auto from manual
                 armPID.setSetPoint(armPosition);
                 break;
-            case 5:// climb position
+            case 6:// climb position
                 armPID.setSetPoint(Constants.ARM_CLIMB);
                 wrist.getController().pwmDisable(); // test if this depowers wrist to go limp?
                 break;
-            case 6://lift for auto before going to deposit
+            case 7://lift for auto before going to deposit
 
                 currentWristPosition = Constants.WRIST_PICKUP;
         }
@@ -255,10 +260,17 @@ public class Arm {
 
     public void fingerDepositPixelAuto(boolean isLeft) {
         if(isLeft) {
-            LFinger.setPosition(Constants.LF_OPEN);
+            if(fingerOpen(isLeft))
+                LFinger.setPosition(Constants.LF_CLOSED);
+            else
+                LFinger.setPosition(Constants.LF_OPEN);
         }
         else {
-            RFinger.setPosition(Constants.RF_OPEN);
+            if(fingerOpen(!isLeft))
+                RFinger.setPosition(Constants.RF_CLOSED);
+            else
+                RFinger.setPosition(Constants.RF_OPEN);
+
         }
     }
 
