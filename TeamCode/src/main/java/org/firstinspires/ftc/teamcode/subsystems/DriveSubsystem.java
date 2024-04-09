@@ -126,8 +126,9 @@ public class DriveSubsystem extends SubsystemBase {
             autoEnabled = false;
         }
 
-        if(slowIsSet) maxSpeed = 0.5;
+        if(slowIsSet) maxSpeed = DriveTrain.SLOW_SPEED_RATIO;
         else maxSpeed = 1.0;
+
         driveTrain.driveFieldCentric(
                 xSpeed * maxSpeed,
                 ySpeed * maxSpeed,

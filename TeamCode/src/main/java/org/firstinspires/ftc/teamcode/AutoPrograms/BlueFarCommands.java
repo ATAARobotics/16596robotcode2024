@@ -44,30 +44,32 @@ public class BlueFarCommands extends CommandOpMode {
         CameraSubsystem.Position zone = CameraSubsystem.Position.UNKNOWN;
 
         // If we have not yet checked for the team element's position, get it.
-        if(zone == CameraSubsystem.Position.UNKNOWN) zone = cam.detectElement();
+        if (zone == CameraSubsystem.Position.UNKNOWN) zone = cam.detectElement();
 
-        if(zone == CameraSubsystem.Position.LEFT) {
+        if (zone == CameraSubsystem.Position.LEFT) {
 
             new PurePursuitCommand(
                     m_robot.getDrive(), m_robot.getOdometry(),
-                    new StartWaypoint(0,0),
+                    new StartWaypoint(0, 0),
                     new InterruptWaypoint(0, 0, Constants.Auto.BACK,
                             Constants.Auto.MOVEMENT_SPEED, Constants.Auto.TURN_SPEED,
                             Constants.Auto.FOLLOW_RADIUS, Constants.Auto.POSITION_BUFFER, Constants.Auto.ROTATION_BUFFER,
                             m_robot.getArmSubsystem()::setArmDriving),
                     new InterruptWaypoint(
                             0, 28, Constants.Auto.LEFT,
-                            0.5, 0.5, 30, 2, Math.PI/36,
+                            0.5, 0.5, 30, 2, Math.PI / 36,
                             m_robot.getArmSubsystem()::setArmPickup),
                     new InterruptWaypoint(
                             0, 28, Constants.Auto.LEFT,
-                            0.5, 0.5, 30, 2, Math.PI/36,
+                            0.5, 0.5, 30, 2, Math.PI / 36,
                             m_robot.getIntakeSubsystem()::fingerOpenLeft),
                     new InterruptWaypoint(
                             0, 28, Constants.Auto.LEFT,
-                            0.5, 0.5, 30, 2, Math.PI/36,
-                            m_robot.getArmSubsystem()::setArmDriving),
-                    new GeneralWaypoint()
+                            0.5, 0.5, 30, 2, Math.PI / 36,
+                            m_robot.getArmSubsystem()::setArmDriving));
+//                    new GeneralWaypoint()
+        }
+    }
 
         //        switch (zone) {
 //                    case 8: // move backwards away from the bars

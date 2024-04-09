@@ -39,7 +39,7 @@ public class DefaultDrive extends CommandBase {
 
     @Override
     public void execute() {
-        m_drive.drive(m_forward.getAsDouble() * (m_drive.IsSlowSet() ? 1 : Constants.DriveTrain.SLOW_SPEED_RATIO), m_sideways.getAsDouble() * (m_drive.IsSlowSet() ? 1 : Constants.DriveTrain.SLOW_TURN_RATIO));
+        m_drive.drive(m_forward.getAsDouble() * (m_drive.IsSlowSet() ? Constants.DriveTrain.SLOW_SPEED_RATIO : 1), m_sideways.getAsDouble() * (m_drive.IsSlowSet() ? Constants.DriveTrain.SLOW_TURN_RATIO : 1));
 
         if(m_turnX.getAsDouble() < -0.5) {
             m_drive.setDirection(Constants.DriveTrain.LEFT);
