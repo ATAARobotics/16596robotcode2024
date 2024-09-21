@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.mechanisms;
 
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
 
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
@@ -12,9 +10,8 @@ import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.Comp3;
 
-public class DriveTrain {
+public class DriveTrainempty {
 
     // Driving Motors
     private final Motor leftFrontDrive;
@@ -24,8 +21,8 @@ public class DriveTrain {
     MecanumDrive driveBase;
 
     // Odometry Motors and variables
-    private final Motor xPea;
-    private final Motor yPea;
+
+
     private PIDController headingControl = null;
     private PIDController xControl = null;
     private PIDController yControl = null;
@@ -51,7 +48,7 @@ public class DriveTrain {
     double xSpeed = 0;
     double ySpeed = 0;
 
-    public DriveTrain(HardwareMap hwMap)
+    public DriveTrainempty(HardwareMap hwMap)
     {
         this.hwMap = hwMap;
 
@@ -62,9 +59,6 @@ public class DriveTrain {
         leftBackDrive = new Motor(hwMap, "left_back_drive"); // 1
         rightBackDrive = new Motor(hwMap, "right_back_drive"); // 0
 
-        xPea = new Motor(hwMap, "winch"); // 2
-        //noinspection SuspiciousNameCombination
-       yPea = new Motor(hwMap, "y_encoder"); // 3
 
         // need to confirm orientation of the HUB so that IMU directions are correct
         imu = hwMap.get(IMU.class, "imu");// need to use IMU in expansion hub, not control hub
@@ -86,15 +80,13 @@ public class DriveTrain {
         rightBackDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         rightFrontDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         leftFrontDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-        xPea.setDistancePerPulse(Constants.TICKS_TO_INCHES); // this will make getDistance in inches, not ticks
-        yPea.setDistancePerPulse(Constants.TICKS_TO_INCHES);
+
 //
 //        imu.resetYaw();
     }
 
     public void start() {
-        xPea.resetEncoder();
-        yPea.resetEncoder();
+
     }
     public void loop(){
         heading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
@@ -165,25 +157,18 @@ public class DriveTrain {
 
     public double getXPosition() { // Convert xPod into actual direction based on current heading
         double xPos = 0.0;
-        if(Math.abs(headingSetPoint - Constants.back) < Constants.HEADING_ERROR) xPos = -xPea.getDistance();
-        else if(Math.abs(headingSetPoint - Constants.left) < Constants.HEADING_ERROR) xPos = yPea.getDistance();
-        else if(Math.abs(headingSetPoint - Constants.forward) < Constants.HEADING_ERROR) xPos = xPea.getDistance();
-        else if(Math.abs(headingSetPoint - Constants.right) < Constants.HEADING_ERROR) xPos = -yPea.getDistance();
         return xPos;
+
     }
     public double getYPosition() { // Convert yPod into actual direction based on current heading
         double yPos = 0.0;
-        if(Math.abs(headingSetPoint - Constants.back) < Constants.HEADING_ERROR) yPos = yPea.getDistance();
-        else if(Math.abs(headingSetPoint - Constants.left) < Constants.HEADING_ERROR) yPos = xPea.getDistance();
-        else if(Math.abs(headingSetPoint - Constants.forward) < Constants.HEADING_ERROR) yPos = -yPea.getDistance();
-        else if(Math.abs(headingSetPoint - Constants.right) < Constants.HEADING_ERROR) yPos = -xPea.getDistance();
         return yPos;
+
     }
     public void resetXEncoder() {
-        xPea.resetEncoder();
+
     }
     public void resetYEncoder() {
-        yPea.resetEncoder();
     }
     public void resetIMU() {
         imu.resetYaw();

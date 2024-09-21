@@ -36,6 +36,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 //@TeleOp(name = "ServoTest", group = "")
 @TeleOp (name = "ServoTest")
 @Disabled
+
 public class ServoTest extends LinearOpMode {
  DistanceSensor findPixel ;
 

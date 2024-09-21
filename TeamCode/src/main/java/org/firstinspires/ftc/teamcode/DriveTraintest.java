@@ -29,44 +29,33 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
-import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.mechanisms.Airplane;
-import org.firstinspires.ftc.teamcode.mechanisms.Arm;
 import org.firstinspires.ftc.teamcode.mechanisms.CAITelemetry;
 import org.firstinspires.ftc.teamcode.mechanisms.Constants;
-import org.firstinspires.ftc.teamcode.mechanisms.DriveTrain;
+import org.firstinspires.ftc.teamcode.mechanisms.DriveTrainempty;
 
-@TeleOp(name = "Comp3")
-public class Comp3 extends OpMode {
+@TeleOp(name = "DriveTraintestrun")
+public class DriveTraintest extends OpMode {
 
     private final ElapsedTime runtime = new ElapsedTime();
-    private DriveTrain driveTrain;
-    private Arm arm;
-    private Airplane drone;
+    private DriveTrainempty driveTrain;
     public GamepadEx driver = null;
     public GamepadEx operator = null;
-    boolean climbing = false;
-double wristIncr;
+
     @Override
     public void init() {
         telemetry = new CAITelemetry(telemetry);
         ((CAITelemetry)telemetry).setDashboardEnabled(false);
         telemetry.addData("Status", "Initializing");
         telemetry.update();
-        driveTrain = new DriveTrain(hardwareMap);
-        arm = new Arm(hardwareMap, runtime);
-        drone = new Airplane(hardwareMap);
+        driveTrain = new DriveTrainempty(hardwareMap);
+
 
         driveTrain.init();
-        arm.init();
-        drone.init();
         telemetry.addData("Status", "Initialized");
         telemetry.update();
     }
@@ -74,7 +63,6 @@ double wristIncr;
     @Override
     public void start() {
         driveTrain.start();
-        arm.start();
         driver = new GamepadEx(gamepad1);
         operator = new GamepadEx(gamepad2);
         runtime.reset();
@@ -89,7 +77,6 @@ double wristIncr;
     public void loop() {
         driver.readButtons();  // enable 'was just pressed' methods
         operator.readButtons();
-        arm.loop();
         driveTrain.loop();
 
 
@@ -107,66 +94,13 @@ double wristIncr;
         } else if (driver.getRightY() > 0.5) {
             driveTrain.setDirection(Constants.back); // north
         }
-        arm.setArmSpeed(operator.getLeftY());
 
-// ========== Get Operator control commands: ========================
-        if (operator.wasJustPressed(GamepadKeys.Button.A))
-            arm.setArmPosition(1);// set arm and wrist for pickup
-        if (operator.wasJustPressed(GamepadKeys.Button.B))
-            arm.setArmPosition(3);// set arm and wrist for mid deposit
-        if (operator.wasJustPressed(GamepadKeys.Button.X))
-            arm.setArmPosition(2);// set arm and wrist for driving
-        if (operator.wasJustPressed(GamepadKeys.Button.Y))
-            arm.setArmPosition(4);// set arm and wrist for long deposit
 
-        if (operator.wasJustPressed(GamepadKeys.Button.DPAD_DOWN))
-            arm.setFinger();// set toggle fingers (open/close)
-        if (operator.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
-            arm.toggleArmInAuto();    // toggle arm auto mode
-        }
         String message;
-        if (arm.getArmInAuto()) message = "arm in auto mode";  // debugging message
-        else message = "arm in manual mode";
-        telemetry.addData("arm mode",message);
 //
-        if (!arm.getArmInAuto()) {
-
-          if (operator.getRightY() > 0.2) wristIncr =  Constants.STEP;
-          else if(operator.getRightY() <0.2) wristIncr = -Constants.STEP;
-
-          arm.setWristPosition( wristIncr);// change current wrist position by  +/- STEP
             telemetry.addData("rightY", "%5.2f", operator.getRightY());
         }
-
-
-        // move the robot!!
-        driveTrain.drive(forwardSpeed, strafeSpeed); // turning and heading control happen in driveTrain
-
-
-        // ================ Launch Drone ===============================
-        if (gamepad2.right_trigger > 0.1) {
-            drone.launch();
-            message = "drone launched";
-        }
-        // =============== go climbing! =============================
-        if (gamepad2.left_trigger > 0.1 && gamepad2.right_trigger > 0.1) {
-            arm.setHook(true);// also moves wrist
-            climbing = true;
-            arm.setArmPosition(5);
-
-            message = "climbing!";
-        }
-
-        arm.Climb(climbing && gamepad2.right_bumper);
-
-        // Show the elapsed game time and arm position.
-        telemetry.addData("Status", "Run Time: " + runtime);
-        arm.printTelemetry(telemetry);
-        driveTrain.printTelemetry(telemetry);
-
-        // Push telemetry to the Driver Station.
-        telemetry.update();
     }
-}
+
 
 
